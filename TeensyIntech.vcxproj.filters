@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Encoder.cpp">
+      <Filter>Library Files\Library Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Motor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OrderManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SensorMgr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MotionControlSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Dynamixel.cpp">
+      <Filter>Library Files\Library Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamixelInterface.cpp">
+      <Filter>Library Files\Library Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamixelMotor.cpp">
+      <Filter>Library Files\Library Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="us_sr04.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ActuatorsMgr.hpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utils.c">
+      <Filter>Library Files\Library Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EthernetMgr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SerialHL.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="__vm\.TeensyIntech.vsarduino.h" />
+    <ClInclude Include="Encoder.h">
+      <Filter>Library Files\Library Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="interrupt_pins.h">
+      <Filter>Library Files\Library Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="interrupt_config.h">
+      <Filter>Library Files\Library Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="direct_pin_read.h">
+      <Filter>Library Files\Library Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="defines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Motor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pin_mapping.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OrderManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MotionControlSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SensorMgr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dynamixel.h">
+      <Filter>Library Files\Library Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamixelInterface.h">
+      <Filter>Library Files\Library Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamixelMotor.h">
+      <Filter>Library Files\Library Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="us_sr04.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pid.hpp">
+      <Filter>Library Files\Library Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Singleton.hpp">
+      <Filter>Library Files\Library Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="safe_enum.hpp">
+      <Filter>Library Files\Library Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utils.h">
+      <Filter>Library Files\Library Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stdarg.h">
+      <Filter>Library Files\Library Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="average.hpp">
+      <Filter>Library Files\Library Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EthernetMgr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SerialHL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ring_buffer.hpp">
+      <Filter>Library Files\Library Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="__vm\.TechTheTown-LowLevel.vsarduino.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TeensyIntech.ino" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{dc8ca316-ffaf-4220-86c6-9523721dd58a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library Files">
+      <UniqueIdentifier>{a2e79c20-857a-4b1d-8954-4230faec6069}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library Files\Library Header Files">
+      <UniqueIdentifier>{a22c4f1b-ee8d-4eb0-b5f7-b4ff972ed91a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library Files\Library Source Files">
+      <UniqueIdentifier>{93da9808-18ac-48e4-9d32-c04a6d95056a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{ba9f07de-573d-472e-9e76-2f09a600a58c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
