@@ -51,13 +51,12 @@ bool inline EthernetMgr::read_char(char & buffer)
 
 bool EthernetMgr::read(String& order)
 {
-	uint32_t start = micros();
 	order = "";
 	char buffer[64];
 	client = server.available();
 	char readChar;
 	int i = 0;
-	if (client) {							//Si on est connectés et il ya des choses à lire
+	if (client.available()>0) {							//Si on est connectés et il ya des choses à lire
 		while (read_char(readChar) && i < RX_BUFFER_SIZE) {	//Tant qu'on n'est pas à la fin d'un message(\r)
 			order.append(readChar);
 			i++;												//Au cas où on ne reçoit jamais de terminaison
@@ -65,8 +64,6 @@ bool EthernetMgr::read(String& order)
 		if (client) {
 			read_char(readChar);								//On élimine le \n
 		}
-		Serial.println(micros()- start);
-		Serial.println(order);
 		return (!order.equals(""));
 	}
 	else {
@@ -135,7 +132,7 @@ void EthernetMgr::printfln(const char* message, ...) {
 	va_end(args);
 }
 
-void EthernetMgr::printfLog(const char* log, ...) {
+void EthernetMgr::log(const char* log, ...) {
 	char data[HEADER_LENGTH + 64] = DEBUG_HEADER;
 	data[HEADER_LENGTH] = '\0';
 	Serial.println("log");

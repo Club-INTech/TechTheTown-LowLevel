@@ -60,6 +60,6 @@ public:
 	/* ENVOI */
 	void sendUS(uint16_t);
 	void printfln(const char*, ...) __attribute__((format(printf, 2, 3)));
-	void printfLog(const char*, ...) __attribute__((format(printf, 2, 3)));
+	void log(const char*, ...) __attribute__((format(printf, 2, 3)));
 };
 #endif
