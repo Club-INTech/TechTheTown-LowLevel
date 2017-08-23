@@ -31,15 +31,15 @@ public:
 
 	/* RECEPTION */
 	bool read_char(char &);
-	bool read(String&, uint16_t=0);
-	bool read(int16_t&, uint16_t=0);
-	bool read(volatile int8_t &, uint16_t=0);
-	bool read(float&, uint16_t=0);
+	bool read(String&);
+	bool read(int16_t&);
+	bool read(volatile int8_t &);
+	bool read(float&);
 	uint8_t available();
 
 	/* ENVOI */
 	void sendUS(uint16_t);
 	void printfln(const char*, ...) __attribute__((format(printf, 2, 3)));
-	void printfLog(const char*, ...) __attribute__((format(printf, 2, 3)));
+	void log(const char*, ...) __attribute__((format(printf, 2, 3)));
 };
 #endif

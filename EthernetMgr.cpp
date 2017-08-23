@@ -7,7 +7,6 @@
 
 #include "EthernetMgr.h"
 
-
 EthernetMgr::EthernetMgr()
 {
 	uint8_t mac[6]{ 0x04, 0xE9, 0xE5, 0x04, 0xE9, 0xE5 };  //Addresse mac de la Teensy, ne pas changer
@@ -19,11 +18,21 @@ EthernetMgr::EthernetMgr()
 	resetCard();
 
 	Ethernet.begin(mac, ip, dns, gateway, subnet);
+	if (Ethernet.localIP() != ip) {
+		Serial.println("ERR\tIP CONFIGURATON FAILED");
+		connected = false;
+	}
+	else {
+		Serial.print("Ethernet Ready\nLocal ip: ");
+		Serial.println(Ethernet.localIP());
+		server.begin();
 
-	Serial.print("Ethernet Ready\nLocal ip: ");
-	Serial.println(Ethernet.localIP());
-	server.begin();
-	client = server.available();
+		client = server.available();
+		if (client) {
+			connected = true;
+			client.println("CONNECTED");
+		}
+	}
 }
 
 void EthernetMgr::resetCard() {
@@ -39,38 +48,34 @@ void EthernetMgr::resetCard() {
 	delay(150);
 }
 
-bool EthernetMgr::connected() {
-	return client.connected();
-}
-
-bool inline EthernetMgr::read_char(char & buffer)
+bool inline EthernetMgr::read_char(byte & buffer)
 {
 	buffer = client.read();
-	return (buffer != '\r');
+	return (buffer != '\r' && buffer != '\n');
 }
 
 bool EthernetMgr::read(String& order)
 {
-	order = "";
-	char buffer[64];
 	client = server.available();
-	char readChar;
+	byte readChar; 
+	order = "";
+	char buffer[64] = "";
 	int i = 0;
 	if (client.available()>0) {							//Si on est connectés et il ya des choses à lire
 		while (read_char(readChar) && i < RX_BUFFER_SIZE) {	//Tant qu'on n'est pas à la fin d'un message(\r)
-			order.append(readChar);
+			buffer[i]=readChar;
 			i++;												//Au cas où on ne reçoit jamais de terminaison
 		}
 		if (client) {
 			read_char(readChar);								//On élimine le \n
 		}
+		order.append(buffer);
 		return (!order.equals(""));
 	}
 	else {
 		return false;
 	}
-	
-	
+
 }
 
 bool EthernetMgr::read(int16_t & value)

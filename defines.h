@@ -9,6 +9,8 @@
 	#include <WProgram.h>
 #endif
 
+//Utilise la série si true, l'ethernet si false
+#define DEBUG false
 
 /*
 ASSERVISSEMENT

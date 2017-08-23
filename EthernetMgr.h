@@ -38,7 +38,7 @@ class EthernetMgr : public Singleton<EthernetMgr>
 {
 private:
 	void resetCard();
-	bool read_char(char &);
+	bool read_char(byte &);
 	/* Attributs Ethernet */
 	EthernetServer server{ PORT };
 	EthernetClient client;
@@ -49,7 +49,7 @@ public:
 		READ_TIMEOUT = 0, READ_SUCCESS = 1
 	};
 
-	bool connected();
+	bool connected;
 
 	/* RECEPTION */
 	bool read(String&);

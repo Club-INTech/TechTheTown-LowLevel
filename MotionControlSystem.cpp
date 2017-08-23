@@ -531,15 +531,15 @@ void MotionControlSystem::setRightSpeedTunings(float kp, float ki, float kd) {
 }
 
 void MotionControlSystem::setAccelAv() {
-	serialHL.printfLog("entrer accel avant(là : %d )", this->maxAccelAv);
+	serialHL.log("entrer accel avant(là : %d )", this->maxAccelAv);
 	serialHL.read(this->maxAccelAv);
-	serialHL.printfLog("entrer decel avant(là : %d )", this->maxDecelAv);
+	serialHL.log("entrer decel avant(là : %d )", this->maxDecelAv);
 	serialHL.read(this->maxDecelAv);
 }
 
 void MotionControlSystem::setAccelAr() {
-	serialHL.printfLog("entrer accel arrière(là : %d )", this->maxAccelAr);
+	serialHL.log("entrer accel arrière(là : %d )", this->maxAccelAr);
 	serialHL.read(this->maxAccelAr);
-	serialHL.printfLog("entrer decel arrière(là : %d )", this->maxDecelAr);
+	serialHL.log("entrer decel arrière(là : %d )", this->maxDecelAr);
 	serialHL.read(this->maxDecelAr);
 }

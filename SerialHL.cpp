@@ -18,21 +18,15 @@ bool inline SerialHL::read_char(char & byte)
 	return (byte != '\r');
 }
 
-bool SerialHL::read(String& order, uint16_t timeout)
+bool SerialHL::read(String& order)
 {
-	uint32_t start = micros();
 	order = "";
 	char buffer[64] = "";
 	char incomingChar;
 	uint8_t i = 0;
 
-	if (timeout > 0) {
-		while (!available()) {
-			if (micros() - start > timeout) {
-				return false;							//Si ça fait trop longtemps qu'on attend un message, on arrête d'attendre et on passe à la suite
-			}
-		}
-	}
+	while (!available()) {}	//On attend l'entrée des commandes
+
 	if (available() > 0) {					//Si il y a quelque chose à lire dans le port série
 		while (read_char(incomingChar) && i < RX_BUFFER_SIZE) {	//Tant qu'on n'est pas à la fin d'un message(\r)
 			buffer[i]=incomingChar;
@@ -45,32 +39,32 @@ bool SerialHL::read(String& order, uint16_t timeout)
 	return (!order.equals(""));
 }
 
-bool SerialHL::read(int16_t & value, uint16_t timeout)
+bool SerialHL::read(int16_t & value)
 {
 	String readValue = "";
 
-	bool status = read(readValue, timeout);
+	bool status = read(readValue);
 
 	value = strtol(readValue.c_str(), nullptr, DEC);
 
 	return status;
 }
 
-bool SerialHL::read(volatile int8_t & value, uint16_t timeout)
+bool SerialHL::read(volatile int8_t & value)
 {
 	String readValue = "";
 
-	bool status = read(readValue, timeout);
+	bool status = read(readValue);
 
 	value = strtol(readValue.c_str(), nullptr, DEC);
 
 	return status;
 }
 
-bool SerialHL::read(float& value, uint16_t timeout) {
+bool SerialHL::read(float& value) {
 	String readValue = "";
 
-	bool status = read(readValue, timeout);
+	bool status = read(readValue);
 
 	value = strtof(readValue.c_str(), nullptr);
 	
@@ -109,7 +103,7 @@ void SerialHL::printfln(const char* message, ...) {
 	va_end(args);
 }
 
-void SerialHL::printfLog(const char* log, ...) {
+void SerialHL::log(const char* log, ...) {
 	char data[HEADER_LENGTH + 64] = DEBUG_HEADER;
 	data[HEADER_LENGTH] = '\0';
 
