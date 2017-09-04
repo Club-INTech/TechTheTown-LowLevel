@@ -114,14 +114,13 @@ void EthernetMgr::sendUS(uint16_t value)
 {
 	String data = "";
 	char header[HEADER_LENGTH] = US_HEADER;
-	Serial.println("us");
 	for (int i = 0; i < HEADER_LENGTH;i++) {
 		data.append(header[i]);
 	}
 
 	data.append(value);
 
-	Serial.println(data);
+	printfln(data.c_str());
 }
 
 void EthernetMgr::printfln(const char* message, ...) {
@@ -132,7 +131,7 @@ void EthernetMgr::printfln(const char* message, ...) {
 
 	vsnprintf(logToSend, 64, message, args);			//Ajoute dans logToSend de log, en formattant avec les arguments
 
-	Serial.println(logToSend);
+	client.println(logToSend);
 
 	va_end(args);
 }
@@ -148,7 +147,7 @@ void EthernetMgr::log(const char* log, ...) {
 
 	char logToSend[HEADER_LENGTH+64];
 	vsnprintf(logToSend, 64, data, args);			//Ajoute dans le buffer log, en formattant les 
-	Serial.println(logToSend);
+	printfln(logToSend);
 
 	va_end(args);
 }

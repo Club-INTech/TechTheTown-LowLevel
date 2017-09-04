@@ -36,7 +36,7 @@ typedef void *__builtin_va_list;
 
 #define NEW_H
 
-#include <arduino.h>
+#include <wprogram.h>
 #define __arm__
 #define __ARM__
 #define __extension__
