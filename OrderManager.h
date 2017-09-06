@@ -29,6 +29,11 @@ private:
 	ActuatorsMgr &actuatorsMgr;
 	SerialHL &serialHL;
 	EthernetMgr &ethMgr;
+#if DEBUG
+	SerialHL &highLevel= serialHL;
+#else
+	EthernetMgr &highLevel = ethMgr;
+#endif
 	String order;
 
 	//Variables booleennes pour envoi de données au HL

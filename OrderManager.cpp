@@ -6,6 +6,11 @@ OrderManager::OrderManager():	motionControlSystem(MotionControlSystem::Instance(
 								serialHL(SerialHL::Instance()),
 								ethMgr(EthernetMgr::Instance())
 {
+#if DEBUG
+	highLevel = serialHL;
+#else
+	highLevel = ethMgr;
+#endif
 	order = "";
 	isSendingUS = false;
 }
@@ -17,16 +22,11 @@ void OrderManager::refreshUS()
 
 void OrderManager::receiveAndExecute() //TODO:traiter selon si c'est la liaison série ou ethernet qui envoie une donnée
 {
-
-	
-#if DEBUG
-	auto highLevel = serialHL;
-#else
-	auto highLevel = ethMgr;
-#endif // DEBUG
 	if(highLevel.read(order)){
 		ack();
 		highLevel.log("Ordre recu: %s", order.c_str());
+		serialHL.log("Ordre recu: %s", order.c_str());
+
 
 /*			 __________________
 * 		   *|                  |*
@@ -390,64 +390,24 @@ void OrderManager::receiveAndExecute() //TODO:traiter selon si c'est la liaison 
 			ack();
 			actuatorsMgr.testGoto(goal);
 		}
-
 		else
 		{
 			highLevel.printfln("ordre inconnu");
 		}
 	}
 	order = "";
-
 }
 
 void OrderManager::sendUSData() {
 	static uint32_t lastSent = 0;
 	if (isSendingUS && millis() - lastSent > 100) 
 	{
-#if DEBUG
-		serialHL.sendUS(sensorMgr.getUsTest());
-#else
-		ethMgr.sendUS(sensorMgr.getUsTest());
-#endif // DEBUG
+		highLevel.sendUS(sensorMgr.getUsTest());
 		lastSent = millis();
 	}
 }
 
 //Parce que c'est chiant d'acquitter à la main
 void OrderManager::ack() {
-#if DEBUG
-	serialHL.printfln("_");
-#else
-	ethMgr.printfln("_");
-#endif // DEBUG
+	highLevel.printfln("_");
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-*   Dead Pingu in the Main !
-*      	       . --- .
-		     /        \
-			|  X  _  X |
-			|  ./   \. |
-			/  `-._.-'  \
-		  .' /         \ `.
-	  .-~.-~/    o   o  \~-.~-.
-  .-~ ~    |    o  o     |    ~ ~-.
-  `- .     |      o  o   |     . -'
-       ~ - |      o      | - ~
-           \             /
-          __\           /___
-         ~;_  >- . . -<  _i~
-            `'         `'
-*/

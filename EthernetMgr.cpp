@@ -139,7 +139,6 @@ void EthernetMgr::printfln(const char* message, ...) {
 void EthernetMgr::log(const char* log, ...) {
 	char data[HEADER_LENGTH + 64] = DEBUG_HEADER;
 	data[HEADER_LENGTH] = '\0';
-	Serial.println("log");
 	strcat(data, log);
 
 	va_list args;								//Variable contenant la liste des arguments après log (...)
