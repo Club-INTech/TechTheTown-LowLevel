@@ -3,14 +3,12 @@
 OrderManager::OrderManager():	motionControlSystem(MotionControlSystem::Instance()), 
 								sensorMgr(SensorMgr::Instance()), 
 								actuatorsMgr(ActuatorsMgr::Instance()),
-								serialHL(SerialHL::Instance()),
-								ethMgr(EthernetMgr::Instance())
-{
 #if DEBUG
-	highLevel = serialHL;
+								highLevel(SerialHL::Instance())
 #else
-	highLevel = ethMgr;
+								highLevel(EthernetMgr::Instance())
 #endif
+{
 	order = "";
 	isSendingUS = false;
 }
@@ -20,13 +18,10 @@ void OrderManager::refreshUS()
 	sensorMgr.refresh(motionControlSystem.getMovingDirection());
 }
 
-void OrderManager::receiveAndExecute() //TODO:traiter selon si c'est la liaison série ou ethernet qui envoie une donnée
+void OrderManager::receiveAndExecute()
 {
 	if(highLevel.read(order)){
-		ack();
 		highLevel.log("Ordre recu: %s", order.c_str());
-		serialHL.log("Ordre recu: %s", order.c_str());
-
 
 /*			 __________________
 * 		   *|                  |*
@@ -58,7 +53,6 @@ void OrderManager::receiveAndExecute() //TODO:traiter selon si c'est la liaison 
 		{
 			int16_t deplacement = 0;
 			highLevel.read(deplacement);
-			ack();           //Acquittement
 			highLevel.log("distance : %d",deplacement);
 			motionControlSystem.orderTranslation(deplacement);
 		}
@@ -66,7 +60,6 @@ void OrderManager::receiveAndExecute() //TODO:traiter selon si c'est la liaison 
 		{
 			float angle = motionControlSystem.getAngleRadian();
 			highLevel.read(angle);
-			ack();
 			highLevel.log("angle : %f", angle);
 			motionControlSystem.orderRotation(angle, MotionControlSystem::FREE);
 		}
@@ -75,7 +68,6 @@ void OrderManager::receiveAndExecute() //TODO:traiter selon si c'est la liaison 
 			float angle_actuel = motionControlSystem.getAngleRadian();
 			float delta_angle;
 			highLevel.read(delta_angle);
-			ack();
 			motionControlSystem.orderRotation(angle_actuel + delta_angle, MotionControlSystem::FREE);
 		}
 		else if (order.equals("stop"))
@@ -86,32 +78,26 @@ void OrderManager::receiveAndExecute() //TODO:traiter selon si c'est la liaison 
 		{
 			float x;
 			highLevel.read(x);
-			ack();
 			motionControlSystem.setX(x);
 		}
 		else if (order.equals("cy"))
 		{
 			float y;
 			highLevel.read(y);
-			ack();
 			motionControlSystem.setY(y);
 		}
 		else if (order.equals("co"))
 		{
 			float o;
 			highLevel.read(o);
-			ack();
 			motionControlSystem.setOriginalAngle(o);
 		}
 		else if (order.equals("cxyz"))
 		{
 			float x, y, o;
 			highLevel.read(x);
-			ack();
 			highLevel.read(y);
-			ack();
 			highLevel.read(o);
-			ack();
 
 			motionControlSystem.setX(x);
 			motionControlSystem.setY(y);
@@ -121,14 +107,12 @@ void OrderManager::receiveAndExecute() //TODO:traiter selon si c'est la liaison 
 		{
 			float speed=0;
 			highLevel.read(speed);
-			ack();
 			motionControlSystem.setTranslationSpeed(speed);
 		}
 		else if (order.equals("crv"))
 		{
 			float speed = 0;
 			highLevel.read(speed);
-			ack();
 			motionControlSystem.setRotationSpeed(speed);
 		}
 		else if (order.equals("efm"))
@@ -255,7 +239,7 @@ void OrderManager::receiveAndExecute() //TODO:traiter selon si c'est la liaison 
 			highLevel.printfln("kp_trans ?");
 			motionControlSystem.getTranslationTunings(kp, ki, kd);
 			highLevel.read(kp);
-			ack();
+			
 			motionControlSystem.setTranslationTunings(kp, ki, kd);
 			highLevel.printfln("kp_trans = %g", kp);
 		}
@@ -265,7 +249,7 @@ void OrderManager::receiveAndExecute() //TODO:traiter selon si c'est la liaison 
 			highLevel.printfln("kd_trans ?");
 			motionControlSystem.getTranslationTunings(kp, ki, kd);
 			highLevel.read(kd);
-			ack();
+			
 			motionControlSystem.setTranslationTunings(kp, ki, kd);
 			highLevel.printfln("kd_trans = %g", kd);
 		}
@@ -275,7 +259,7 @@ void OrderManager::receiveAndExecute() //TODO:traiter selon si c'est la liaison 
 			highLevel.printfln("ki_trans ?");
 			motionControlSystem.getTranslationTunings(kp, ki, kd);
 			highLevel.read(ki);
-			ack();
+			
 			motionControlSystem.setTranslationTunings(kp, ki, kd);
 			highLevel.printfln("ki_trans = %g", ki);
 		}
@@ -287,7 +271,7 @@ void OrderManager::receiveAndExecute() //TODO:traiter selon si c'est la liaison 
 			highLevel.printfln("kp_rot ?");
 			motionControlSystem.getRotationTunings(kp, ki, kd);
 			highLevel.read(kp);
-			ack();
+			
 			motionControlSystem.setRotationTunings(kp, ki, kd);
 			highLevel.printfln("kp_rot = %g", kp);
 		}
@@ -297,7 +281,7 @@ void OrderManager::receiveAndExecute() //TODO:traiter selon si c'est la liaison 
 			highLevel.printfln("ki_rot ?");
 			motionControlSystem.getRotationTunings(kp, ki, kd);
 			highLevel.read(ki);
-			ack();
+			
 			motionControlSystem.setRotationTunings(kp, ki, kd);
 			highLevel.printfln("ki_rot = %g", ki);
 		}
@@ -307,7 +291,7 @@ void OrderManager::receiveAndExecute() //TODO:traiter selon si c'est la liaison 
 			highLevel.printfln("kd_rot ?");
 			motionControlSystem.getRotationTunings(kp, ki, kd);
 			highLevel.read(kd);
-			ack();
+			
 			motionControlSystem.setRotationTunings(kp, ki, kd);
 			highLevel.printfln("kd_rot = %g", kd);
 		}
@@ -319,7 +303,7 @@ void OrderManager::receiveAndExecute() //TODO:traiter selon si c'est la liaison 
 			highLevel.printfln("kp_gauche ?");
 			motionControlSystem.getLeftSpeedTunings(kp, ki, kd);
 			highLevel.read(kp);
-			ack();
+			
 			motionControlSystem.setLeftSpeedTunings(kp, ki, kd);
 			highLevel.printfln("kp_gauche = %g", kp);
 		}
@@ -329,7 +313,7 @@ void OrderManager::receiveAndExecute() //TODO:traiter selon si c'est la liaison 
 			highLevel.printfln("ki_gauche ?");
 			motionControlSystem.getLeftSpeedTunings(kp, ki, kd);
 			highLevel.read(ki);
-			ack();
+			
 			motionControlSystem.setLeftSpeedTunings(kp, ki, kd);
 			highLevel.printfln("ki_gauche = %g", ki);
 		}
@@ -339,7 +323,7 @@ void OrderManager::receiveAndExecute() //TODO:traiter selon si c'est la liaison 
 			highLevel.printfln("kd_gauche ?");
 			motionControlSystem.getLeftSpeedTunings(kp, ki, kd);
 			highLevel.read(kd);
-			ack();
+			
 			motionControlSystem.setLeftSpeedTunings(kp, ki, kd);
 			highLevel.printfln("kd_gauche = %g", kd);
 		}
@@ -351,7 +335,7 @@ void OrderManager::receiveAndExecute() //TODO:traiter selon si c'est la liaison 
 			highLevel.printfln("kp_droite ?");
 			motionControlSystem.getRightSpeedTunings(kp, ki, kd);
 			highLevel.read(kp);
-			ack();
+			
 			motionControlSystem.setRightSpeedTunings(kp, ki, kd);
 			highLevel.printfln("kp_droite = %g", kp);
 		}
@@ -361,7 +345,7 @@ void OrderManager::receiveAndExecute() //TODO:traiter selon si c'est la liaison 
 			highLevel.printfln("ki_droite ?");
 			motionControlSystem.getRightSpeedTunings(kp, ki, kd);
 			highLevel.read(ki);
-			ack();
+			
 			motionControlSystem.setRightSpeedTunings(kp, ki, kd);
 			highLevel.printfln("ki_droite = %g", ki);
 		}
@@ -371,7 +355,7 @@ void OrderManager::receiveAndExecute() //TODO:traiter selon si c'est la liaison 
 			highLevel.printfln("kd_droite ?");
 			motionControlSystem.getRightSpeedTunings(kp, ki, kd);
 			highLevel.read(kd);
-			ack();
+			
 			motionControlSystem.setRightSpeedTunings(kp, ki, kd);
 			highLevel.printfln("kd_droite = %g", kd);
 		}
@@ -387,7 +371,7 @@ void OrderManager::receiveAndExecute() //TODO:traiter selon si c'est la liaison 
 		{
 			int16_t goal = 150;
 			highLevel.read(goal);
-			ack();
+			
 			actuatorsMgr.testGoto(goal);
 		}
 		else
@@ -402,12 +386,7 @@ void OrderManager::sendUSData() {
 	static uint32_t lastSent = 0;
 	if (isSendingUS && millis() - lastSent > 100) 
 	{
-		highLevel.sendUS(sensorMgr.getUsTest());
+		//highLevel.sendUS(sensorMgr.getUsTest());
 		lastSent = millis();
 	}
-}
-
-//Parce que c'est chiant d'acquitter à la main
-void OrderManager::ack() {
-	highLevel.printfln("_");
 }

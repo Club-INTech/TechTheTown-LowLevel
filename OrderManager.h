@@ -27,12 +27,10 @@ private:
 	MotionControlSystem &motionControlSystem;
 	SensorMgr &sensorMgr;
 	ActuatorsMgr &actuatorsMgr;
-	SerialHL &serialHL;
-	EthernetMgr &ethMgr;
 #if DEBUG
-	SerialHL &highLevel= serialHL;
+	SerialHL &highLevel;
 #else
-	EthernetMgr &highLevel = ethMgr;
+	EthernetMgr &highLevel;
 #endif
 	String order;
 

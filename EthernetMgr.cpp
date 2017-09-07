@@ -110,15 +110,17 @@ bool EthernetMgr::read(float& value) {
 	return status;
 }
 
-void EthernetMgr::sendUS(uint16_t value)
+void EthernetMgr::sendUS(uint16_t values[])
 {
 	String data = "";
 	char header[HEADER_LENGTH] = US_HEADER;
 	for (int i = 0; i < HEADER_LENGTH;i++) {
 		data.append(header[i]);
 	}
-
-	data.append(value);
+	for (int i = 0; i < 4; i++) {
+		data.append(values[i]);
+		if (i < 3) { data.append(',');}
+	}
 
 	printfln(data.c_str());
 }
