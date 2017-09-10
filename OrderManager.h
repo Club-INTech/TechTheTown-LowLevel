@@ -21,6 +21,7 @@
 #include "EthernetMgr.h"
 #include <WString.h>
 #include "defines.h"
+
 class OrderManager : public Singleton<OrderManager>
 {
 private:
@@ -43,7 +44,6 @@ private:
 	 void refreshUS();
 	 void receiveAndExecute();
 	 void sendUSData();
-	 void ack();
 };
 
 #endif //_ORDERMGR_h

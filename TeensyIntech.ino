@@ -5,11 +5,8 @@
 *
 **/
 
-#include "defines.h"
+
 #include "OrderManager.h"
-#include "SensorMgr.h"
-#include "SPI\SPI.h"
-#include "Ethernet\Ethernet.h"
 
 //Initialisation de tout ce dont le robot a besoin
 void setup() {
@@ -41,6 +38,9 @@ void motionControlInterrupt() {
 	motionControlSystem.control();
 	motionControlSystem.manageStop();
 }
+
+
+
 
 
 
@@ -88,7 +88,7 @@ void motionControlInterrupt() {
 
 /*
  *   Dead Pingu in the Main !
- *      	  . --- .
+ *      	      . --- .
 		    /        \
 		   |  X  _  X |
 		   |  ./   \. |

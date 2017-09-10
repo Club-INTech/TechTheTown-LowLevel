@@ -9,11 +9,20 @@
 	#include <WProgram.h>
 #endif
 
+/**
+*COMMUNICATION
+*/
+
 //Utilise la série si true, l'ethernet si false
 #define DEBUG false
 
-/*
-ASSERVISSEMENT
+//Nombre d'octets acceptables depuis le HL
+#define RX_BUFFER_SIZE 8
+
+
+
+/**
+*ASSERVISSEMENT
 */
 
 #define PERIOD_ASSERV 1000 //1kHz, à modifier
@@ -33,15 +42,6 @@ ASSERVISSEMENT
 
 #define WHEEL_DISTANCE_TO_CENTER 145.1
 #define TOLERANCY 50
-
-#define RX_BUFFER_SIZE 64
-
-
-#if DEBUG
-#define TRACKER_SIZE 		1500
-#else
-#define TRACKER_SIZE 		1
-#endif
 
 #endif
 
