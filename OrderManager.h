@@ -28,8 +28,9 @@ private:
 	MotionControlSystem &motionControlSystem;
 	SensorMgr &sensorMgr;
 	ActuatorsMgr &actuatorsMgr;
+	SerialHL &serialHL;
 #if DEBUG
-	SerialHL &highLevel;
+	SerialHL &highLevel=serialHL;
 #else
 	EthernetMgr &highLevel;
 #endif

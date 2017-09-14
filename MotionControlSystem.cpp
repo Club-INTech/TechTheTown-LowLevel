@@ -37,12 +37,6 @@ MotionControlSystem::MotionControlSystem() :leftEncoder(PIN_A_LEFT_ENCODER, PIN_
 	maxSpeedTranslation = 2000; // Consigne max envoy�e au PID
 	maxSpeedRotation = 1400;
 
-
-	maxAccelAv = 4;
-	maxDecelAv = 8;
-	maxAccelAr = 8;
-	maxDecelAr = 4;
-
 	delayToStop = 100; // temps � l'arr�t avant de consid�rer un blocage
 	toleranceTranslation = 30;
 	toleranceRotation = 50;
@@ -56,8 +50,7 @@ MotionControlSystem::MotionControlSystem() :leftEncoder(PIN_A_LEFT_ENCODER, PIN_
 	leftSpeedPID.setTunings(0.011, 0, 0.005); // ki 0.00001
 	rightSpeedPID.setTunings(0.011, 0, 0.005);
 
-	maxAcceleration = maxAccelAr;
-	maxDeceleration = maxDecelAr;
+	maxAcceleration = 4;
 
 	leftMotor.init();
 	rightMotor.init();
@@ -65,110 +58,112 @@ MotionControlSystem::MotionControlSystem() :leftEncoder(PIN_A_LEFT_ENCODER, PIN_
 }
 
 void MotionControlSystem::control() {
-	if (!controlled) {
-		return;
+	if (controlled) {
+		// Pour le calcul de la vitesse instantanee :
+		static int32_t previousLeftTicks = 0;
+		static int32_t previousRightTicks = 0;
+
+		// Pour le calcul de l'acceleration intantanee :
+		static int32_t previousLeftSpeedSetpoint = 0;
+		static int32_t previousRightSpeedSetpoint = 0;
+
+		leftTicks = leftEncoder.read();
+		rightTicks = rightEncoder.read();
+
+		currentLeftSpeed = (leftTicks - previousLeftTicks) * MC_FREQUENCY;
+		currentRightSpeed = (rightTicks - previousRightTicks) * MC_FREQUENCY;
+
+		averageLeftSpeed.add(currentLeftSpeed);										//Mise à jour des moyennes des vitesses
+		averageRightSpeed.add(currentRightSpeed);
+
+		previousLeftTicks = leftTicks;
+		previousRightTicks = rightTicks;
+
+		averageLeftDerivativeError.add(ABS(leftSpeedPID.getDerivativeError()));		// Mise à jour des moyennes de dérivées de l'erreur (pour les blocages)
+		averageRightDerivativeError.add(ABS(rightSpeedPID.getDerivativeError()));
+
+		currentLeftSpeed = averageLeftSpeed.value(); // On utilise pour l'asserv la valeur moyenne des dernieres current Speed
+		currentRightSpeed = averageRightSpeed.value(); // sinon le robot il fait nawak.
+
+		currentDistance = (leftTicks + rightTicks) / 2;
+		currentAngle = ((rightTicks - currentDistance)*RAYON_COD_GAUCHE / RAYON_COD_DROITE - (leftTicks - currentDistance)) / 2;
+
+		//Mise à jour des pids
+		if (translationControlled) {
+			translationPID.compute();
+		}
+		if (rotationControlled) {
+			rotationPID.compute();
+		}
+
+		// Limitation de la consigne de vitesse en translation
+		if (translationSpeed > maxSpeedTranslation)
+			translationSpeed = maxSpeedTranslation;
+		else if (translationSpeed < -maxSpeedTranslation)
+			translationSpeed = -maxSpeedTranslation;
+
+		// Limitation de la consigne de vitesse en rotation
+		if (rotationSpeed > maxSpeedRotation)
+			rotationSpeed = maxSpeedRotation;
+		else if (rotationSpeed < -maxSpeedRotation)
+			rotationSpeed = -maxSpeedRotation;
+
+		leftSpeedSetpoint = (int32_t)(translationSpeed - rotationSpeed);
+		rightSpeedSetpoint = (int32_t)(translationSpeed + rotationSpeed);
+
+		// Limitation de la vitesse
+		if (leftSpeedSetpoint > maxSpeed) {
+			leftSpeedSetpoint = maxSpeed;
+		}
+		else if (leftSpeedSetpoint < -maxSpeed) {
+			leftSpeedSetpoint = -maxSpeed;
+		}
+		if (rightSpeedSetpoint > maxSpeed) {
+			rightSpeedSetpoint = maxSpeed;
+		}
+		else if (rightSpeedSetpoint < -maxSpeed) {
+			rightSpeedSetpoint = -maxSpeed;
+		}
+
+		//Limiteurs d'accélération et décélération
+		if (leftSpeedSetpoint - previousLeftSpeedSetpoint > maxAcceleration)
+		{
+			leftSpeedSetpoint = (int32_t)(previousLeftSpeedSetpoint + maxAcceleration);
+		}
+		else if (previousLeftSpeedSetpoint - leftSpeedSetpoint > maxAcceleration)
+		{
+			leftSpeedSetpoint = (int32_t)(previousLeftSpeedSetpoint - maxAcceleration);
+		}
+		if (rightSpeedSetpoint - previousRightSpeedSetpoint > maxAcceleration)
+		{
+			rightSpeedSetpoint = (previousRightSpeedSetpoint + maxAcceleration);
+		}
+		else if (previousRightSpeedSetpoint - rightSpeedSetpoint > maxAcceleration)
+		{
+			rightSpeedSetpoint = (previousRightSpeedSetpoint - maxAcceleration);
+		}
+
+		// Mise à jour des consignes de vitesse pour calculs postérieurs
+		previousLeftSpeedSetpoint = leftSpeedSetpoint;
+		previousRightSpeedSetpoint = rightSpeedSetpoint;
+
+		//Mise à jour des PID en vitesse
+		if (leftSpeedControlled) {
+			leftSpeedPID.compute();
+		}
+		else {
+			leftPWM = 0;
+		}
+		if (rightSpeedControlled) {
+			rightSpeedPID.compute();
+		}
+		else {
+			rightPWM = 0;
+		}
+
+		leftMotor.run(leftPWM);
+		rightMotor.run(rightPWM);
 	}
-	// Pour le calcul de la vitesse instantanee :
-	static int32_t previousLeftTicks = 0;
-	static int32_t previousRightTicks = 0;
-
-	// Pour le calcul de l'acceleration intantanee :
-	static int32_t previousLeftSpeedSetpoint = 0;
-	static int32_t previousRightSpeedSetpoint = 0;
-
-	leftTicks = leftEncoder.read();
-	rightTicks = rightEncoder.read();
-
-	currentLeftSpeed = (leftTicks - previousLeftTicks) * 1000;
-	currentRightSpeed = (rightTicks - previousRightTicks) * 1000;
-
-	averageLeftSpeed.add(currentLeftSpeed);										//Mise à jour des moyennes des vitesses
-	averageRightSpeed.add(currentRightSpeed);
-
-	previousLeftTicks = leftTicks;
-	previousRightTicks = rightTicks;
-
-	averageLeftDerivativeError.add(ABS(leftSpeedPID.getDerivativeError()));		// Mise à jour des moyennes de dérivées de l'erreur (pour les blocages)
-	averageRightDerivativeError.add(ABS(rightSpeedPID.getDerivativeError()));
-
-	currentLeftSpeed = averageLeftSpeed.value(); // On utilise pour l'asserv la valeur moyenne des dernieres current Speed
-	currentRightSpeed = averageRightSpeed.value(); // sinon le robot il fait nawak.
-
-	currentDistance = (leftTicks + rightTicks) / 2;
-	currentAngle = ((rightTicks - currentDistance)*RAYON_COD_GAUCHE / RAYON_COD_DROITE - (leftTicks - currentDistance)) / 2;
-
-	//Mise à jour des pids
-	if (translationControlled) {
-		translationPID.compute();
-	}
-	if (rotationControlled) {
-		rotationPID.compute();
-	}
-	
-	// Limitation de la consigne de vitesse en translation
-	if (translationSpeed > maxSpeedTranslation)
-		translationSpeed = maxSpeedTranslation;
-	else if (translationSpeed < -maxSpeedTranslation)
-		translationSpeed = -maxSpeedTranslation;
-
-	// Limitation de la consigne de vitesse en rotation
-	if (rotationSpeed > maxSpeedRotation)
-		rotationSpeed = maxSpeedRotation;
-	else if (rotationSpeed < -maxSpeedRotation)
-		rotationSpeed = -maxSpeedRotation;
-
-	leftSpeedSetpoint = (int32_t)(translationSpeed - rotationSpeed);
-	rightSpeedSetpoint = (int32_t)(translationSpeed + rotationSpeed);
-
-	// Limitation de la vitesse
-	if (leftSpeedSetpoint > maxSpeed) {
-		leftSpeedSetpoint = maxSpeed;
-	}
-	else if (leftSpeedSetpoint < -maxSpeed) {
-		leftSpeedSetpoint = -maxSpeed;
-	}
-	if (rightSpeedSetpoint > maxSpeed) {
-		rightSpeedSetpoint = maxSpeed;
-	}
-	else if (rightSpeedSetpoint < -maxSpeed) {
-		rightSpeedSetpoint = -maxSpeed;
-	}
-	
-	//Limiteurs d'accélération et décélération
-	if (leftSpeedSetpoint - previousLeftSpeedSetpoint > maxAcceleration)
-	{
-		leftSpeedSetpoint = (int32_t)(previousLeftSpeedSetpoint + maxAcceleration);
-	}
-	else if (previousLeftSpeedSetpoint - leftSpeedSetpoint > maxDeceleration) {
-		leftSpeedSetpoint = (int32_t)(previousLeftSpeedSetpoint - maxDeceleration);
-	}
-
-	if (rightSpeedSetpoint - previousRightSpeedSetpoint > maxAcceleration) {
-		rightSpeedSetpoint = (int32_t)(previousRightSpeedSetpoint + maxAcceleration);
-	}
-	else if (previousRightSpeedSetpoint - rightSpeedSetpoint > maxDeceleration) {
-		rightSpeedSetpoint = (int32_t)(previousRightSpeedSetpoint - maxDeceleration );
-	}
-
-	previousLeftSpeedSetpoint = leftSpeedSetpoint;			// Mise à jour des consignes de vitesse pour calculs postérieurs
-	previousRightSpeedSetpoint = rightSpeedSetpoint;
-
-	//Mise à jour des PID en vitesse
-	if (leftSpeedControlled) {
-		leftSpeedPID.compute();
-	}
-	else {
-		leftPWM = 0;
-	}
-	if (rightSpeedControlled) {
-		rightSpeedPID.compute();
-	}
-	else {
-		rightPWM = 0;
-	}
-
-	leftMotor.run(leftPWM);
-	rightMotor.run(rightPWM);
 }
 
 MOVING_DIRECTION MotionControlSystem::getMovingDirection() const
@@ -210,6 +205,16 @@ void MotionControlSystem::enableForcedMovement() {
 
 void MotionControlSystem::disableForcedMovement() {
 	forcedMovement = false;
+}
+
+int32_t MotionControlSystem::getCodG()
+{
+	return leftEncoder.read();
+}
+
+int32_t MotionControlSystem::getCodD()
+{
+	return rightEncoder.read();
 }
 
 
@@ -303,22 +308,17 @@ void MotionControlSystem::updatePosition() {
 
 
 void MotionControlSystem::orderTranslation(int32_t mmDistance) {
+	
 	translationSetpoint += (int32_t)mmDistance / TICK_TO_MM;
+
 	if (!moving)
 	{
 		translationPID.resetErrors();
 		moving = true;
 	}
-	if (mmDistance >= 0) {
-		direction = FORWARD;
-		maxAcceleration = maxAccelAv;
-		maxDeceleration = maxDecelAv;
-	}
-	else {
-		direction = BACKWARD;
-		maxAcceleration = maxAccelAr;
-		maxDeceleration = maxDecelAr;
-	}
+
+	direction = (mmDistance < 0) ? BACKWARD : FORWARD;
+
 	moveAbnormal = false;
 }
 
@@ -528,18 +528,4 @@ void MotionControlSystem::setLeftSpeedTunings(float kp, float ki, float kd) {
 }
 void MotionControlSystem::setRightSpeedTunings(float kp, float ki, float kd) {
 	rightSpeedPID.setTunings(kp, ki, kd);
-}
-
-void MotionControlSystem::setAccelAv() {
-	serialHL.log("entrer accel avant(là : %d )", this->maxAccelAv);
-	serialHL.read(this->maxAccelAv);
-	serialHL.log("entrer decel avant(là : %d )", this->maxDecelAv);
-	serialHL.read(this->maxDecelAv);
-}
-
-void MotionControlSystem::setAccelAr() {
-	serialHL.log("entrer accel arrière(là : %d )", this->maxAccelAr);
-	serialHL.read(this->maxAccelAr);
-	serialHL.log("entrer decel arrière(là : %d )", this->maxDecelAr);
-	serialHL.read(this->maxDecelAr);
 }

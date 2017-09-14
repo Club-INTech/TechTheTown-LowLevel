@@ -31,10 +31,11 @@ public:
 
 	/* RECEPTION */
 	bool read_char(char &);
-	bool read(String&);
-	bool read(int16_t&);
-	bool read(volatile int8_t &);
-	bool read(float&);
+	bool read(String&, bool wait = false);
+	bool read(uint32_t&, bool wait = false);
+	bool read(int16_t&, bool wait = false);
+	bool read(volatile int8_t &, bool wait = false);
+	bool read(float&, bool wait = false);
 	uint8_t available();
 
 	/* ENVOI */

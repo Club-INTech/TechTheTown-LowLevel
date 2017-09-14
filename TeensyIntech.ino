@@ -14,24 +14,6 @@ void setup() {
 	Serial.begin(115200);
 }
 
-//Boucle principale, gère entre autres la communication avec le HL
-void loop() {
-
-	/* MotionControlSystem */
-	IntervalTimer motionControlInterruptTimer;
-	motionControlInterruptTimer.priority(253);
-	motionControlInterruptTimer.begin(motionControlInterrupt, PERIOD_ASSERV); //asservissements
-
-	/* Gestion des ordres reçus */
-	OrderManager& orderMgr = OrderManager::Instance();
-
-	while (true) {
-		//orderMgr.refreshUS();
-		orderMgr.receiveAndExecute();
-		//orderMgr.sendUSData();
-	}
-}
-
 /* Interruptions d'asservissements */
 void motionControlInterrupt() {
 	static MotionControlSystem &motionControlSystem = MotionControlSystem::Instance();
@@ -39,6 +21,25 @@ void motionControlInterrupt() {
 	motionControlSystem.manageStop();
 }
 
+
+//Boucle principale, gère entre autres la communication avec le HL
+void loop() {
+
+	OrderManager& orderMgr = OrderManager::Instance();
+
+	/* MotionControlSystem */
+	IntervalTimer motionControlInterruptTimer;
+	motionControlInterruptTimer.priority(253);
+	motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); //asservissements
+	
+	/* Gestion des ordres reçus */
+
+	while (true) {
+		//orderMgr.refreshUS();
+		orderMgr.receiveAndExecute();
+		//orderMgr.sendUSData();
+	}
+}
 
 
 

@@ -22,6 +22,7 @@ MOSI	11
 #include <WString.h>
 #include "defines.h"
 #include <Ethernet.h>
+#include "MotionControlSystem.h"
 #include "pin_mapping.h"
 
 #define HEADER_LENGTH   2
@@ -44,9 +45,8 @@ private:
 	IPAddress subnet{ 255,255,255,0 };
 
 	void resetCard();
-	bool read_char(byte &);
-	void manageClient();
-	uint32_t lastMessage;
+	bool read_char(char & buffer);
+	uint32_t lastMessage = 0;
 	/* Attributs Ethernet */
 	EthernetServer server{ PORT };
 	EthernetClient client;
@@ -60,11 +60,13 @@ public:
 	bool connected;
 
 
+	void manageClient();
+
 	/* RECEPTION */
-	bool read(String&);
-	bool read(int16_t&);
-	bool read(volatile int8_t &);
-	bool read(float&);
+	bool read(String&, bool wait=false);
+	bool read(int16_t&, bool wait=false);
+	bool read(volatile int8_t &, bool wait=false);
+	bool read(float&, bool wait=false);
 
 	/* ENVOI */
 	void sendUS(uint16_t[]);

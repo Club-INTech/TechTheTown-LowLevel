@@ -25,7 +25,8 @@
 *ASSERVISSEMENT
 */
 
-#define PERIOD_ASSERV 1000 //1kHz, à modifier
+#define MC_FREQUENCY 1000 //1kHz, à modifier
+#define MC_PERIOD	(double)(1000000/MC_FREQUENCY)  //Durée en µs entre deux mesures
 
 // 65,5mm diametre des roues
 // ~1000 ticks par tour de roue
@@ -43,5 +44,6 @@
 #define WHEEL_DISTANCE_TO_CENTER 145.1
 #define TOLERANCY 50
 
-#endif
+//const String& getValue(String data, char )
 
+#endif

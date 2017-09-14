@@ -3,6 +3,7 @@
 OrderManager::OrderManager():	motionControlSystem(MotionControlSystem::Instance()), 
 								sensorMgr(SensorMgr::Instance()), 
 								actuatorsMgr(ActuatorsMgr::Instance()),
+								serialHL(SerialHL::Instance()),
 #if DEBUG
 								highLevel(SerialHL::Instance())
 #else
@@ -52,14 +53,14 @@ void OrderManager::receiveAndExecute()
 		else if (order.equals("d"))		//Ordre de d�placement rectiligne (en mm)
 		{
 			int16_t deplacement = 0;
-			highLevel.read(deplacement);
+			highLevel.read(deplacement, true);
 			highLevel.log("distance : %d",deplacement);
 			motionControlSystem.orderTranslation(deplacement);
 		}
 		else if (order.equals("t"))
 		{
 			float angle = motionControlSystem.getAngleRadian();
-			highLevel.read(angle);
+			highLevel.read(angle, true);
 			highLevel.log("angle : %f", angle);
 			motionControlSystem.orderRotation(angle, MotionControlSystem::FREE);
 		}
@@ -67,7 +68,7 @@ void OrderManager::receiveAndExecute()
 		{
 			float angle_actuel = motionControlSystem.getAngleRadian();
 			float delta_angle;
-			highLevel.read(delta_angle);
+			highLevel.read(delta_angle, true);
 			motionControlSystem.orderRotation(angle_actuel + delta_angle, MotionControlSystem::FREE);
 		}
 		else if (order.equals("stop"))
@@ -77,27 +78,27 @@ void OrderManager::receiveAndExecute()
 		else if (order.equals("cx"))
 		{
 			float x;
-			highLevel.read(x);
+			highLevel.read(x, true);
 			motionControlSystem.setX(x);
 		}
 		else if (order.equals("cy"))
 		{
 			float y;
-			highLevel.read(y);
+			highLevel.read(y, true);
 			motionControlSystem.setY(y);
 		}
 		else if (order.equals("co"))
 		{
 			float o;
-			highLevel.read(o);
+			highLevel.read(o, true);
 			motionControlSystem.setOriginalAngle(o);
 		}
 		else if (order.equals("cxyz"))
 		{
 			float x, y, o;
-			highLevel.read(x);
-			highLevel.read(y);
-			highLevel.read(o);
+			highLevel.read(x, true);
+			highLevel.read(y, true);
+			highLevel.read(o, true);
 
 			motionControlSystem.setX(x);
 			motionControlSystem.setY(y);
@@ -106,13 +107,13 @@ void OrderManager::receiveAndExecute()
 		else if (order.equals("ctv"))
 		{
 			float speed=0;
-			highLevel.read(speed);
+			highLevel.read(speed, true);
 			motionControlSystem.setTranslationSpeed(speed);
 		}
 		else if (order.equals("crv"))
 		{
 			float speed = 0;
-			highLevel.read(speed);
+			highLevel.read(speed, true);
 			motionControlSystem.setRotationSpeed(speed);
 		}
 		else if (order.equals("efm"))
@@ -160,7 +161,14 @@ void OrderManager::receiveAndExecute()
 			motionControlSystem.enableSpeedControl(true);
 			highLevel.log("asservi en vitesse");
 		}
-
+		else if (order.equals("cod")) {
+			highLevel.log("Gauche:");
+			Serial.println(motionControlSystem.getCodG());
+			Serial.println(motionControlSystem.getCodD());
+			highLevel.log("%ld", motionControlSystem.getCodG());
+			highLevel.log("Droite:");
+			highLevel.log("%ld", motionControlSystem.getCodD());
+		}
 /*			 ___________________________
 * 		   *|                           |*
 *		   *|         MONTLHERY         |*
@@ -238,7 +246,7 @@ void OrderManager::receiveAndExecute()
 			float kp, ki, kd;
 			highLevel.printfln("kp_trans ?");
 			motionControlSystem.getTranslationTunings(kp, ki, kd);
-			highLevel.read(kp);
+			highLevel.read(kp, true);
 			
 			motionControlSystem.setTranslationTunings(kp, ki, kd);
 			highLevel.printfln("kp_trans = %g", kp);
@@ -248,7 +256,7 @@ void OrderManager::receiveAndExecute()
 			float kp, ki, kd;
 			highLevel.printfln("kd_trans ?");
 			motionControlSystem.getTranslationTunings(kp, ki, kd);
-			highLevel.read(kd);
+			highLevel.read(kd, true);
 			
 			motionControlSystem.setTranslationTunings(kp, ki, kd);
 			highLevel.printfln("kd_trans = %g", kd);
@@ -258,7 +266,7 @@ void OrderManager::receiveAndExecute()
 			float kp, ki, kd;
 			highLevel.printfln("ki_trans ?");
 			motionControlSystem.getTranslationTunings(kp, ki, kd);
-			highLevel.read(ki);
+			highLevel.read(ki, true);
 			
 			motionControlSystem.setTranslationTunings(kp, ki, kd);
 			highLevel.printfln("ki_trans = %g", ki);
@@ -270,7 +278,7 @@ void OrderManager::receiveAndExecute()
 			float kp, ki, kd;
 			highLevel.printfln("kp_rot ?");
 			motionControlSystem.getRotationTunings(kp, ki, kd);
-			highLevel.read(kp);
+			highLevel.read(kp, true);
 			
 			motionControlSystem.setRotationTunings(kp, ki, kd);
 			highLevel.printfln("kp_rot = %g", kp);
@@ -280,7 +288,7 @@ void OrderManager::receiveAndExecute()
 			float kp, ki, kd;
 			highLevel.printfln("ki_rot ?");
 			motionControlSystem.getRotationTunings(kp, ki, kd);
-			highLevel.read(ki);
+			highLevel.read(ki, true);
 			
 			motionControlSystem.setRotationTunings(kp, ki, kd);
 			highLevel.printfln("ki_rot = %g", ki);
@@ -290,7 +298,7 @@ void OrderManager::receiveAndExecute()
 			float kp, ki, kd;
 			highLevel.printfln("kd_rot ?");
 			motionControlSystem.getRotationTunings(kp, ki, kd);
-			highLevel.read(kd);
+			highLevel.read(kd, true);
 			
 			motionControlSystem.setRotationTunings(kp, ki, kd);
 			highLevel.printfln("kd_rot = %g", kd);
@@ -302,7 +310,7 @@ void OrderManager::receiveAndExecute()
 			float kp, ki, kd;
 			highLevel.printfln("kp_gauche ?");
 			motionControlSystem.getLeftSpeedTunings(kp, ki, kd);
-			highLevel.read(kp);
+			highLevel.read(kp, true);
 			
 			motionControlSystem.setLeftSpeedTunings(kp, ki, kd);
 			highLevel.printfln("kp_gauche = %g", kp);
@@ -312,7 +320,7 @@ void OrderManager::receiveAndExecute()
 			float kp, ki, kd;
 			highLevel.printfln("ki_gauche ?");
 			motionControlSystem.getLeftSpeedTunings(kp, ki, kd);
-			highLevel.read(ki);
+			highLevel.read(ki, true);
 			
 			motionControlSystem.setLeftSpeedTunings(kp, ki, kd);
 			highLevel.printfln("ki_gauche = %g", ki);
@@ -322,7 +330,7 @@ void OrderManager::receiveAndExecute()
 			float kp, ki, kd;
 			highLevel.printfln("kd_gauche ?");
 			motionControlSystem.getLeftSpeedTunings(kp, ki, kd);
-			highLevel.read(kd);
+			highLevel.read(kd, true);
 			
 			motionControlSystem.setLeftSpeedTunings(kp, ki, kd);
 			highLevel.printfln("kd_gauche = %g", kd);
@@ -334,7 +342,7 @@ void OrderManager::receiveAndExecute()
 			float kp, ki, kd;
 			highLevel.printfln("kp_droite ?");
 			motionControlSystem.getRightSpeedTunings(kp, ki, kd);
-			highLevel.read(kp);
+			highLevel.read(kp, true);
 			
 			motionControlSystem.setRightSpeedTunings(kp, ki, kd);
 			highLevel.printfln("kp_droite = %g", kp);
@@ -344,7 +352,7 @@ void OrderManager::receiveAndExecute()
 			float kp, ki, kd;
 			highLevel.printfln("ki_droite ?");
 			motionControlSystem.getRightSpeedTunings(kp, ki, kd);
-			highLevel.read(ki);
+			highLevel.read(ki, true);
 			
 			motionControlSystem.setRightSpeedTunings(kp, ki, kd);
 			highLevel.printfln("ki_droite = %g", ki);
@@ -354,23 +362,15 @@ void OrderManager::receiveAndExecute()
 			float kp, ki, kd;
 			highLevel.printfln("kd_droite ?");
 			motionControlSystem.getRightSpeedTunings(kp, ki, kd);
-			highLevel.read(kd);
+			highLevel.read(kd, true);
 			
 			motionControlSystem.setRightSpeedTunings(kp, ki, kd);
 			highLevel.printfln("kd_droite = %g", kd);
 		}
-		else if (order.equals("accelAv"))
-		{
-			motionControlSystem.setAccelAv();
-		}
-		else if (order.equals("accelAr"))
-		{
-			motionControlSystem.setAccelAr();
-		}
 		else if (order.equals("axTest"))
 		{
 			int16_t goal = 150;
-			highLevel.read(goal);
+			highLevel.read(goal, true);
 			
 			actuatorsMgr.testGoto(goal);
 		}

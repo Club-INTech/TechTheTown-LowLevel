@@ -226,6 +226,8 @@ public:
 	void manageStop();
 	void enableForcedMovement();
 	void disableForcedMovement();
+	int32_t getCodG();
+	int32_t getCodD();
 };
 
 #endif

@@ -18,28 +18,38 @@ bool inline SerialHL::read_char(char & byte)
 	return (byte != '\r');
 }
 
-bool SerialHL::read(String& order)
+bool SerialHL::read(String& order, bool wait)
 {
-	order = "";
-	char buffer[64] = "";
-	char incomingChar;
-	uint8_t i = 0;
-
-	while (!available()) {}	//On attend l'entrée des commandes
-
+	if (wait) {
+		while (!available()) {}	//On attend l'entrée des commandes
+	}
 	if (available() > 0) {					//Si il y a quelque chose à lire dans le port série
+		order = "";
+		char buffer[64] = "";
+		char incomingChar;
+		uint8_t i = 0;
 		while (read_char(incomingChar) && i < RX_BUFFER_SIZE) {	//Tant qu'on n'est pas à la fin d'un message(\r)
 			buffer[i]=incomingChar;
 			i++;												//Au cas où on ne reçoit jamais de terminaison
 		}
 		read_char(incomingChar);								//On élimine le \n
+		order.append(buffer);
 	}
-	order.append(buffer);
 
 	return (!order.equals(""));
 }
 
-bool SerialHL::read(int16_t & value)
+bool SerialHL::read(uint32_t& value, bool wait) {
+	String readValue = "";
+
+	bool status = read(readValue, wait);
+
+	value = strtol(readValue.c_str(), nullptr, DEC);
+
+	return status;
+}
+
+bool SerialHL::read(int16_t & value, bool wait)
 {
 	String readValue = "";
 
@@ -50,7 +60,7 @@ bool SerialHL::read(int16_t & value)
 	return status;
 }
 
-bool SerialHL::read(volatile int8_t & value)
+bool SerialHL::read(volatile int8_t & value, bool wait)
 {
 	String readValue = "";
 
@@ -61,7 +71,7 @@ bool SerialHL::read(volatile int8_t & value)
 	return status;
 }
 
-bool SerialHL::read(float& value) {
+bool SerialHL::read(float& value, bool wait) {
 	String readValue = "";
 
 	bool status = read(readValue);
