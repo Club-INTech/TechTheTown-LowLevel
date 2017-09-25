@@ -21,6 +21,8 @@
 #include "EthernetMgr.h"
 #include <WString.h>
 #include "defines.h"
+#include <vector>
+#include "utils.h"
 
 class OrderManager : public Singleton<OrderManager>
 {
@@ -34,8 +36,8 @@ private:
 #else
 	EthernetMgr &highLevel;
 #endif
-	String order;
-
+	char order[RX_BUFFER_SIZE];
+	char orderData[RX_WORD_COUNT][RX_WORD_SIZE];
 	//Variables booleennes pour envoi de données au HL
 	bool isSendingUS;
 
@@ -45,6 +47,7 @@ private:
 	 void refreshUS();
 	 void receiveAndExecute();
 	 void sendUSData();
+	 uint8_t split(char input[RX_BUFFER_SIZE], char output[4][RX_WORD_SIZE], const char* separator = " ");
 };
 
 #endif //_ORDERMGR_h

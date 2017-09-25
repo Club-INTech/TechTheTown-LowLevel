@@ -45,35 +45,32 @@ private:
 	IPAddress subnet{ 255,255,255,0 };
 
 	void resetCard();
+
 	bool read_char(char & buffer);
+
 	uint32_t lastMessage = 0;
+
 	/* Attributs Ethernet */
+
 	EthernetServer server{ PORT };
 	EthernetClient client;
 
 public:
 	EthernetMgr();
-	enum {
-		READ_TIMEOUT = 0, READ_SUCCESS = 1
-	};
 
 	bool connected;
 
-
-	void manageClient();
-
 	/* RECEPTION */
-	bool read(String&, bool wait=false);
-	bool read(int16_t&, bool wait=false);
-	bool read(volatile int8_t &, bool wait=false);
-	bool read(float&, bool wait=false);
+	bool read(char*);
+	bool read(int32_t&);
+	bool read(int16_t&);
+	bool read(volatile int8_t &);
+	bool read(float&);
 
 	/* ENVOI */
 	void sendUS(uint16_t[]);
 	void print(const char*, ...) __attribute__((format(printf, 2, 3)));
 	void printfln(const char*, ...) __attribute__((format(printf, 2, 3)));
 	void log(const char*, ...) __attribute__((format(printf, 2, 3)));
-	void log(const String&);
-
 };
 #endif

@@ -10,117 +10,148 @@ OrderManager::OrderManager():	motionControlSystem(MotionControlSystem::Instance(
 								highLevel(EthernetMgr::Instance())
 #endif
 {
-	order = "";
+	memset(order, 0, RX_BUFFER_SIZE);
 	isSendingUS = false;
-}
-
-void OrderManager::refreshUS()
-{
-	sensorMgr.refresh(motionControlSystem.getMovingDirection());
 }
 
 void OrderManager::receiveAndExecute()
 {
-	if(highLevel.read(order)){
-		highLevel.log("Ordre recu: %s", order.c_str());
+	if (highLevel.read(order)) {
+		highLevel.log("Message recu: %s", order);
 
-/*			 __________________
-* 		   *|                  |*
-*		   *|  COMM. DE BASE   |*
-*		   *|__________________|*
-*/
+		int8_t nwords = split(order, orderData, " ")-1;		//Sépare l'ordre en plusieurs mots, nwords=nombre de paramètres
+		strcpy(order, orderData[0]);
 
-		if (order.equals("?"))			//Ping
+		/*			 __________________
+		* 		   *|                  |*
+		*		   *|  COMM. DE BASE   |*
+		*		   *|__________________|*
+		*/
+
+		if (!strcmp(order, "?"))			//Ping
 		{
 			highLevel.printfln("0");
 		}
-		else if (order.equals("sus"))		//Switch d'envois périodiques de données des capteurs
+		else if (!strcmp(order, "sus"))		//Switch d'envois périodiques de données des capteurs
 		{
 			highLevel.log("Activation US");
 			isSendingUS = !isSendingUS;
 		}
-		else if (order.equals("f")) 
+		else if (!strcmp(order, "f"))
 		{
-			highLevel.printfln("%d", motionControlSystem.isMoving());
-			highLevel.printfln("%d", motionControlSystem.isMoveAbnormal());
+			highLevel.printfln("%d,%d", motionControlSystem.isMoving(), motionControlSystem.isMoveAbnormal());
 		}
-		else if (order.equals("?xyo"))		//Renvoie la position du robot (en mm et radians)
+		else if (!strcmp(order, "?xyo"))		//Renvoie la position du robot (en mm et radians)
 		{
-			highLevel.printfln("%f", motionControlSystem.getX());
-			highLevel.printfln("%f", motionControlSystem.getY());
-			highLevel.printfln("%f", motionControlSystem.getAngleRadian());
+			highLevel.printfln("%f,%f,%f", motionControlSystem.getX(), motionControlSystem.getY(), motionControlSystem.getAngleRadian());
 		}
-		else if (order.equals("d"))		//Ordre de d�placement rectiligne (en mm)
+		else if (!strcmp(order, "d"))		//Ordre de déplacement rectiligne (en mm)
 		{
-			int16_t deplacement = 0;
-			highLevel.read(deplacement, true);
-			highLevel.log("distance : %d",deplacement);
-			motionControlSystem.orderTranslation(deplacement);
+			if (nwords == 1) {
+				int16_t deplacement = strtod(orderData[1], nullptr);
+				highLevel.log("distance : %d", deplacement);
+				motionControlSystem.orderTranslation(deplacement);
+			}
+			else {
+				highLevel.log("Paramètres incorrects");
+			}
 		}
-		else if (order.equals("t"))
+		else if (!strcmp(order, "t"))
 		{
-			float angle = motionControlSystem.getAngleRadian();
-			highLevel.read(angle, true);
-			highLevel.log("angle : %f", angle);
-			motionControlSystem.orderRotation(angle, MotionControlSystem::FREE);
+			if (nwords == 1) {
+				float angle = motionControlSystem.getAngleRadian();
+				angle = parseFloat(orderData[1]);
+				highLevel.log("angle : %f", angle);
+				motionControlSystem.orderRotation(angle, MotionControlSystem::FREE);
+			}
+			else {
+				highLevel.log("Paramètres incorrects");
+			}
 		}
-		else if (order.equals("t3"))
-		{
-			float angle_actuel = motionControlSystem.getAngleRadian();
-			float delta_angle;
-			highLevel.read(delta_angle, true);
-			motionControlSystem.orderRotation(angle_actuel + delta_angle, MotionControlSystem::FREE);
-		}
-		else if (order.equals("stop"))
+		else if (!strcmp(order, "stop"))
 		{
 			motionControlSystem.stop();
 		}
-		else if (order.equals("cx"))
-		{
-			float x;
-			highLevel.read(x, true);
-			motionControlSystem.setX(x);
-		}
-		else if (order.equals("cy"))
-		{
-			float y;
-			highLevel.read(y, true);
-			motionControlSystem.setY(y);
-		}
-		else if (order.equals("co"))
-		{
-			float o;
-			highLevel.read(o, true);
-			motionControlSystem.setOriginalAngle(o);
-		}
-		else if (order.equals("cxyz"))
-		{
-			float x, y, o;
-			highLevel.read(x, true);
-			highLevel.read(y, true);
-			highLevel.read(o, true);
 
-			motionControlSystem.setX(x);
-			motionControlSystem.setY(y);
-			motionControlSystem.setOriginalAngle(o);
-		}
-		else if (order.equals("ctv"))
+		/*			 __________________
+		* 		   *|                  |*
+		*		   *|   POS & VITESSE  |*
+		*		   *|__________________|*
+		*/
+
+		else if (!strcmp(order, "cx"))
 		{
-			float speed=0;
-			highLevel.read(speed, true);
-			motionControlSystem.setTranslationSpeed(speed);
+			if (nwords == 1) {
+				float x = parseFloat(orderData[1]);
+				motionControlSystem.setX(x);
+			}
+			else {
+				highLevel.log("Paramètres incorrects");
+			}
+			
 		}
-		else if (order.equals("crv"))
+		else if (!strcmp(order, "cy"))
 		{
-			float speed = 0;
-			highLevel.read(speed, true);
-			motionControlSystem.setRotationSpeed(speed);
+			if (nwords == 1) {
+				float y = parseFloat(orderData[1]);
+				motionControlSystem.setY(y);
+			}
+			else {
+				highLevel.log("Paramètres incorrects");
+			}
 		}
-		else if (order.equals("efm"))
+		else if (!strcmp(order, "co"))
+		{
+			if (nwords == 1) {
+				float o = parseFloat(orderData[1]);
+				motionControlSystem.setOriginalAngle(o);
+			}
+			else {
+				highLevel.log("Paramètres incorrects");
+			}
+		}
+		else if (!strcmp(order, "cxyo"))
+		{
+			if (nwords == 3) {
+				float x = parseFloat(orderData[1])
+					, y = parseFloat(orderData[2])
+					, o = parseFloat(orderData[3]);
+
+				motionControlSystem.setX(x);
+				motionControlSystem.setY(y);
+				motionControlSystem.setOriginalAngle(o);
+			}
+			else {
+				highLevel.log("Paramètres incorrects");
+			}
+			
+		}
+		else if (!strcmp(order, "ctv"))
+		{
+			if (nwords == 1) {
+				float speed = parseFloat(orderData[1]);
+				motionControlSystem.setTranslationSpeed(speed);
+			}
+			else {
+				highLevel.log("Paramètres incorrects");
+			}
+			
+		}
+		else if (!strcmp(order, "crv"))
+		{
+			if (nwords == 1) {
+				float speed = parseFloat(orderData[1]);
+				motionControlSystem.setRotationSpeed(speed);
+			}
+			else {
+				highLevel.log("Paramètres incorrects");
+			}
+		}
+		else if (!strcmp(order, "efm"))
 		{
 			motionControlSystem.enableForcedMovement();
 		}
-		else if (order.equals("dfm"))
+		else if (!strcmp(order, "dfm"))
 		{
 			motionControlSystem.disableForcedMovement();
 		}
@@ -131,92 +162,109 @@ void OrderManager::receiveAndExecute()
 		*		   *|___________________|*
 		*/
 
-		else if (order.equals("ct0"))		//D�sactiver l'asservissement en translation
+		else if (!strcmp(order, "ct0"))		//Désactiver l'asservissement en translation
 		{
 			motionControlSystem.enableTranslationControl(false);
 			highLevel.log("non asservi en translation");
 		}
-		else if (order.equals("ct1"))		//Activer l'asservissement en translation
+		else if (!strcmp(order, "ct1"))		//Activer l'asservissement en translation
 		{
 			motionControlSystem.enableTranslationControl(true);
 			highLevel.log("asservi en translation");
 		}
-		else if (order.equals("cr0"))		//D�sactiver l'asservissement en rotation
+		else if (!strcmp(order, "cr0"))		//Désactiver l'asservissement en rotation
 		{
 			motionControlSystem.enableRotationControl(false);
 			highLevel.log("non asservi en rotation");
 		}
-		else if (order.equals("cr1"))		//Activer l'asservissement en rotation
+		else if (!strcmp(order, "cr1"))		//Activer l'asservissement en rotation
 		{
 			motionControlSystem.enableRotationControl(true);
 			highLevel.log("asservi en rotation");
 		}
-		else if (order.equals("cv0"))		//Désactiver l'asservissement en vitesse
+		else if (!strcmp(order, "cv0"))		//Désactiver l'asservissement en vitesse
 		{
 			motionControlSystem.enableSpeedControl(false);
 			highLevel.log("non asservi en vitesse");
 		}
-		else if (order.equals("cv1"))		//Activer l'asservissement en vitesse
+		else if (!strcmp(order, "cv1"))		//Activer l'asservissement en vitesse
 		{
 			motionControlSystem.enableSpeedControl(true);
 			highLevel.log("asservi en vitesse");
 		}
-		else if (order.equals("cod")) {
+
+		/*			 ___________________________
+		* 		   *|                           |*
+		*		   *|					        |*
+		*		   *|			DEBUG			|*
+		*		   *|						    |*
+		*		   *|___________________________|*
+		*/
+
+		else if (!strcmp(order, "cod")) {
 			highLevel.log("Gauche:");
-			Serial.println(motionControlSystem.getCodG());
-			Serial.println(motionControlSystem.getCodD());
 			highLevel.log("%ld", motionControlSystem.getCodG());
 			highLevel.log("Droite:");
 			highLevel.log("%ld", motionControlSystem.getCodD());
 		}
-/*			 ___________________________
-* 		   *|                           |*
-*		   *|         MONTLHERY         |*
-*		   *|   DEPLACEMENT ET ROTATION |*
-*		   *|    AVEC ASSERVISSEMENT    |*
-*		   *|___________________________|*
-*/
+		else if (!strcmp("pfdebug", order))
+		{
+			//highLevel.printfln("%d", (int)motionControlSystem.getRightSpeed());
+			//highLevel.printfln("%d", (int)motionControlSystem.getRightMotorDir());
+			//highLevel.printfln("%d", (int)motionControlSystem.getRightSetPoint());
+			//highLevel.printfln("%d", (int)motionControlSystem.getRightMotorPWM());
+			//highLevel.printfln("%d", (int)motionControlSystem.getCodD());
+		}
 
-		else if (order.equals("monthlery"))
+		/*			 ___________________________
+		* 		   *|                           |*
+		*		   *|         MONTLHERY         |*
+		*		   *|   DEPLACEMENT ET ROTATION |*
+		*		   *|    SANS ASSERVISSEMENT    |*
+		*		   *|___________________________|*
+		*/
+
+		else if (!strcmp(order, "monthlery"))
 		{
 			motionControlSystem.enableTranslationControl(false);
 			motionControlSystem.enableRotationControl(false);
 		}
-		else if (order.equals("av"))
+		else if (!strcmp(order, "av"))
 		{
 			motionControlSystem.setRawPositiveTranslationSpeed();  // definit la consigne max de vitesse de translation envoi�e au PID (trap�ze)
-																	// déplacement vers l'avant avec asservissement
+																   // déplacement vers l'avant avec asservissement
 		}
 
-		else if (order.equals("rc"))
+		else if (!strcmp(order, "rc"))
 		{
 			motionControlSystem.setRawNegativeTranslationSpeed();  // definit la consigne max de vitesse de translation envoi�e au PID (trap�ze)
-																	// déplacement vers l'arrière avec asservissement
+																   // déplacement vers l'arrière avec asservissement
 		}
 
-		else if (order.equals("td"))
+		else if (!strcmp(order, "td"))
 		{
 			motionControlSystem.setRawNegativeRotationSpeed();     // definit la consigne max de vitesse de rotation envoi�e au PID (trap�ze)
-																	// rotation sens antitrigo avec asservissement
+																   // rotation sens antitrigo avec asservissement
 		}
 
-		else if (order.equals("tg"))
+		else if (!strcmp(order, "tg"))
 		{
 			motionControlSystem.setRawPositiveRotationSpeed();     // definit la consigne max de vitesse de rotation envoi�e au PID (trap�ze)
-																	// rotation sens antitrigo avec asservissement
+																   // rotation sens antitrigo avec asservissement
 		}
 
-		else if (order.equals("sstop"))                            // Stoppe le robot
+		else if (!strcmp(order, "sstop"))                            // Stoppe le robot
 		{
 			motionControlSystem.setRawNullSpeed();
 		}
 
-/*			 _________________________________
-* 		   *|                                 |*
-*		   *|CONSTANTES D'ASSERV (pour le PID)|*
-*    	   *|_________________________________|*
-*/
-		else if (order.equals("toggle"))
+		/*			 _________________________________
+		* 		   *|                                 |*
+		*		   *|CONSTANTES D'ASSERV (pour le PID)|*
+		*    	   *|_________________________________|*
+		*/
+
+		else if (!strcmp(order, "toggle"))
 		{
 			motionControlSystem.translation = !motionControlSystem.translation;   //Bascule entre le réglage d'asserv en translation et en rotation
 			if (motionControlSystem.translation)
@@ -224,7 +272,7 @@ void OrderManager::receiveAndExecute()
 			else
 				highLevel.log("reglage de la rotation");
 		}
-		else if (order.equals("display")) //affiche les paramètres des PID des différentes asserv (translation, rotation, vitesse à droite, vitesse à gauche)
+		else if (!strcmp(order, "display")) //affiche les paramètres des PID des différentes asserv (translation, rotation, vitesse à droite, vitesse à gauche)
 		{
 			float
 				kp_t, ki_t, kd_t,	  // Translation
@@ -241,145 +289,214 @@ void OrderManager::receiveAndExecute()
 			highLevel.log("droite: kp= %g ; ki= %g ; kd= %g", kp_d, ki_d, kd_d);
 		}
 		// ***********  Paramètres du PID pour l'asserv en position (TRANSLATION)  ***********
-		else if (order.equals("kpt"))
+		else if (!strcmp(order, "kpt"))
 		{
-			float kp, ki, kd;
-			highLevel.printfln("kp_trans ?");
-			motionControlSystem.getTranslationTunings(kp, ki, kd);
-			highLevel.read(kp, true);
-			
-			motionControlSystem.setTranslationTunings(kp, ki, kd);
-			highLevel.printfln("kp_trans = %g", kp);
+			if (nwords == 1) {
+				float kp, ki, kd;
+				highLevel.printfln("kp_trans ?");
+				motionControlSystem.getTranslationTunings(kp, ki, kd);
+				kp = parseFloat(orderData[1]);
+
+				motionControlSystem.setTranslationTunings(kp, ki, kd);
+				highLevel.log("kp_trans = %g", kp);
+			}
+			else {
+				highLevel.log("Paramètres incorrects");
+			}
 		}
-		else if (order.equals("kdt"))
+		else if (!strcmp(order, "kdt"))
 		{
-			float kp, ki, kd;
-			highLevel.printfln("kd_trans ?");
-			motionControlSystem.getTranslationTunings(kp, ki, kd);
-			highLevel.read(kd, true);
-			
-			motionControlSystem.setTranslationTunings(kp, ki, kd);
-			highLevel.printfln("kd_trans = %g", kd);
+			if (nwords == 1) {
+				float kp, ki, kd;
+				highLevel.printfln("kd_trans ?");
+				motionControlSystem.getTranslationTunings(kp, ki, kd);
+				kd = parseFloat(orderData[1]);
+
+				motionControlSystem.setTranslationTunings(kp, ki, kd);
+				highLevel.log("kd_trans = %g", kd);
+			}
+			else {
+				highLevel.log("Paramètres incorrects");
+			}
 		}
-		else if (order.equals("kit"))
+		else if (!strcmp(order, "kit"))
 		{
-			float kp, ki, kd;
-			highLevel.printfln("ki_trans ?");
-			motionControlSystem.getTranslationTunings(kp, ki, kd);
-			highLevel.read(ki, true);
-			
-			motionControlSystem.setTranslationTunings(kp, ki, kd);
-			highLevel.printfln("ki_trans = %g", ki);
+			if (nwords == 1) {
+				float kp, ki, kd;
+				highLevel.printfln("ki_trans ?");
+				motionControlSystem.getTranslationTunings(kp, ki, kd);
+				ki = parseFloat(orderData[1]);
+
+				motionControlSystem.setTranslationTunings(kp, ki, kd);
+				highLevel.log("ki_trans = %g", ki);
+			}
+			else {
+				highLevel.log("Paramètres incorrects");
+			}
 		}
 
 		// ***********  Paramètres du PID pour l'asserv en ROTATION  ***********
-		else if (order.equals("kpr"))
+		else if (!strcmp(order, "kpr"))
 		{
-			float kp, ki, kd;
-			highLevel.printfln("kp_rot ?");
-			motionControlSystem.getRotationTunings(kp, ki, kd);
-			highLevel.read(kp, true);
-			
-			motionControlSystem.setRotationTunings(kp, ki, kd);
-			highLevel.printfln("kp_rot = %g", kp);
+			if (nwords == 1) {
+				float kp, ki, kd;
+				highLevel.printfln("kp_rot ?");
+				motionControlSystem.getRotationTunings(kp, ki, kd);
+				kp = parseFloat(orderData[1]);
+
+				motionControlSystem.setRotationTunings(kp, ki, kd);
+				highLevel.log("kp_rot = %g", kp);
+			}
+			else {
+				highLevel.log("Paramètres incorrects");
+			}
 		}
-		else if (order.equals("kir"))
+		else if (!strcmp(order, "kir"))
 		{
-			float kp, ki, kd;
-			highLevel.printfln("ki_rot ?");
-			motionControlSystem.getRotationTunings(kp, ki, kd);
-			highLevel.read(ki, true);
-			
-			motionControlSystem.setRotationTunings(kp, ki, kd);
-			highLevel.printfln("ki_rot = %g", ki);
+			if (nwords == 1) {
+				float kp, ki, kd;
+				highLevel.printfln("ki_rot ?");
+				motionControlSystem.getRotationTunings(kp, ki, kd);
+				ki = parseFloat(orderData[1]);
+
+				motionControlSystem.setRotationTunings(kp, ki, kd);
+				highLevel.log("ki_rot = %g", ki);
+			}
+			else {
+				highLevel.log("Paramètres incorrects");
+			}
 		}
-		else if (order.equals("kdr"))
+		else if (!strcmp(order, "kdr"))
 		{
-			float kp, ki, kd;
-			highLevel.printfln("kd_rot ?");
-			motionControlSystem.getRotationTunings(kp, ki, kd);
-			highLevel.read(kd, true);
-			
-			motionControlSystem.setRotationTunings(kp, ki, kd);
-			highLevel.printfln("kd_rot = %g", kd);
+			if (nwords == 1) {
+				float kp, ki, kd;
+				highLevel.printfln("kd_rot ?");
+				motionControlSystem.getRotationTunings(kp, ki, kd);
+				kd = parseFloat(orderData[1]);
+
+				motionControlSystem.setRotationTunings(kp, ki, kd);
+				highLevel.log("kd_rot = %g", kd);
+			}
+			else {
+				highLevel.log("Paramètres incorrects");
+			}
 		}
 
 		// ***********  Paramètres du PID pour l'asserv en vitesse à gauche  ***********
-		else if (order.equals("kpg"))
+		else if (!strcmp(order, "kpg"))
 		{
-			float kp, ki, kd;
-			highLevel.printfln("kp_gauche ?");
-			motionControlSystem.getLeftSpeedTunings(kp, ki, kd);
-			highLevel.read(kp, true);
-			
-			motionControlSystem.setLeftSpeedTunings(kp, ki, kd);
-			highLevel.printfln("kp_gauche = %g", kp);
+			if (nwords == 1) {
+				float kp, ki, kd;
+				highLevel.printfln("kp_gauche ?");
+				motionControlSystem.getLeftSpeedTunings(kp, ki, kd);
+				kp = parseFloat(orderData[1]);
+
+				motionControlSystem.setLeftSpeedTunings(kp, ki, kd);
+				highLevel.log("kp_gauche = %g", kp);
+			}
+			else {
+				highLevel.log("Paramètres incorrects");
+			}
 		}
-		else if (order.equals("kig"))
+		else if (!strcmp(order, "kig"))
 		{
-			float kp, ki, kd;
-			highLevel.printfln("ki_gauche ?");
-			motionControlSystem.getLeftSpeedTunings(kp, ki, kd);
-			highLevel.read(ki, true);
-			
-			motionControlSystem.setLeftSpeedTunings(kp, ki, kd);
-			highLevel.printfln("ki_gauche = %g", ki);
+			if (nwords == 1) {
+				float kp, ki, kd;
+				highLevel.printfln("ki_gauche ?");
+				motionControlSystem.getLeftSpeedTunings(kp, ki, kd);
+				ki = parseFloat(orderData[1]);
+
+				motionControlSystem.setLeftSpeedTunings(kp, ki, kd);
+				highLevel.log("ki_gauche = %g", ki);
+			}
+			else {
+				highLevel.log("Paramètres incorrects");
+			}
 		}
-		else if (order.equals("kdg"))
+		else if (!strcmp(order, "kdg"))
 		{
-			float kp, ki, kd;
-			highLevel.printfln("kd_gauche ?");
-			motionControlSystem.getLeftSpeedTunings(kp, ki, kd);
-			highLevel.read(kd, true);
-			
-			motionControlSystem.setLeftSpeedTunings(kp, ki, kd);
-			highLevel.printfln("kd_gauche = %g", kd);
+			if (nwords == 1) {
+				float kp, ki, kd;
+				highLevel.printfln("kd_gauche ?");
+				motionControlSystem.getLeftSpeedTunings(kp, ki, kd);
+				kd = parseFloat(orderData[1]);
+
+				motionControlSystem.setLeftSpeedTunings(kp, ki, kd);
+				highLevel.log("kd_gauche = %g", kd);
+			}
+			else {
+				highLevel.log("Paramètres incorrects");
+			}
 		}
 
 		// ***********  Paramètres du PID pour l'asserv en vitesse à droite ****************
-		else if (order.equals("kpd"))
+		else if (!strcmp(order, "kpd"))
 		{
-			float kp, ki, kd;
-			highLevel.printfln("kp_droite ?");
-			motionControlSystem.getRightSpeedTunings(kp, ki, kd);
-			highLevel.read(kp, true);
-			
-			motionControlSystem.setRightSpeedTunings(kp, ki, kd);
-			highLevel.printfln("kp_droite = %g", kp);
+			if (nwords == 1) {
+				float kp, ki, kd;
+				highLevel.printfln("kp_droite ?");
+				motionControlSystem.getRightSpeedTunings(kp, ki, kd);
+				kp = parseFloat(orderData[1]);
+
+				motionControlSystem.setRightSpeedTunings(kp, ki, kd);
+				highLevel.log("kp_droite = %g", kp);
+			}
+			else {
+				highLevel.log("Paramètres incorrects");
+			}
 		}
-		else if (order.equals("kid"))
+		else if (!strcmp(order, "kid"))
 		{
-			float kp, ki, kd;
-			highLevel.printfln("ki_droite ?");
-			motionControlSystem.getRightSpeedTunings(kp, ki, kd);
-			highLevel.read(ki, true);
-			
-			motionControlSystem.setRightSpeedTunings(kp, ki, kd);
-			highLevel.printfln("ki_droite = %g", ki);
+			if (nwords == 1) {
+				float kp, ki, kd;
+				highLevel.printfln("ki_droite ?");
+				motionControlSystem.getRightSpeedTunings(kp, ki, kd);
+				ki = parseFloat(orderData[1]);
+
+				motionControlSystem.setRightSpeedTunings(kp, ki, kd);
+				highLevel.log("ki_droite = %g", ki);
+			}
+			else {
+				highLevel.log("Paramètres incorrects");
+			}
 		}
-		else if (order.equals("kdd"))
+		else if (!strcmp(order, "kdd"))
 		{
-			float kp, ki, kd;
-			highLevel.printfln("kd_droite ?");
-			motionControlSystem.getRightSpeedTunings(kp, ki, kd);
-			highLevel.read(kd, true);
-			
-			motionControlSystem.setRightSpeedTunings(kp, ki, kd);
-			highLevel.printfln("kd_droite = %g", kd);
+			if (nwords == 1) {
+				float kp, ki, kd;
+				highLevel.printfln("kd_droite ?");
+				motionControlSystem.getRightSpeedTunings(kp, ki, kd);
+				kd = parseFloat(orderData[1]);
+
+				motionControlSystem.setRightSpeedTunings(kp, ki, kd);
+				highLevel.log("kd_droite = %g", kd);
+			}
+			else {
+				highLevel.log("Paramètres incorrects");
+			}
 		}
-		else if (order.equals("axTest"))
+		else if (!strcmp(order, "axTest"))
 		{
-			int16_t goal = 150;
-			highLevel.read(goal, true);
-			
-			actuatorsMgr.testGoto(goal);
+			if (nwords == 1) {
+				int16_t goal = 150;
+				goal = parseFloat(orderData[1]);
+				actuatorsMgr.testGoto(goal);
+			}
+			else {
+				highLevel.log("Paramètres incorrects");
+			}
 		}
 		else
 		{
 			highLevel.printfln("ordre inconnu");
 		}
 	}
-	order = "";
+	memset(order, 0, RX_BUFFER_SIZE);
+}
+
+void OrderManager::refreshUS()
+{
+	sensorMgr.refresh(motionControlSystem.getMovingDirection());
 }
 
 void OrderManager::sendUSData() {
@@ -390,3 +507,25 @@ void OrderManager::sendUSData() {
 		lastSent = millis();
 	}
 }
+
+/**
+*	Sépare une courte chaîne de caractères(RX_BUFFER_SIZE) selon un séparateur, dans un tableau output (au plus 4 mots)
+*/
+
+uint8_t OrderManager::split(char input[RX_BUFFER_SIZE], char output[4][RX_WORD_SIZE], const char* separator) {
+	
+	char* token;
+	int i = 0;
+	token = strtok(input, separator);
+
+	uint8_t length = parseInt(token);			//Le premier caractère est le nombre de mots
+	while (token != NULL && i < length) {
+		token = strtok(NULL, " ");
+		if (token != NULL) {
+			strcpy(output[i], token);
+			++i;
+		}
+	}
+	return i;
+}
+

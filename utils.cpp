@@ -25,3 +25,11 @@ int modulo(int nombre, int modulo)
 		return modulo - ((-nombre) % modulo);
 	}
 }
+
+int parseInt(char* s) {
+	return strtol(s, nullptr, 10);
+}
+
+double parseFloat(char* s) {
+	return strtod(s, nullptr);
+}

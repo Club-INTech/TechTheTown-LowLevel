@@ -31,14 +31,14 @@
     <ClCompile Include="ActuatorsMgr.hpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="utils.c">
-      <Filter>Library Files\Library Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="EthernetMgr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SerialHL.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utils.cpp">
+      <Filter>Library Files\Library Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

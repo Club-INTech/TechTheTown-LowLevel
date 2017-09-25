@@ -14,12 +14,12 @@
 */
 
 //Utilise la série si true, l'ethernet si false
-#define DEBUG false
+#define DEBUG true
 
 //Nombre d'octets acceptables depuis le HL
-#define RX_BUFFER_SIZE 8
-
-
+#define RX_BUFFER_SIZE	64		//Taille max des messages
+#define RX_WORD_SIZE		12		//Taille max des mots d'un ordre
+#define RX_WORD_COUNT	4		//Nombre de mots max par ordre
 
 /**
 *ASSERVISSEMENT

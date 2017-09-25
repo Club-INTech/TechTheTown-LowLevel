@@ -5,7 +5,6 @@
 *
 **/
 
-
 #include "OrderManager.h"
 
 //Initialisation de tout ce dont le robot a besoin
@@ -40,11 +39,6 @@ void loop() {
 		//orderMgr.sendUSData();
 	}
 }
-
-
-
-
-
 
                    /*``.           `-:--.`                                                                                                 
                   `.-::::/.        .:::::::y                                                                                                

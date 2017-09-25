@@ -12,71 +12,70 @@ SerialHL::SerialHL()
 {
 }
 
-bool inline SerialHL::read_char(char & byte)
+bool inline SerialHL::read_char(char & buffer)
 {
-	byte = Serial.read();
-	return (byte != '\r');
+	buffer = Serial.read();
+	return (buffer != '\r' && buffer != '\n');
 }
 
-bool SerialHL::read(String& order, bool wait)
+bool SerialHL::read(char* order)
 {
-	if (wait) {
-		while (!available()) {}	//On attend l'entrée des commandes
-	}
 	if (available() > 0) {					//Si il y a quelque chose à lire dans le port série
-		order = "";
-		char buffer[64] = "";
-		char incomingChar;
-		uint8_t i = 0;
-		while (read_char(incomingChar) && i < RX_BUFFER_SIZE) {	//Tant qu'on n'est pas à la fin d'un message(\r)
-			buffer[i]=incomingChar;
+		char readChar;
+		int i = 0;
+
+		while (read_char(readChar) && i < RX_BUFFER_SIZE) {	//Tant qu'on n'est pas à la fin d'un message(\r)
+			order[i] = readChar;
 			i++;												//Au cas où on ne reçoit jamais de terminaison
 		}
-		read_char(incomingChar);								//On élimine le \n
-		order.append(buffer);
+		if (Serial.peek()==10) {
+			read_char(readChar);								//On élimine le \n
+		}
+		return (strcmp(order, ""));
 	}
-
-	return (!order.equals(""));
+	else {
+		return false;
+	}
 }
 
-bool SerialHL::read(uint32_t& value, bool wait) {
-	String readValue = "";
+bool SerialHL::read(int32_t& value) {
+	char readValue[16];
 
-	bool status = read(readValue, wait);
+	bool status = read(readValue);
 
-	value = strtol(readValue.c_str(), nullptr, DEC);
+	value = strtol(readValue, nullptr, DEC);
 
 	return status;
 }
 
-bool SerialHL::read(int16_t & value, bool wait)
+bool SerialHL::read(int16_t & value)
 {
-	String readValue = "";
+	char readValue[16];
 
 	bool status = read(readValue);
 
-	value = strtol(readValue.c_str(), nullptr, DEC);
+	value = strtol(readValue, nullptr, DEC);
 
 	return status;
 }
 
-bool SerialHL::read(volatile int8_t & value, bool wait)
+bool SerialHL::read(volatile int8_t & value)
 {
-	String readValue = "";
+	char readValue[16];
 
 	bool status = read(readValue);
 
-	value = strtol(readValue.c_str(), nullptr, DEC);
+	value = strtol(readValue, nullptr, DEC);
 
 	return status;
 }
 
-bool SerialHL::read(float& value, bool wait) {
-	String readValue = "";
+bool SerialHL::read(float& value) {
+	char readValue[16];
 
 	bool status = read(readValue);
 
-	value = strtof(readValue.c_str(), nullptr);
+	value = strtof(readValue, nullptr);
 	
 	return status;
 }
