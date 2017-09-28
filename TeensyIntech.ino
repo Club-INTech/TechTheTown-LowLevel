@@ -5,6 +5,7 @@
 *
 **/
 
+#include "Hook.h"
 #include "OrderManager.h"
 
 //Initialisation de tout ce dont le robot a besoin
@@ -57,6 +58,7 @@ namespace std {
 	{
 		while (true)
 		{
+			SerialHL::Instance().log("Length Error");
 			SerialHL::Instance().log(e);
 			EthernetMgr::Instance().log(e);
 			delay(500);
@@ -67,6 +69,7 @@ namespace std {
 	{
 		while (true)
 		{
+			SerialHL::Instance().log("Out of range error");
 			SerialHL::Instance().log(e);
 			EthernetMgr::Instance().log(e);
 			delay(500);
@@ -77,6 +80,7 @@ namespace std {
 	{
 		while (true)
 		{
+			SerialHL::Instance().log("Out of range fmt");
 			SerialHL::Instance().log(e);
 			EthernetMgr::Instance().log(e);
 			delay(500);

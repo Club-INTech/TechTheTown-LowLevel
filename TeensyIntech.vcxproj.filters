@@ -40,6 +40,7 @@
     <ClCompile Include="utils.cpp">
       <Filter>Library Files\Library Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Hook.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.TeensyIntech.vsarduino.h" />
@@ -113,6 +114,7 @@
       <Filter>Library Files\Library Source Files</Filter>
     </ClInclude>
     <ClInclude Include="__vm\.TechTheTown-LowLevel.vsarduino.h" />
+    <ClInclude Include="Hook.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeensyIntech.ino" />

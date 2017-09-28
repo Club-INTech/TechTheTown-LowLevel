@@ -25,7 +25,7 @@
 #define HEADER_LENGTH   2
 #define DEBUG_HEADER    {0x02, 0x20}
 #define EVENT_HEADER    {0x13, 0x37}
-#define US_HEADER       {0x01, 0x10}
+#define SENSOR_HEADER	{0x01, 0x10}
 
 /**
 *ASSERVISSEMENT
@@ -37,6 +37,7 @@
 // 65,5mm diametre des roues
 // ~1000 ticks par tour de roue
 // 17cm ?cartement des roues
+
 #define RAYON_COD_GAUCHE 140
 #define RAYON_COD_DROITE 144
 #define TICK_TO_MM 0.2088			// unit? : mm/ticks

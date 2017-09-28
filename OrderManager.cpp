@@ -19,10 +19,14 @@ void OrderManager::receiveAndExecute()
 	if (highLevel.read(order)) {
 		highLevel.log("Message recu: %s", order);
 
+		uint32_t start = micros();
 		int8_t n_param = split(order, orderData, " ")-1;		//Sépare l'ordre en plusieurs mots, n_param=nombre de paramètres
-		
+		Serial.print("dt split: "); Serial.println(micros() - start);
+		for (int i = 0; i < n_param+1; i++) {
+			Serial.println(orderData.at(i));
+		}
 		strcpy(order, orderData.at(0));
-
+		
 		/*			 __________________
 		* 		   *|                  |*
 		*		   *|  COMM. DE BASE   |*
@@ -54,7 +58,7 @@ void OrderManager::receiveAndExecute()
 				motionControlSystem.orderTranslation(deplacement);
 			}
 			else {
-				highLevel.log("ERREUR\tParamètres incorrects");
+				highLevel.log("ERREUR::Paramètres incorrects");
 			}
 		}
 		else if (!strcmp(order, "t"))
@@ -66,7 +70,7 @@ void OrderManager::receiveAndExecute()
 				motionControlSystem.orderRotation(angle, MotionControlSystem::FREE);
 			}
 			else {
-				highLevel.log("ERREUR\tParamètres incorrects");
+				highLevel.log("ERREUR::Paramètres incorrects");
 			}
 		}
 		else if (!strcmp(order, "stop"))
@@ -87,7 +91,7 @@ void OrderManager::receiveAndExecute()
 				motionControlSystem.setX(x);
 			}
 			else {
-				highLevel.log("ERREUR\tParamètres incorrects");
+				highLevel.log("ERREUR::Paramètres incorrects");
 			}
 			
 		}
@@ -98,7 +102,7 @@ void OrderManager::receiveAndExecute()
 				motionControlSystem.setY(y);
 			}
 			else {
-				highLevel.log("ERREUR\tParamètres incorrects");
+				highLevel.log("ERREUR::Paramètres incorrects");
 			}
 		}
 		else if (!strcmp(order, "co"))
@@ -108,7 +112,7 @@ void OrderManager::receiveAndExecute()
 				motionControlSystem.setOriginalAngle(o);
 			}
 			else {
-				highLevel.log("ERREUR\tParamètres incorrects");
+				highLevel.log("ERREUR::Paramètres incorrects");
 			}
 		}
 		else if (!strcmp(order, "cxyo"))
@@ -123,7 +127,7 @@ void OrderManager::receiveAndExecute()
 				motionControlSystem.setOriginalAngle(o);
 			}
 			else {
-				highLevel.log("ERREUR\tParamètres incorrects");
+				highLevel.log("ERREUR::Paramètres incorrects");
 			}
 			
 		}
@@ -134,7 +138,7 @@ void OrderManager::receiveAndExecute()
 				motionControlSystem.setTranslationSpeed(speed);
 			}
 			else {
-				highLevel.log("ERREUR\tParamètres incorrects");
+				highLevel.log("ERREUR::Paramètres incorrects");
 			}
 			
 		}
@@ -145,7 +149,7 @@ void OrderManager::receiveAndExecute()
 				motionControlSystem.setRotationSpeed(speed);
 			}
 			else {
-				highLevel.log("ERREUR\tParamètres incorrects");
+				highLevel.log("ERREUR::Paramètres incorrects");
 			}
 		}
 		else if (!strcmp(order, "efm"))
@@ -302,7 +306,7 @@ void OrderManager::receiveAndExecute()
 				highLevel.log("kp_trans = %g", kp);
 			}
 			else {
-				highLevel.log("ERREUR\tParamètres incorrects");
+				highLevel.log("ERREUR::Paramètres incorrects");
 			}
 		}
 		else if (!strcmp(order, "kdt"))
@@ -317,7 +321,7 @@ void OrderManager::receiveAndExecute()
 				highLevel.log("kd_trans = %g", kd);
 			}
 			else {
-				highLevel.log("ERREUR\tParamètres incorrects");
+				highLevel.log("ERREUR::Paramètres incorrects");
 			}
 		}
 		else if (!strcmp(order, "kit"))
@@ -332,7 +336,7 @@ void OrderManager::receiveAndExecute()
 				highLevel.log("ki_trans = %g", ki);
 			}
 			else {
-				highLevel.log("ERREUR\tParamètres incorrects");
+				highLevel.log("ERREUR::Paramètres incorrects");
 			}
 		}
 
@@ -349,7 +353,7 @@ void OrderManager::receiveAndExecute()
 				highLevel.log("kp_rot = %g", kp);
 			}
 			else {
-				highLevel.log("ERREUR\tParamètres incorrects");
+				highLevel.log("ERREUR::Paramètres incorrects");
 			}
 		}
 		else if (!strcmp(order, "kir"))
@@ -364,7 +368,7 @@ void OrderManager::receiveAndExecute()
 				highLevel.log("ki_rot = %g", ki);
 			}
 			else {
-				highLevel.log("ERREUR\tParamètres incorrects");
+				highLevel.log("ERREUR::Paramètres incorrects");
 			}
 		}
 		else if (!strcmp(order, "kdr"))
@@ -379,7 +383,7 @@ void OrderManager::receiveAndExecute()
 				highLevel.log("kd_rot = %g", kd);
 			}
 			else {
-				highLevel.log("ERREUR\tParamètres incorrects");
+				highLevel.log("ERREUR::Paramètres incorrects");
 			}
 		}
 
@@ -396,7 +400,7 @@ void OrderManager::receiveAndExecute()
 				highLevel.log("kp_gauche = %g", kp);
 			}
 			else {
-				highLevel.log("ERREUR\tParamètres incorrects");
+				highLevel.log("ERREUR::Paramètres incorrects");
 			}
 		}
 		else if (!strcmp(order, "kig"))
@@ -411,7 +415,7 @@ void OrderManager::receiveAndExecute()
 				highLevel.log("ki_gauche = %g", ki);
 			}
 			else {
-				highLevel.log("ERREUR\tParamètres incorrects");
+				highLevel.log("ERREUR::Paramètres incorrects");
 			}
 		}
 		else if (!strcmp(order, "kdg"))
@@ -426,7 +430,7 @@ void OrderManager::receiveAndExecute()
 				highLevel.log("kd_gauche = %g", kd);
 			}
 			else {
-				highLevel.log("ERREUR\tParamètres incorrects");
+				highLevel.log("ERREUR::Paramètres incorrects");
 			}
 		}
 
@@ -443,7 +447,7 @@ void OrderManager::receiveAndExecute()
 				highLevel.log("kp_droite = %g", kp);
 			}
 			else {
-				highLevel.log("ERREUR\tParamètres incorrects");
+				highLevel.log("ERREUR::Paramètres incorrects");
 			}
 		}
 		else if (!strcmp(order, "kid"))
@@ -458,7 +462,7 @@ void OrderManager::receiveAndExecute()
 				highLevel.log("ki_droite = %g", ki);
 			}
 			else {
-				highLevel.log("ERREUR\tParamètres incorrects");
+				highLevel.log("ERREUR::Paramètres incorrects");
 			}
 		}
 		else if (!strcmp(order, "kdd"))
@@ -473,7 +477,7 @@ void OrderManager::receiveAndExecute()
 				highLevel.log("kd_droite = %g", kd);
 			}
 			else {
-				highLevel.log("ERREUR\tParamètres incorrects");
+				highLevel.log("ERREUR::Paramètres incorrects");
 			}
 		}
 		else if (!strcmp(order, "axTest"))
@@ -484,7 +488,7 @@ void OrderManager::receiveAndExecute()
 				actuatorsMgr.testGoto(goal);
 			}
 			else {
-				highLevel.log("ERREUR\tParamètres incorrects");
+				highLevel.log("ERREUR::Paramètres incorrects");
 			}
 		}
 		else
@@ -517,8 +521,9 @@ uint8_t OrderManager::split(char* input, std::vector<char*>& output, const char*
 	
 	char* token;
 	int i = 0;
+	output.clear();
 	token = strtok(input, separator);
-	uint8_t length = parseInt(token);			//Le premier caractère est le nombre de mots
+	uint8_t length = parseFloat(token);			//Le premier caractère est le nombre de mots
 
 	while (token != NULL && i < length) {
 		token = strtok(NULL, separator);
