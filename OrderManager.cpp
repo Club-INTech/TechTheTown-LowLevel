@@ -14,21 +14,21 @@ OrderManager::OrderManager():	motionControlSystem(MotionControlSystem::Instance(
 	isSendingUS = false;
 }
 
-void OrderManager::receiveAndExecute()
-{
+void OrderManager::communicate() {
 	if (highLevel.read(order)) {
+		execute(order);
+	}
+	memset(order, 0, RX_BUFFER_SIZE);
+}
+void OrderManager::execute(char* order)
+{
 		highLevel.log("Message recu: %s", order);
 
-		int8_t n_param = split(order, orderData, " ")-1;		//Sépare l'ordre en plusieurs mots, n_param=nombre de paramètres
+		int8_t n_param = split(order, orderData, SEPARATOR);		//Sépare l'ordre en plusieurs mots, n_param=nombre de paramètres
 
-		//<TODO id="enlever, pour tests" >
-		for (int i = 0; i < n_param+1; i++) {
-			Serial.println(orderData.at(i));
-		}
-		//<\TODO>
-
+	if (n_param >= 0) {
 		strcpy(order, orderData.at(0));
-		
+
 		/*			 __________________
 		* 		   *|                  |*
 		*		   *|  COMM. DE BASE   |*
@@ -95,7 +95,7 @@ void OrderManager::receiveAndExecute()
 			else {
 				highLevel.log("ERREUR::Paramètres incorrects");
 			}
-			
+
 		}
 		else if (!strcmp(order, "cy"))
 		{
@@ -131,7 +131,7 @@ void OrderManager::receiveAndExecute()
 			else {
 				highLevel.log("ERREUR::Paramètres incorrects");
 			}
-			
+
 		}
 		else if (!strcmp(order, "ctv"))
 		{
@@ -142,7 +142,7 @@ void OrderManager::receiveAndExecute()
 			else {
 				highLevel.log("ERREUR::Paramètres incorrects");
 			}
-			
+
 		}
 		else if (!strcmp(order, "crv"))
 		{
@@ -239,25 +239,25 @@ void OrderManager::receiveAndExecute()
 		else if (!strcmp(order, "av"))
 		{
 			motionControlSystem.setRawPositiveTranslationSpeed();  // definit la consigne max de vitesse de translation envoi�e au PID (trap�ze)
-																   // déplacement vers l'avant avec asservissement
+																	// déplacement vers l'avant avec asservissement
 		}
 
 		else if (!strcmp(order, "rc"))
 		{
 			motionControlSystem.setRawNegativeTranslationSpeed();  // definit la consigne max de vitesse de translation envoi�e au PID (trap�ze)
-																   // déplacement vers l'arrière avec asservissement
+																	// déplacement vers l'arrière avec asservissement
 		}
 
 		else if (!strcmp(order, "td"))
 		{
 			motionControlSystem.setRawNegativeRotationSpeed();     // definit la consigne max de vitesse de rotation envoi�e au PID (trap�ze)
-																   // rotation sens antitrigo avec asservissement
+																	// rotation sens antitrigo avec asservissement
 		}
 
 		else if (!strcmp(order, "tg"))
 		{
 			motionControlSystem.setRawPositiveRotationSpeed();     // definit la consigne max de vitesse de rotation envoi�e au PID (trap�ze)
-																   // rotation sens antitrigo avec asservissement
+																	// rotation sens antitrigo avec asservissement
 		}
 
 		else if (!strcmp(order, "sstop"))                            // Stoppe le robot
@@ -497,8 +497,8 @@ void OrderManager::receiveAndExecute()
 		{
 			highLevel.printfln("ordre inconnu");
 		}
+
 	}
-	memset(order, 0, RX_BUFFER_SIZE);
 }
 
 void OrderManager::refreshUS()
@@ -519,14 +519,18 @@ void OrderManager::sendUSData() {
 *	Sépare une courte chaîne de caractères(RX_BUFFER_SIZE) selon un séparateur, dans un tableau output (au plus 4 mots)
 */
 
-uint8_t OrderManager::split(char* input, std::vector<char*>& output, const char* separator) {
-	
+int8_t OrderManager::split(char* input, std::vector<char*>& output, const char* separator) {
 	char* token;
 	int i = 0;
 	output.clear();
 	token = strtok(input, separator);
 	//TODO: singeproof la lecture de la longueur
-	uint8_t length = parseFloat(token);			//Le premier caractère est le nombre de mots
+	int8_t length = parseInt(token);	
+	if (length == -1) {
+		highLevel.log("ERREUR::OrderManager::split::lengthNaN");
+		return -1;
+	}
+	//Le premier caractère est le nombre de mots
 	while (token != NULL && i < length) {
 		token = strtok(NULL, separator);
 		if (token != NULL) {
@@ -534,6 +538,42 @@ uint8_t OrderManager::split(char* input, std::vector<char*>& output, const char*
 			++i;
 		}
 	}
-	return i;
+	return i-1;
 }
 
+int OrderManager::parseInt(char* s) {
+	char currentChar = s[0];
+	int i = 0;
+	while (currentChar != '\0') {
+		if (!isDigit(currentChar)) {
+			highLevel.log("Not a digit!");
+			highLevel.log(currentChar);
+
+			return -1;
+		}
+		currentChar = s[++i];
+	}
+	return strtol(s, nullptr, DEC);
+}
+
+float OrderManager::parseFloat(char* s) {
+	char currentChar = s[0];
+	int i = 0;
+	uint8_t point = 0;
+	while (currentChar != '\0') {
+		if (!isDigit(currentChar) && currentChar != '.') {
+			highLevel.log("Not a digit!");
+			highLevel.log(currentChar);
+
+			return -1;
+		}
+		if (currentChar == '.') {
+			++point;
+		}
+		if (point > 1) {
+			return -1;
+		}
+		currentChar = s[++i];
+	}
+	return strtod(s, nullptr);
+}

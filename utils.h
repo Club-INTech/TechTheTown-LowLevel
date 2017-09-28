@@ -14,10 +14,6 @@ extern "C" {
 
 int modulo(int nombre, int modulo);
 
-int parseInt(char*);
-
-double parseFloat(char*);
-
 #ifdef __cplusplus
 }
 #endif

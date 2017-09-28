@@ -27,6 +27,10 @@
 #define EVENT_HEADER    {0x13, 0x37}
 #define SENSOR_HEADER	{0x01, 0x10}
 
+//Separateurs des mots d'ordres
+#define SEPARATOR " "
+
+
 /**
 *ASSERVISSEMENT
 */

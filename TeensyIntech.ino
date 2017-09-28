@@ -5,7 +5,6 @@
 *
 **/
 
-#include "Hook.h"
 #include "OrderManager.h"
 
 //Initialisation de tout ce dont le robot a besoin
@@ -36,7 +35,7 @@ void loop() {
 
 	while (true) {
 		//orderMgr.refreshUS();
-		orderMgr.receiveAndExecute();
+		orderMgr.communicate();
 		//orderMgr.sendUSData();
 	}
 }

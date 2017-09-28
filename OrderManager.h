@@ -32,25 +32,28 @@ private:
 	SensorMgr &sensorMgr;
 	ActuatorsMgr &actuatorsMgr;
 	SerialHL &serialHL;
-#if DEBUG
-	SerialHL &highLevel=serialHL;
-#else
-	EthernetMgr &highLevel;
-#endif
-	char order[RX_BUFFER_SIZE];
+
 	std::vector<char*> orderData = std::vector<char*>();
+	char order[RX_BUFFER_SIZE];
 
 	//Variables booleennes pour envoi de données au HL
 	bool isSendingUS;
 
- public:
+public:
+#if DEBUG
+	 SerialHL &highLevel = serialHL;
+#else
+	 EthernetMgr &highLevel;
+#endif
 
 	 OrderManager();
-
 	 void refreshUS();
-	 void receiveAndExecute();
+	 void communicate();
+	 void execute(char*);	//public pour pouvoir executer des scripts de hook
 	 void sendUSData();
-	 uint8_t split(char* , std::vector<char*>& , const char* separator = ",");
+	 int8_t split(char* , std::vector<char*>& , const char* separator = ",");
+	 int parseInt(char*);
+	 float parseFloat(char*);
 };
 
 #endif //_ORDERMGR_h
