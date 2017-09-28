@@ -21,6 +21,12 @@
 #define RX_WORD_SIZE		12		//Taille max des mots d'un ordre
 #define RX_WORD_COUNT	4		//Nombre de mots max par ordre
 
+//Divers headers
+#define HEADER_LENGTH   2
+#define DEBUG_HEADER    {0x02, 0x20}
+#define EVENT_HEADER    {0x13, 0x37}
+#define US_HEADER       {0x01, 0x10}
+
 /**
 *ASSERVISSEMENT
 */
@@ -33,8 +39,8 @@
 // 17cm ?cartement des roues
 #define RAYON_COD_GAUCHE 140
 #define RAYON_COD_DROITE 144
-
 #define TICK_TO_MM 0.2088			// unit? : mm/ticks
+
 //#define TICK_TO_RADIAN 0.0014569	// unit? : radians/ticks
 #define TICK_TO_RADIAN (TICK_TO_MM/RAYON_COD_GAUCHE)
 
@@ -43,7 +49,5 @@
 
 #define WHEEL_DISTANCE_TO_CENTER 145.1
 #define TOLERANCY 50
-
-//const String& getValue(String data, char )
 
 #endif

@@ -21,6 +21,7 @@
 #include "EthernetMgr.h"
 #include <WString.h>
 #include "defines.h"
+#include "Wstring.h"
 #include <vector>
 #include "utils.h"
 
@@ -37,17 +38,19 @@ private:
 	EthernetMgr &highLevel;
 #endif
 	char order[RX_BUFFER_SIZE];
-	char orderData[RX_WORD_COUNT][RX_WORD_SIZE];
+	std::vector<char*> orderData = std::vector<char*>();
+
 	//Variables booleennes pour envoi de données au HL
 	bool isSendingUS;
 
  public:
+
 	 OrderManager();
 
 	 void refreshUS();
 	 void receiveAndExecute();
 	 void sendUSData();
-	 uint8_t split(char input[RX_BUFFER_SIZE], char output[4][RX_WORD_SIZE], const char* separator = " ");
+	 uint8_t split(char* , std::vector<char*>& , const char* separator = ",");
 };
 
 #endif //_ORDERMGR_h

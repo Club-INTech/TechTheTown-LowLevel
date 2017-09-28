@@ -127,7 +127,7 @@ bool EthernetMgr::read(float& value) {
 */
 void EthernetMgr::sendUS(uint16_t values[])
 {
-	char valueString[HEADER_LENGTH] = US_HEADER;
+	char valueString[HEADER_LENGTH] = SENSOR_HEADER;
 	char currentValue[4] = "";	//Comment gérer des values de tailles différentes?
 
 	for (int i = 0; i < 3; ++i) {

@@ -9,16 +9,9 @@
 
 #include "Singleton.hpp"
 #include "stdarg.h"
-#include <WString.h>
 #include "defines.h"
 
-#define RX_TIMEOUT 1000 //TODO gérer les timeouts(surtout pour le moniteur série..)
 
-#define HEADER_LENGTH   2
-
-#define DEBUG_HEADER    {0x02, 0x20}
-#define EVENT_HEADER    {0x13, 0x37}
-#define US_HEADER       {0x01, 0x10}
 
 class SerialHL : public Singleton<SerialHL>
 {

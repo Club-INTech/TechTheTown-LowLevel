@@ -40,6 +40,50 @@ void loop() {
 	}
 }
 
+
+/* Ce bout de code permet de compiler avec std::vector, copié honteusement de chez INTech-Senpai */
+namespace std {
+	void __throw_bad_alloc()
+	{
+		while (true)
+		{
+			SerialHL::Instance().log("ERROR\tUnable to allocate memory");
+			EthernetMgr::Instance().log("ERROR\tUnable to allocate memory");
+			delay(500);
+		}
+	}
+
+	void __throw_length_error(char const*e)
+	{
+		while (true)
+		{
+			SerialHL::Instance().log(e);
+			EthernetMgr::Instance().log(e);
+			delay(500);
+		}
+	}
+
+	void __throw_out_of_range(char const*e)
+	{
+		while (true)
+		{
+			SerialHL::Instance().log(e);
+			EthernetMgr::Instance().log(e);
+			delay(500);
+		}
+	}
+
+	void __throw_out_of_range_fmt(char const*e, ...)
+	{
+		while (true)
+		{
+			SerialHL::Instance().log(e);
+			EthernetMgr::Instance().log(e);
+			delay(500);
+		}
+	}
+}
+
                    /*``.           `-:--.`                                                                                                 
                   `.-::::/.        .:::::::y                                                                                                
                  `::::::::o``````.-::::::/h-                                                                                                

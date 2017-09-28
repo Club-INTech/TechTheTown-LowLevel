@@ -25,10 +25,7 @@ MOSI	11
 #include "MotionControlSystem.h"
 #include "pin_mapping.h"
 
-#define HEADER_LENGTH   2
-#define DEBUG_HEADER    {0x02, 0x20}
-#define EVENT_HEADER    {0x13, 0x37}
-#define US_HEADER       {0x01, 0x10}
+
 
 #define CONNECTION_TIMEOUT	1000
 
@@ -61,6 +58,7 @@ public:
 	bool connected;
 
 	/* RECEPTION */
+
 	bool read(char*);
 	bool read(int32_t&);
 	bool read(int16_t&);

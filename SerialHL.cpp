@@ -88,7 +88,7 @@ uint8_t inline SerialHL::available()
 void SerialHL::sendUS(uint16_t value)
 {
 	String data = "";
-	char header[HEADER_LENGTH] = US_HEADER;
+	char header[HEADER_LENGTH] = SENSOR_HEADER;
 
 	for (int i = 0; i < HEADER_LENGTH;i++) {
 		data.append(header[i]);
