@@ -19,12 +19,14 @@ void OrderManager::receiveAndExecute()
 	if (highLevel.read(order)) {
 		highLevel.log("Message recu: %s", order);
 
-		uint32_t start = micros();
 		int8_t n_param = split(order, orderData, " ")-1;		//Sépare l'ordre en plusieurs mots, n_param=nombre de paramètres
-		Serial.print("dt split: "); Serial.println(micros() - start);
+
+		//<TODO id="enlever, pour tests" >
 		for (int i = 0; i < n_param+1; i++) {
 			Serial.println(orderData.at(i));
 		}
+		//<\TODO>
+
 		strcpy(order, orderData.at(0));
 		
 		/*			 __________________
@@ -523,8 +525,8 @@ uint8_t OrderManager::split(char* input, std::vector<char*>& output, const char*
 	int i = 0;
 	output.clear();
 	token = strtok(input, separator);
+	//TODO: singeproof la lecture de la longueur
 	uint8_t length = parseFloat(token);			//Le premier caractère est le nombre de mots
-
 	while (token != NULL && i < length) {
 		token = strtok(NULL, separator);
 		if (token != NULL) {
