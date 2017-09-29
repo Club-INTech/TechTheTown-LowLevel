@@ -482,6 +482,13 @@ void OrderManager::execute(char* order)
 				highLevel.log("ERREUR::Paramètres incorrects");
 			}
 		}
+
+		/*			 _________________________________
+		* 		   *|                                 |*
+		*		   *|			 Actionneurs          |*
+		*    	   *|_________________________________|*
+		*/
+
 		else if (!strcmp(order, "axTest"))
 		{
 			if (n_param == 1) {

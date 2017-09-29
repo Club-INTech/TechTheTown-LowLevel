@@ -20,16 +20,14 @@ class ActuatorsMgr : public Singleton<ActuatorsMgr>
 {
 private:
 	DynamixelInterface serialAX;
-	DynamixelMotor* axTest;
+	DynamixelMotor axTest;
 
 public:
 	ActuatorsMgr();
 
 	~ActuatorsMgr();
 
-	void testGoto(uint16_t goal) {
-		axTest->goalPositionDegree(goal);
-	}
+	void testGoto(uint16_t);
 };
 
 #endif
