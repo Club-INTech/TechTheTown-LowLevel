@@ -28,17 +28,17 @@
     <ClCompile Include="us_sr04.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ActuatorsMgr.hpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="EthernetMgr.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SerialHL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="utils.cpp">
       <Filter>Library Files\Library Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ActuatorsMgr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SerialMgr.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -106,13 +106,16 @@
     <ClInclude Include="EthernetMgr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SerialHL.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ring_buffer.hpp">
       <Filter>Library Files\Library Source Files</Filter>
     </ClInclude>
     <ClInclude Include="__vm\.TechTheTown-LowLevel.vsarduino.h" />
+    <ClInclude Include="ActuatorsMgr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SerialMgr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="TeensyIntech.ino" />

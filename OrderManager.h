@@ -16,14 +16,39 @@
 #include "Singleton.hpp"
 #include "MotionControlSystem.h"
 #include "SensorMgr.h"
-#include "ActuatorsMgr.hpp"
-#include "SerialHL.h"
+#include "SerialMgr.h"
 #include "EthernetMgr.h"
+#include "ActuatorsMgr.h"
 #include <WString.h>
 #include "defines.h"
 #include "Wstring.h"
 #include <vector>
 #include "utils.h"
+
+
+class OrderData {
+private:
+	std::vector<String> orderData;
+public:
+	OrderData() : orderData(std::vector<String>()) {}
+	void push_back(const String& s) {
+		orderData.push_back(s);
+	}
+	const char* pop() {
+		const char* buffer = orderData.at(orderData.size()).c_str();
+		orderData.pop_back();
+		return buffer;
+	}
+	const char* at(uint8_t i) {
+		return orderData.at(i).c_str();
+	}
+	void clear() {
+		orderData.clear();
+	}
+	uint8_t size() {
+		return orderData.size();
+	}
+};
 
 class OrderManager : public Singleton<OrderManager>
 {
@@ -31,9 +56,9 @@ private:
 	MotionControlSystem &motionControlSystem;
 	SensorMgr &sensorMgr;
 	ActuatorsMgr &actuatorsMgr;
-	SerialHL &serialHL;
+	SerialMgr &serialHL;
 
-	std::vector<char*> orderData = std::vector<char*>();
+	OrderData orderData;
 	char order[RX_BUFFER_SIZE];
 
 	//Variables booleennes pour envoi de données au HL
@@ -41,7 +66,7 @@ private:
 
 public:
 #if DEBUG
-	 SerialHL &highLevel = serialHL;
+	 SerialMgr &highLevel = serialHL;
 #else
 	 EthernetMgr &highLevel;
 #endif
@@ -51,10 +76,12 @@ public:
 	 void communicate();
 	 void execute(char*);	//public pour pouvoir executer des scripts de hook
 	 void sendUSData();
-	 int8_t split(char* , std::vector<char*>& , const char* separator = ",");
-	 int parseInt(char*);
-	 float parseFloat(char*);
+	 int8_t split(char* , OrderData& , const char* separator = ",");
+	 int parseInt(const char*);
+	 float parseFloat(const char*);
 };
+
+
 
 #endif //_ORDERMGR_h
 

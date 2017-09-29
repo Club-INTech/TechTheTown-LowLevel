@@ -6,19 +6,19 @@
 *
 */
 
-#include "SerialHL.h"
+#include "SerialMgr.h"
 
-SerialHL::SerialHL()
+SerialMgr::SerialMgr()
 {
 }
 
-bool inline SerialHL::read_char(char & buffer)
+bool inline SerialMgr::read_char(char & buffer)
 {
 	buffer = Serial.read();
 	return (buffer != '\r' && buffer != '\n');
 }
 
-bool SerialHL::read(char* order)
+bool SerialMgr::read(char* order)
 {
 	if (available() > 0) {					//Si il y a quelque chose à lire dans le port série
 		char readChar;
@@ -38,7 +38,7 @@ bool SerialHL::read(char* order)
 	}
 }
 
-bool SerialHL::read(int32_t& value) {
+bool SerialMgr::read(int32_t& value) {
 	char readValue[16];
 
 	bool status = read(readValue);
@@ -48,7 +48,7 @@ bool SerialHL::read(int32_t& value) {
 	return status;
 }
 
-bool SerialHL::read(int16_t & value)
+bool SerialMgr::read(int16_t & value)
 {
 	char readValue[16];
 
@@ -59,7 +59,7 @@ bool SerialHL::read(int16_t & value)
 	return status;
 }
 
-bool SerialHL::read(volatile int8_t & value)
+bool SerialMgr::read(volatile int8_t & value)
 {
 	char readValue[16];
 
@@ -70,7 +70,7 @@ bool SerialHL::read(volatile int8_t & value)
 	return status;
 }
 
-bool SerialHL::read(float& value) {
+bool SerialMgr::read(float& value) {
 	char readValue[16];
 
 	bool status = read(readValue);
@@ -80,12 +80,12 @@ bool SerialHL::read(float& value) {
 	return status;
 }
 
-uint8_t inline SerialHL::available()
+uint8_t inline SerialMgr::available()
 {
 	return Serial.available();
 }
 
-void SerialHL::sendUS(uint16_t value)
+void SerialMgr::sendUS(uint16_t value)
 {
 	String data = "";
 	char header[HEADER_LENGTH] = SENSOR_HEADER;
@@ -99,7 +99,7 @@ void SerialHL::sendUS(uint16_t value)
 	Serial.println(data);
 }
 
-void SerialHL::printfln(const char* message, ...) {
+void SerialMgr::printfln(const char* message, ...) {
 	va_list args;										//Variable contenant la liste des arguments après log (...)
 	va_start(args, message);
 
@@ -112,7 +112,7 @@ void SerialHL::printfln(const char* message, ...) {
 	va_end(args);
 }
 
-void SerialHL::log(const char* log, ...) {
+void SerialMgr::log(const char* log, ...) {
 	char data[HEADER_LENGTH + 64] = DEBUG_HEADER;
 	data[HEADER_LENGTH] = '\0';
 

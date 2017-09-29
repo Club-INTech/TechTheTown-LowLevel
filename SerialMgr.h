@@ -13,10 +13,10 @@
 
 
 
-class SerialHL : public Singleton<SerialHL>
+class SerialMgr : public Singleton<SerialMgr>
 {
 public:
-	SerialHL();
+	SerialMgr();
 
 	/* RECEPTION */
 	

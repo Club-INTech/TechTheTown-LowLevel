@@ -23,7 +23,6 @@ void motionControlInterrupt() {
 
 //Boucle principale, gère entre autres la communication avec le HL
 void loop() {
-
 	OrderManager& orderMgr = OrderManager::Instance();
 
 	/* MotionControlSystem */
@@ -41,13 +40,19 @@ void loop() {
 }
 
 
+
+
+
+
+
+
 /* Ce bout de code permet de compiler avec std::vector, copié honteusement de chez INTech-Senpai */
 namespace std {
 	void __throw_bad_alloc()
 	{
 		while (true)
 		{
-			SerialHL::Instance().log("ERROR\tUnable to allocate memory");
+			SerialMgr::Instance().log("ERROR\tUnable to allocate memory");
 			EthernetMgr::Instance().log("ERROR\tUnable to allocate memory");
 			delay(500);
 		}
@@ -57,8 +62,8 @@ namespace std {
 	{
 		while (true)
 		{
-			SerialHL::Instance().log("Length Error");
-			SerialHL::Instance().log(e);
+			SerialMgr::Instance().log("Length Error");
+			SerialMgr::Instance().log(e);
 			EthernetMgr::Instance().log(e);
 			delay(500);
 		}
@@ -68,8 +73,8 @@ namespace std {
 	{
 		while (true)
 		{
-			SerialHL::Instance().log("Out of range error");
-			SerialHL::Instance().log(e);
+			SerialMgr::Instance().log("Out of range error");
+			SerialMgr::Instance().log(e);
 			EthernetMgr::Instance().log(e);
 			delay(500);
 		}
@@ -79,8 +84,8 @@ namespace std {
 	{
 		while (true)
 		{
-			SerialHL::Instance().log("Out of range fmt");
-			SerialHL::Instance().log(e);
+			SerialMgr::Instance().log("Out of range fmt");
+			SerialMgr::Instance().log(e);
 			EthernetMgr::Instance().log(e);
 			delay(500);
 		}

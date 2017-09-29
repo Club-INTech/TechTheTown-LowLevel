@@ -3,7 +3,7 @@
 MotionControlSystem::MotionControlSystem() :leftEncoder(PIN_A_LEFT_ENCODER, PIN_B_LEFT_ENCODER),
 											rightEncoder(PIN_A_RIGHT_ENCODER, PIN_B_RIGHT_ENCODER),
 											leftMotor(Side::LEFT), rightMotor(Side::RIGHT), 
-											serialHL(SerialHL::Instance()),
+											serialHL(SerialMgr::Instance()),
 											rightSpeedPID(&currentRightSpeed, &rightPWM, &rightSpeedSetpoint),
 											leftSpeedPID(&currentLeftSpeed, &leftPWM, &leftSpeedSetpoint),
 											translationPID(&currentDistance, &translationSpeed, &translationSetpoint),

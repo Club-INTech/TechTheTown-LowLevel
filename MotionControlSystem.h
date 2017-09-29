@@ -8,7 +8,7 @@
 #include "pin_mapping.h"
 #include "defines.h"
 #include "Encoder.h"
-#include "SerialHL.h"
+#include "SerialMgr.h"
 
 enum MOVING_DIRECTION { FORWARD, BACKWARD, NONE };
 
@@ -34,7 +34,7 @@ private:
 	Motor rightMotor;
 
 	//Série:
-	SerialHL serialHL;
+	SerialMgr serialHL;
 	/*
 	* 		Définition des variables d'état du système (position, vitesse, consigne, ...)
 	*

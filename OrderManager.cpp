@@ -3,9 +3,9 @@
 OrderManager::OrderManager():	motionControlSystem(MotionControlSystem::Instance()), 
 								sensorMgr(SensorMgr::Instance()), 
 								actuatorsMgr(ActuatorsMgr::Instance()),
-								serialHL(SerialHL::Instance()),
+								serialHL(SerialMgr::Instance()),
 #if DEBUG
-								highLevel(SerialHL::Instance())
+								highLevel(SerialMgr::Instance())
 #else
 								highLevel(EthernetMgr::Instance())
 #endif
@@ -493,6 +493,21 @@ void OrderManager::execute(char* order)
 				highLevel.log("ERREUR::Paramètres incorrects");
 			}
 		}
+
+		/*			 _________________________________
+		* 		   *|                                 |*
+		*		   *|			   HOOKS	              |*
+		*    	   *|_________________________________|*
+		*/
+		else if(!strcmp(order, "nh")){
+			//TODO: créée un hook
+		}
+		else if (!strcmp(order, "eh")) {
+			//TODO: active un hook
+		}
+		else if (!strcmp(order, "dh")) {
+			//TODO: désactive un hook
+		}
 		else
 		{
 			highLevel.printfln("ordre inconnu");
@@ -519,7 +534,7 @@ void OrderManager::sendUSData() {
 *	Sépare une courte chaîne de caractères(RX_BUFFER_SIZE) selon un séparateur, dans un tableau output (au plus 4 mots)
 */
 
-int8_t OrderManager::split(char* input, std::vector<char*>& output, const char* separator) {
+int8_t OrderManager::split(char* input, OrderData& output, const char* separator) {
 	char* token;
 	int i = 0;
 	output.clear();
@@ -541,13 +556,13 @@ int8_t OrderManager::split(char* input, std::vector<char*>& output, const char* 
 	return i-1;
 }
 
-int OrderManager::parseInt(char* s) {
+int OrderManager::parseInt(const char* s) {
 	char currentChar = s[0];
 	int i = 0;
 	while (currentChar != '\0') {
 		if (!isDigit(currentChar)) {
-			highLevel.log("Not a digit!");
-			highLevel.log(currentChar);
+			highLevel.log("Not a digit at pos %d of:", i);
+			highLevel.log(s);
 
 			return -1;
 		}
@@ -556,14 +571,15 @@ int OrderManager::parseInt(char* s) {
 	return strtol(s, nullptr, DEC);
 }
 
-float OrderManager::parseFloat(char* s) {
+float OrderManager::parseFloat(const char* s) {
 	char currentChar = s[0];
 	int i = 0;
 	uint8_t point = 0;
 	while (currentChar != '\0') {
 		if (!isDigit(currentChar) && currentChar != '.') {
-			highLevel.log("Not a digit!");
-			highLevel.log(currentChar);
+			highLevel.log("Not a digit at pos %d of:", i);
+			highLevel.log(s);
+
 
 			return -1;
 		}
