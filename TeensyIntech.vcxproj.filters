@@ -40,6 +40,7 @@
     <ClCompile Include="SerialMgr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Hook.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.TeensyIntech.vsarduino.h" />
@@ -116,6 +117,7 @@
     <ClInclude Include="SerialMgr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Hook.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeensyIntech.ino" />

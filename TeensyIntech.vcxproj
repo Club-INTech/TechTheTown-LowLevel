@@ -88,6 +88,7 @@
     <ClInclude Include="DynamixelInterface.h" />
     <ClInclude Include="DynamixelMotor.h" />
     <ClInclude Include="Encoder.h" />
+    <ClInclude Include="Hook.h" />
     <ClInclude Include="OrderManager.h" />
     <ClInclude Include="pid.hpp" />
     <ClInclude Include="pin_mapping.h" />
@@ -117,6 +118,7 @@
     <ClCompile Include="DynamixelInterface.cpp" />
     <ClCompile Include="DynamixelMotor.cpp" />
     <ClCompile Include="Encoder.cpp" />
+    <ClCompile Include="Hook.cpp" />
     <ClCompile Include="MotionControlSystem.cpp" />
     <ClCompile Include="Motor.cpp" />
     <ClCompile Include="OrderManager.cpp" />
