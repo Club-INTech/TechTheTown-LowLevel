@@ -24,7 +24,7 @@
 #include "Wstring.h"
 #include <vector>
 #include "utils.h"
-
+#include "Hook.h"
 
 class OrderData {
 private:
@@ -59,7 +59,8 @@ private:
 	SerialMgr &serialHL;
 
 	OrderData orderData;
-	char order[RX_BUFFER_SIZE];
+	char readMessage[RX_BUFFER_SIZE];
+	std::vector<Hook> hookList;
 
 	//Variables booleennes pour envoi de données au HL
 	bool isSendingUS;
@@ -74,11 +75,14 @@ public:
 	 OrderManager();
 	 void refreshUS();
 	 void communicate();
-	 void execute(char*);	//public pour pouvoir executer des scripts de hook
+	 void execute(const char*);	//public pour pouvoir executer des scripts de hook
 	 void sendUSData();
 	 int8_t split(char* , OrderData& , const char* separator = ",");
 	 int parseInt(const char*);
 	 float parseFloat(const char*);
+	 void hookInterrupt();
+	 void executeHooks();
+	 bool hooksEnabled;
 };
 
 

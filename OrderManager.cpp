@@ -4,24 +4,29 @@ OrderManager::OrderManager():	motionControlSystem(MotionControlSystem::Instance(
 								sensorMgr(SensorMgr::Instance()), 
 								actuatorsMgr(ActuatorsMgr::Instance()),
 								serialHL(SerialMgr::Instance()),
+								hookList(std::vector<Hook>()),
 #if DEBUG
 								highLevel(SerialMgr::Instance())
 #else
 								highLevel(EthernetMgr::Instance())
 #endif
 {
-	memset(order, 0, RX_BUFFER_SIZE);
+	memset(readMessage, 0, RX_BUFFER_SIZE);
 	isSendingUS = false;
+	hooksEnabled = true;
 }
 
 void OrderManager::communicate() {
-	if (highLevel.read(order)) {
-		execute(order);
+	if (highLevel.read(readMessage)) {
+		execute(readMessage);
 	}
-	memset(order, 0, RX_BUFFER_SIZE);
+	memset(readMessage, 0, RX_BUFFER_SIZE);
 }
-void OrderManager::execute(char* order)
+
+void OrderManager::execute(const char* orderToExecute)
 {
+	char order[RX_BUFFER_SIZE];
+	strcpy(order, orderToExecute);
 		highLevel.log("Message recu: %s", order);
 
 		int8_t n_param = split(order, orderData, SEPARATOR);		//Sépare l'ordre en plusieurs mots, n_param=nombre de paramètres
@@ -507,7 +512,13 @@ void OrderManager::execute(char* order)
 		*    	   *|_________________________________|*
 		*/
 		else if(!strcmp(order, "nh")){
-			//TODO: créée un hook
+			int16_t x, y, r;
+			x = parseInt(orderData.at(1));
+			y = parseInt(orderData.at(2));
+			r = parseInt(orderData.at(3));
+			const char* hookOrder = orderData.at(4);
+
+			hookList.push_back(Hook(x, y, r, hookOrder));
 		}
 		else if (!strcmp(order, "eh")) {
 			//TODO: active un hook
@@ -519,8 +530,10 @@ void OrderManager::execute(char* order)
 		{
 			highLevel.printfln("ordre inconnu");
 		}
-
 	}
+
+	executeHooks();
+
 }
 
 void OrderManager::refreshUS()
@@ -599,4 +612,29 @@ float OrderManager::parseFloat(const char* s) {
 		currentChar = s[++i];
 	}
 	return strtod(s, nullptr);
+}
+
+
+void OrderManager::hookInterrupt() {
+	if (hooksEnabled) {
+		uint8_t l = hookList.size();
+		for (int i = 0; i < l; ++i) {
+			if (!hookList.at(i).isReady() && hookList.at(i).check(motionControlSystem.getX(), motionControlSystem.getY())) {
+				hookList.at(i).setReady();
+			}
+		}
+	}
+}
+
+void OrderManager::executeHooks() {
+
+	if (hooksEnabled) {
+		uint8_t l = hookList.size();
+
+		for (int i = 0; i < l; ++i) {
+			if (hookList.at(i).isReady()) {
+				execute(hookList.at(i).getOrder());
+			}
+		}
+	}
 }

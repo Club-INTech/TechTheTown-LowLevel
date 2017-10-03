@@ -5,9 +5,7 @@
 *
 **/
 
-#include "Hooks.h"
 #include "OrderManager.h"
-
 //Initialisation de tout ce dont le robot a besoin
 void setup() {
 	/*série*/

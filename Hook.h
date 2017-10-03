@@ -9,21 +9,23 @@
 	#include "WProgram.h"
 #endif
 
-#include "OrderManager.h"
-
 class Hook
 {
 private:
-	int16_t zoneX;
-	int16_t zoneY;
-	uint16_t zoneR;
+	const int16_t zoneX;
+	const int16_t zoneY;
+	const uint16_t zoneR;
 	bool active;
-	char* order;
+	bool ready;
+	const char* order;
 
 public:
-	Hook(int16_t, int16_t, uint16_t, char*);
+	Hook(int16_t, int16_t, uint16_t,const char*);
 	bool check(int16_t, int16_t);
-	void execute(OrderManager&);
+	const char* getOrder();
+	void setActive(bool);
+	void setReady();
+	bool isReady();
 };
 
 #endif
