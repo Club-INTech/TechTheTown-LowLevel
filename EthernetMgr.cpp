@@ -49,7 +49,6 @@ void EthernetMgr::resetCard() {
 bool inline EthernetMgr::read_char(char & buffer)
 {
 	buffer = client.read();
-	Serial.println(buffer);
 	return (buffer != '\r' && buffer != '\n');
 }
 
@@ -70,7 +69,6 @@ bool EthernetMgr::read(char* order)
 			read_char(readChar);		//On élimine le \n terminal
 		}
 		lastMessage = millis();
-		Serial.println(order);
 		return (strcmp(order, ""));
 	}
 	else {
@@ -141,30 +139,42 @@ void EthernetMgr::sendUS(uint16_t values[])
 	printfln(valueString);
 }
 
-void inline EthernetMgr::print(const char* message, ...) {
-	va_list args;										//Variable contenant la liste des arguments après le log
+void EthernetMgr::print(const char* message, ...) {
+	va_list args;										//Variable contenant la liste des arguments après log (...)
 	va_start(args, message);
 
 	char logToSend[64];
 
 	vsnprintf(logToSend, 64, message, args);			//Ajoute dans logToSend de log, en formattant avec les arguments
-
+	
 	client.print(logToSend);
-
 
 	va_end(args);
 }
+
+template void EthernetMgr::print<int8_t>(int8_t value);
+template void EthernetMgr::println<int8_t>(int8_t value);
+template void EthernetMgr::print<float>(float value);
+template void EthernetMgr::println<float>(float value);
+template void EthernetMgr::print<uint32_t>(uint32_t value);
+template void EthernetMgr::println<uint32_t>(uint32_t value);
+template void EthernetMgr::print<int32_t>(int32_t value);
+template void EthernetMgr::println<int32_t>(int32_t value);
 
 void inline EthernetMgr::printfln(const char* message, ...) {
 	va_list args;
 	va_start(args, message);
-	log(message, args);
+
+	print(message, args);
+	client.print("\r\n");
+
 	va_end(args);
 }
 
-void inline EthernetMgr::log(const char* log, ...) {
+void EthernetMgr::log(const char* log, ...) {
 	char data[HEADER_LENGTH + 64] = DEBUG_HEADER;
 	data[HEADER_LENGTH] = '\0';
+
 	strcat(data, log);
 
 	va_list args;								//Variable contenant la liste des arguments après log (...)
@@ -172,7 +182,7 @@ void inline EthernetMgr::log(const char* log, ...) {
 
 	char logToSend[HEADER_LENGTH + 64];
 	vsnprintf(logToSend, 64, data, args);			//Ajoute dans le buffer log, en formattant les 
-	printfln(logToSend);
+	client.println(logToSend);
 
 	va_end(args);
 }

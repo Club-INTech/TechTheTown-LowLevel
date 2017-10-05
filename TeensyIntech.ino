@@ -51,8 +51,7 @@ namespace std {
 	{
 		while (true)
 		{
-			SerialMgr::Instance().log("ERROR\tUnable to allocate memory");
-			EthernetMgr::Instance().log("ERROR\tUnable to allocate memory");
+			Serial.println("ERROR\tUnable to allocate memory");
 			delay(500);
 		}
 	}
@@ -61,9 +60,8 @@ namespace std {
 	{
 		while (true)
 		{
-			SerialMgr::Instance().log("Length Error");
-			SerialMgr::Instance().log(e);
-			EthernetMgr::Instance().log(e);
+			Serial.print("Length Error\t");
+			Serial.println(e);
 			delay(500);
 		}
 	}
@@ -72,9 +70,8 @@ namespace std {
 	{
 		while (true)
 		{
-			SerialMgr::Instance().log("Out of range error");
-			SerialMgr::Instance().log(e);
-			EthernetMgr::Instance().log(e);
+			Serial.print("Out of range error\t");
+			Serial.println(e);
 			delay(500);
 		}
 	}
@@ -83,9 +80,8 @@ namespace std {
 	{
 		while (true)
 		{
-			SerialMgr::Instance().log("Out of range fmt");
-			SerialMgr::Instance().log(e);
-			EthernetMgr::Instance().log(e);
+			Serial.print("Out of range fmt\t");
+			Serial.println(e);
 			delay(500);
 		}
 	}

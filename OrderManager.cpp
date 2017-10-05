@@ -25,8 +25,8 @@ void OrderManager::communicate() {
 
 void OrderManager::execute(const char* orderToExecute)
 {
-	char order[RX_BUFFER_SIZE];
-	strcpy(order, orderToExecute);
+		char order[RX_BUFFER_SIZE];
+		strcpy(order, orderToExecute);
 		highLevel.log("Message recu: %s", order);
 
 		int8_t n_param = split(order, orderData, SEPARATOR);		//Sépare l'ordre en plusieurs mots, n_param=nombre de paramètres
@@ -51,11 +51,15 @@ void OrderManager::execute(const char* orderToExecute)
 		}
 		else if (!strcmp(order, "f"))
 		{
-			highLevel.printfln("%d,%d", motionControlSystem.isMoving(), motionControlSystem.isMoveAbnormal());
+			highLevel.println(motionControlSystem.isMoving());
+			highLevel.println(motionControlSystem.isMoveAbnormal());
 		}
 		else if (!strcmp(order, "?xyo"))		//Renvoie la position du robot (en mm et radians)
 		{
-			highLevel.printfln("%f,%f,%f", motionControlSystem.getX(), motionControlSystem.getY(), motionControlSystem.getAngleRadian());
+			//highLevel.printfln("%f,%f,%f", motionControlSystem.getX(), motionControlSystem.getY(), motionControlSystem.getAngleRadian());
+			highLevel.println(motionControlSystem.getX());
+			highLevel.println(motionControlSystem.getY());
+			highLevel.println(motionControlSystem.getAngleRadian());
 		}
 		else if (!strcmp(order, "d"))		//Ordre de déplacement rectiligne (en mm)
 		{
@@ -83,6 +87,7 @@ void OrderManager::execute(const char* orderToExecute)
 		else if (!strcmp(order, "stop"))
 		{
 			motionControlSystem.stop();
+			highLevel.log("A priori, je m'arrête");
 		}
 
 		/*			 __________________
@@ -158,7 +163,22 @@ void OrderManager::execute(const char* orderToExecute)
 			else {
 				highLevel.log("ERREUR::Paramètres incorrects");
 			}
+
 		}
+		else if (!strcmp(order, "ctrv"))
+		{
+			if (n_param == 2) {
+				float transpeed = parseFloat(orderData.at(1));
+				float rotspeed = parseFloat(orderData.at(2));
+				motionControlSystem.setTranslationSpeed(transpeed);
+				motionControlSystem.setRotationSpeed(rotspeed);
+			}
+			else {
+				highLevel.log("ERREUR::Paramètres incorrects");
+			}
+
+		}
+
 		else if (!strcmp(order, "efm"))
 		{
 			motionControlSystem.enableForcedMovement();
@@ -512,13 +532,29 @@ void OrderManager::execute(const char* orderToExecute)
 		*    	   *|_________________________________|*
 		*/
 		else if(!strcmp(order, "nh")){
-			int16_t x, y, r;
-			x = parseInt(orderData.at(1));
-			y = parseInt(orderData.at(2));
-			r = parseInt(orderData.at(3));
-			const char* hookOrder = orderData.at(4);
+			int16_t id, x, y, r;
+			if (n_param >=5) {
+				id = parseInt(orderData.at(1));
+				x = parseInt(orderData.at(2));
+				y = parseInt(orderData.at(3));
+				r = parseInt(orderData.at(4));
 
-			hookList.push_back(Hook(x, y, r, hookOrder));
+				char hookOrder[RX_BUFFER_SIZE] = "";
+
+				for (int i = 5; i < n_param + 1; i++) {
+					strcat(hookOrder, orderData.at(i));
+					strcat(hookOrder, " ");
+
+				}
+				hookList.push_back(Hook(id, x, y, r, hookOrder));
+				for (uint i = 0; i < hookList.size(); i++) {
+					Serial.println(hookList.at(i).getOrder());
+				}
+			}
+			else {
+				highLevel.log("ERREUR::Paramètres incorrects");
+			}
+
 		}
 		else if (!strcmp(order, "eh")) {
 			//TODO: active un hook
@@ -529,6 +565,7 @@ void OrderManager::execute(const char* orderToExecute)
 		else
 		{
 			highLevel.printfln("ordre inconnu");
+			highLevel.log("T'es un déchêt");
 		}
 	}
 
@@ -555,25 +592,29 @@ void OrderManager::sendUSData() {
 */
 
 int8_t OrderManager::split(char* input, OrderData& output, const char* separator) {
+	//uint32_t start = micros();
 	char* token;
 	int i = 0;
 	output.clear();
 	token = strtok(input, separator);
-	//TODO: singeproof la lecture de la longueur
-	int8_t length = parseInt(token);	
-	if (length == -1) {
-		highLevel.log("ERREUR::OrderManager::split::lengthNaN");
-		return -1;
+
+	if (token != NULL) {
+		output.push_back(token);
 	}
-	//Le premier caractère est le nombre de mots
-	while (token != NULL && i < length) {
+
+	//Le premier caractère est le nombre de mots (max rx_word_count ici)
+
+	do {
 		token = strtok(NULL, separator);
 		if (token != NULL) {
 			output.push_back(token);
 			++i;
 		}
-	}
-	return i-1;
+	} while (token != NULL && i < RX_WORD_COUNT);
+
+	//Serial.println(micros() - start);
+	//Serial.println("C'était la durée du split");
+	return i;
 }
 
 int OrderManager::parseInt(const char* s) {

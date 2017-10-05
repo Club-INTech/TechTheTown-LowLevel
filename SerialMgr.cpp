@@ -99,6 +99,15 @@ void SerialMgr::sendUS(uint16_t value)
 	Serial.println(data);
 }
 
+template void SerialMgr::print<int8_t>(int8_t value);
+template void SerialMgr::println<int8_t>(int8_t value);
+template void SerialMgr::print<float>(float value);
+template void SerialMgr::println<float>(float value);
+template void SerialMgr::print<uint32_t>(uint32_t value);
+template void SerialMgr::println<uint32_t>(uint32_t value);
+template void SerialMgr::print<int32_t>(int32_t value);
+template void SerialMgr::println<int32_t>(int32_t value);
+
 void SerialMgr::printfln(const char* message, ...) {
 	va_list args;										//Variable contenant la liste des arguments après log (...)
 	va_start(args, message);
@@ -106,7 +115,7 @@ void SerialMgr::printfln(const char* message, ...) {
 	char logToSend[64];
 
 	vsnprintf(logToSend, 64, message, args);			//Ajoute dans logToSend de log, en formattant avec les arguments
-
+	Serial.println("serialmgr");
 	Serial.println(logToSend);
 
 	va_end(args);

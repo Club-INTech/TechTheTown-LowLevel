@@ -67,6 +67,15 @@ public:
 
 	/* ENVOI */
 	void sendUS(uint16_t[]);
+	template<typename T>
+	void print(T value) {
+		client.print(value);
+	}
+	template<typename T>
+	void println(T value) {
+		client.println(value);
+	}
+
 	void print(const char*, ...) __attribute__((format(printf, 2, 3)));
 	void printfln(const char*, ...) __attribute__((format(printf, 2, 3)));
 	void log(const char*, ...) __attribute__((format(printf, 2, 3)));

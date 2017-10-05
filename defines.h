@@ -18,8 +18,7 @@
 
 //Nombre d'octets acceptables depuis le HL
 #define RX_BUFFER_SIZE	64		//Taille max des messages
-#define RX_WORD_SIZE		12		//Taille max des mots d'un ordre
-#define RX_WORD_COUNT	4		//Nombre de mots max par ordre
+#define RX_WORD_COUNT	10		//Nombre de mots max par ordre
 
 //Divers headers
 #define HEADER_LENGTH   2
