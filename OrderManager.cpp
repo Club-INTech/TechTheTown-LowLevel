@@ -236,9 +236,9 @@ void OrderManager::execute(const char* orderToExecute)
 
 		else if (!strcmp(order, "cod")) {
 			highLevel.log("Gauche:");
-			highLevel.log("%ld", motionControlSystem.getCodG());
+			highLevel.log("%ld", motionControlSystem.getLeftTick());
 			highLevel.log("Droite:");
-			highLevel.log("%ld", motionControlSystem.getCodD());
+			highLevel.log("%ld", motionControlSystem.getRightTick());
 		}
 		else if (!strcmp("pfdebug", order))
 		{

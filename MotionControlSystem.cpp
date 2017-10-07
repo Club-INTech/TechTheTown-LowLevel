@@ -3,7 +3,6 @@
 MotionControlSystem::MotionControlSystem() :leftEncoder(PIN_A_LEFT_ENCODER, PIN_B_LEFT_ENCODER),
 											rightEncoder(PIN_A_RIGHT_ENCODER, PIN_B_RIGHT_ENCODER),
 											leftMotor(Side::LEFT), rightMotor(Side::RIGHT), 
-											serialHL(SerialMgr::Instance()),
 											rightSpeedPID(&currentRightSpeed, &rightPWM, &rightSpeedSetpoint),
 											leftSpeedPID(&currentLeftSpeed, &leftPWM, &leftSpeedSetpoint),
 											translationPID(&currentDistance, &translationSpeed, &translationSetpoint),
@@ -55,6 +54,16 @@ MotionControlSystem::MotionControlSystem() :leftEncoder(PIN_A_LEFT_ENCODER, PIN_
 	leftMotor.init();
 	rightMotor.init();
 	enable(true);
+}
+
+int32_t MotionControlSystem::getLeftTick()
+{
+	return leftTicks;
+}
+
+int32_t MotionControlSystem::getRightTick()
+{
+	return rightTicks;
 }
 
 void MotionControlSystem::control() {
@@ -207,17 +216,6 @@ void MotionControlSystem::disableForcedMovement() {
 	forcedMovement = false;
 }
 
-int32_t MotionControlSystem::getCodG()
-{
-	return leftEncoder.read();
-}
-
-int32_t MotionControlSystem::getCodD()
-{
-	return rightEncoder.read();
-}
-
-
 void MotionControlSystem::manageStop()
 {
 	static uint32_t time = 0;
@@ -300,6 +298,14 @@ void MotionControlSystem::updatePosition() {
 
 	x += (deltaDistanceMm * cosf(getAngleRadian()));
 	y += (deltaDistanceMm * sinf(getAngleRadian()));
+}
+
+void MotionControlSystem::resetPosition()
+{
+	this->setX(0);
+	this->setY(0);
+	this->setOriginalAngle(0);
+	stop();
 }
 
 /**

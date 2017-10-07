@@ -8,7 +8,6 @@
 #include "pin_mapping.h"
 #include "defines.h"
 #include "Encoder.h"
-#include "SerialMgr.h"
 
 enum MOVING_DIRECTION { FORWARD, BACKWARD, NONE };
 
@@ -28,13 +27,13 @@ private:
 	//Codeuses
 	Encoder leftEncoder;
 	Encoder rightEncoder;
+	int32_t leftTicks;
+	int32_t rightTicks;
 
 	//Moteurs
 	Motor leftMotor;
 	Motor rightMotor;
 
-	//Série:
-	SerialMgr serialHL;
 	/*
 	* 		Définition des variables d'état du système (position, vitesse, consigne, ...)
 	*
@@ -81,10 +80,7 @@ private:
 											  //	Limitation d'acc�l�ration
 	volatile int8_t maxAcceleration;
 	volatile int8_t maxDeceleration;
-	volatile int8_t maxAccelAv;
-	volatile int8_t maxAccelAr;
-	volatile int8_t maxDecelAv;
-	volatile int8_t maxDecelAr;
+
 
 	//	Pour faire de jolies courbes de r�ponse du syst�me, la vitesse moyenne c'est mieux !
 	Average<int32_t, AVERAGE_SPEED_SIZE> averageLeftSpeed;
@@ -142,28 +138,20 @@ private:
 	bool isLeftWheelSpeedAbnormal();
 	bool isRightWheelSpeedAbnormal();
 
+
+
 public:
 	MotionControlSystem();
 
 	/* Codeuses */
-	int32_t leftTicks;
-	int32_t rightTicks;
-
-	/* Moteurs */
-	int getRightMotorDir();
-	int getLeftMotorDir();
-	int getLeftMotorPWM();
-	int getRightMotorPWM();
+	int32_t getLeftTick();
+	int32_t getRightTick();
 
 	/* Asservissement */
 		//LA fonction d'asservissement
 	void control();
 	bool controlled;
 		//Vitesse
-	int getLeftSpeed();
-	int getRightSpeed();
-	float getRightSetPoint();
-	float getLeftSetPoint();
 
 	void setLeftSpeedTunings(float, float, float);
 	void setRightSpeedTunings(float, float, float);
@@ -171,13 +159,7 @@ public:
 	void getRotationTunings(float &, float &, float &) const;
 
 		//Position & orientation
-	float getTranslationSetPoint();
-	int kpt;
-	int kpd;
-	int kit;
 
-	void setAccelAv();
-	void setAccelAr();
 
 	void setTranslationTunings(float, float, float);
 	void setRotationTunings(float, float, float);
@@ -207,8 +189,6 @@ public:
 	void updatePosition();
 	void resetPosition(void);
 
-	void getData();
-
 	/* Ordres */
 	void orderTranslation(int32_t);
 	void orderRotation(float, RotationWay);
@@ -226,8 +206,6 @@ public:
 	void manageStop();
 	void enableForcedMovement();
 	void disableForcedMovement();
-	int32_t getCodG();
-	int32_t getCodD();
 };
 
 #endif

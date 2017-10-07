@@ -28,3 +28,7 @@ bool Hook::isReady() {
 void Hook::setActive(bool state) {
 	active = state;
 }
+
+bool Hook::isActive() {
+	return active;
+}

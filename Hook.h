@@ -27,6 +27,7 @@ public:
 	void setActive(bool);
 	void setReady();
 	bool isReady();
+	bool isActive();
 };
 
 #endif

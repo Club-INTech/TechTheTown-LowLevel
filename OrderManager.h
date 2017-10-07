@@ -66,8 +66,8 @@ public:
 	}
 
 	void addHook(uint8_t id, int16_t x, int16_t y, uint16_t r, const char* o) {
-		hooks.emplace(std::make_pair(id, Hook(id, x, y, r, o)));
-		ids.push_back(id);
+		hooks.emplace(std::make_pair(id, Hook(id, x, y, r, o)));	//On ajoute un couple (id, hook(id)) au dictionnaire de hooks
+		ids.push_back(id);	//On ajoute l'id à la liste des ids disponibles
 	}
 
 	void enableHook(uint8_t id) {
@@ -87,15 +87,15 @@ public:
 	}
 
 	const char* getReadyHookOrder(uint8_t i) {
-		hooks.at(readyIds.at(i)).setActive(false);
+		hooks.at(readyIds.at(i)).setActive(false); //Si un hook est à effectuer maintenant, il ne sera plus activable
 		return hooks.at(readyIds.at(i)).getOrder();
 	}
 	void check(float x, float y) {
 		for (uint8_t i = 0; i < ids.size(); ++i) {
 			Hook currentHook = (hooks.at(ids.at(i)));
-			if (!currentHook.isReady() && currentHook.check(x, y)) {
-				currentHook.setReady();
-				readyIds.push_back(ids.at(i));
+			if (currentHook.isActive() && !currentHook.isReady() && currentHook.check(x, y)) {
+				currentHook.setReady();			//Les conditions du hook sont réunies !
+				readyIds.push_back(ids.at(i));	//Il faudra l'executer dès que possible
 			}
 		}
 	}
