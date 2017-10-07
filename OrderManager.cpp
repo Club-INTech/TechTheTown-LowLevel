@@ -4,7 +4,8 @@ OrderManager::OrderManager():	motionControlSystem(MotionControlSystem::Instance(
 								sensorMgr(SensorMgr::Instance()), 
 								actuatorsMgr(ActuatorsMgr::Instance()),
 								serialHL(SerialMgr::Instance()),
-								hookList(std::vector<Hook>()),
+								hookList(HookList()),
+								orderData(OrderData()),
 #if DEBUG
 								highLevel(SerialMgr::Instance())
 #else
@@ -544,12 +545,12 @@ void OrderManager::execute(const char* orderToExecute)
 				for (int i = 5; i < n_param + 1; i++) {
 					strcat(hookOrder, orderData.at(i));
 					strcat(hookOrder, " ");
+				}
+				hookOrder[RX_BUFFER_SIZE - 1] = '\0';
 
-				}
-				hookList.push_back(Hook(id, x, y, r, hookOrder));
-				for (uint i = 0; i < hookList.size(); i++) {
-					Serial.println(hookList.at(i).getOrder());
-				}
+				hookList.addHook(id, x, y, r, hookOrder);
+				//TEST:
+				Serial.println(hookList.getHook(id).getOrder());
 			}
 			else {
 				highLevel.log("ERREUR::Paramètres incorrects");
@@ -569,8 +570,8 @@ void OrderManager::execute(const char* orderToExecute)
 		}
 	}
 
+	checkHooks();
 	executeHooks();
-
 }
 
 void OrderManager::refreshUS()
@@ -656,26 +657,17 @@ float OrderManager::parseFloat(const char* s) {
 }
 
 
-void OrderManager::hookInterrupt() {
+void OrderManager::checkHooks() {
 	if (hooksEnabled) {
-		uint8_t l = hookList.size();
-		for (int i = 0; i < l; ++i) {
-			if (!hookList.at(i).isReady() && hookList.at(i).check(motionControlSystem.getX(), motionControlSystem.getY())) {
-				hookList.at(i).setReady();
-			}
-		}
+		hookList.check(motionControlSystem.getX(), motionControlSystem.getY());
 	}
 }
 
 void OrderManager::executeHooks() {
-
 	if (hooksEnabled) {
-		uint8_t l = hookList.size();
-
-		for (int i = 0; i < l; ++i) {
-			if (hookList.at(i).isReady()) {
-				execute(hookList.at(i).getOrder());
-			}
+		uint8_t l = hookList.getReadySize();
+		for (uint8_t i = 0; i < l; ++i) {
+			execute(hookList.getReadyHookOrder(i));
 		}
 	}
 }

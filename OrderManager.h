@@ -23,6 +23,7 @@
 #include "defines.h"
 #include "Wstring.h"
 #include <vector>
+#include <map>
 #include "utils.h"
 #include "Hook.h"
 
@@ -50,6 +51,57 @@ public:
 	}
 };
 
+class HookList 
+{
+private:
+	std::map<uint8_t, Hook> hooks;
+	std::vector<uint8_t> ids;
+	std::vector<uint8_t> readyIds;
+
+public:
+	HookList() : hooks(std::map<uint8_t, Hook>()), ids(std::vector<uint8_t>()), readyIds(std::vector<uint8_t>()){}
+
+	Hook& getHook(uint8_t id) {
+		return hooks.at(id);
+	}
+
+	void addHook(uint8_t id, int16_t x, int16_t y, uint16_t r, const char* o) {
+		hooks.emplace(std::make_pair(id, Hook(id, x, y, r, o)));
+		ids.push_back(id);
+	}
+
+	void enableHook(uint8_t id) {
+		hooks.at(id).setActive(true);
+	}
+
+	void disableHook(uint8_t id) {
+		hooks.at(id).setActive(false);
+	}
+
+	uint8_t getSize() {
+		return ids.size();
+	}
+
+	uint8_t getReadySize() {
+		return readyIds.size();
+	}
+
+	const char* getReadyHookOrder(uint8_t i) {
+		hooks.at(readyIds.at(i)).setActive(false);
+		return hooks.at(readyIds.at(i)).getOrder();
+	}
+	void check(float x, float y) {
+		for (uint8_t i = 0; i < ids.size(); ++i) {
+			Hook currentHook = (hooks.at(ids.at(i)));
+			if (!currentHook.isReady() && currentHook.check(x, y)) {
+				currentHook.setReady();
+				readyIds.push_back(ids.at(i));
+			}
+		}
+	}
+};
+
+
 class OrderManager : public Singleton<OrderManager>
 {
 private:
@@ -57,10 +109,9 @@ private:
 	SensorMgr &sensorMgr;
 	ActuatorsMgr &actuatorsMgr;
 	SerialMgr &serialHL;
-
+	HookList hookList;
 	OrderData orderData;
 	char readMessage[RX_BUFFER_SIZE];
-	std::vector<Hook> hookList;
 
 	//Variables booleennes pour envoi de données au HL
 	bool isSendingUS;
@@ -73,14 +124,20 @@ public:
 #endif
 
 	 OrderManager();
+	 
+	 //Com&exec
 	 void refreshUS();
 	 void communicate();
 	 void execute(const char*);	//public pour pouvoir executer des scripts de hook
 	 void sendUSData();
+
+	 //Utilitaire
 	 int8_t split(char* , OrderData& , const char* separator = ",");
 	 int parseInt(const char*);
 	 float parseFloat(const char*);
-	 void hookInterrupt();
+
+	 //Hooks
+	 void checkHooks();
 	 void executeHooks();
 	 bool hooksEnabled;
 };
