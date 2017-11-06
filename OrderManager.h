@@ -13,6 +13,8 @@
 	#include <WProgram.h>
 #endif
 
+#include <vector>
+#include <map>
 #include "Singleton.hpp"
 #include "MotionControlSystem.h"
 #include "SensorMgr.h"
@@ -22,12 +24,13 @@
 #include <WString.h>
 #include "defines.h"
 #include "Wstring.h"
-#include <vector>
-#include <map>
 #include "utils.h"
 #include "Hook.h"
+#include <Metro.h>
+
 
 class OrderData {
+
 private:
 	std::vector<String> orderData;
 public:

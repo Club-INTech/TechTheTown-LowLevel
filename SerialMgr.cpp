@@ -115,7 +115,6 @@ void SerialMgr::printfln(const char* message, ...) {
 	char logToSend[64];
 
 	vsnprintf(logToSend, 64, message, args);			//Ajoute dans logToSend de log, en formattant avec les arguments
-	Serial.println("serialmgr");
 	Serial.println(logToSend);
 
 	va_end(args);

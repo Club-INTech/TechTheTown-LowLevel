@@ -134,6 +134,8 @@ private:
 
 	int delayToEstablish; // Temps � attendre avant de consid�rer la vitesse stable
 
+	bool speedTest;
+
 	bool isPhysicallyStopped();//Indique si le robot est immobile.
 	bool isLeftWheelSpeedAbnormal();
 	bool isRightWheelSpeedAbnormal();
@@ -155,6 +157,11 @@ public:
 
 	void setLeftSpeedTunings(float, float, float);
 	void setRightSpeedTunings(float, float, float);
+	void getPWMS(uint16_t & left, uint16_t & right);
+	void getSpeedErrors(uint16_t & leftProp, uint16_t & leftIntegral, uint16_t & leftDerivative, uint16_t & rightProp, uint16_t & rightIntegral, uint16_t & rightDerivative);
+	void rawWheelSpeed(uint16_t speed, uint16_t& leftsetpoint, uint16_t& rightsetpoint);
+	void getSpeedSetpoints(uint16_t & left, uint16_t & right);
+	void printValues();
 	void getTranslationTunings(float &, float &, float &) const;
 	void getRotationTunings(float &, float &, float &) const;
 

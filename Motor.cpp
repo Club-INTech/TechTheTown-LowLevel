@@ -3,11 +3,21 @@
 void Motor::setDirection(Direction directionToSet)
 {
 	direction = directionToSet;
-	if (direction == Direction::FORWARD) {
-		digitalWrite(pin_dir, HIGH);
+	if (side == Side::LEFT) {
+		if (direction == Direction::FORWARD) {
+			digitalWrite(pin_dir, LOW);
+		}
+		if (direction == Direction::BACKWARD) {
+			digitalWrite(pin_dir, HIGH);
+		}
 	}
-	if (direction == Direction::BACKWARD) {
-		digitalWrite(pin_dir, LOW);
+	else {
+		if (direction == Direction::FORWARD) {
+			digitalWrite(pin_dir, HIGH);
+		}
+		if (direction == Direction::BACKWARD) {
+			digitalWrite(pin_dir, LOW);
+		}
 	}
 }
 
@@ -33,7 +43,7 @@ void Motor::init()
 	}
 
 	//TODO: Initialiser les PWM
-	analogWriteResolution(10);
+	analogWriteResolution(8);
 	analogWriteFrequency(pin_pwm, 35156.25);
 }
 
@@ -42,11 +52,11 @@ void Motor::run(int16_t newpwm)
 	pwm = newpwm;
 	if (pwm >= 0) {
 		setDirection(Direction::FORWARD);
-		pwm = MIN(pwm, 1023);
+		pwm = MIN(pwm, 255);
 	}
 	else if (pwm < 0) {
 		setDirection(Direction::BACKWARD);
-		pwm = MIN(-pwm, 1023);
+		pwm = MIN(-pwm, 255);
 	}
 	analogWrite(pin_pwm, pwm);
 }

@@ -1,7 +1,6 @@
 #include "SensorMgr.h"
 
-SensorMgr::SensorMgr():
-	usTEST(PIN_TRIGGER_TEST, PIN_ECHO_TEST)
+SensorMgr::SensorMgr()
 {
 	delayToRefresh = 25;
 	lastRefresh = millis();
@@ -27,61 +26,21 @@ void SensorMgr::refresh(MOVING_DIRECTION dir)
 		lastRefresh = millis();
 	}
 }
-/*
-void SensorMgr::interruptAVG()
-{
-	usAVG.interruption();
-}
 
-void SensorMgr::interruptAVD()
-{
-	usAVG.interruption();
-}
-
-void SensorMgr::interruptARG()
-{
-	usAVG.interruption();
-}
-
-void SensorMgr::interruptARD()
-{
-	usAVG.interruption();
-}
-
-uint16_t SensorMgr::getUsAVG()
-{
-	return usAVG.value();
-}
-
-uint16_t SensorMgr::getUsAVD()
-{
-	return usAVD.value();
-}
-
-uint16_t SensorMgr::getUsARG()
-{
-	return usARG.value();
-}
-
-uint16_t SensorMgr::getUsARD()
-{
-	return usARD.value();
-}
-*/
-void SensorMgr::interruptTest() {
-	usTEST.interruption();
-}
 uint16_t SensorMgr::getUsTest()
 {
-	return usTEST.value();
+	//return usTEST.value();
+	return 0;
 }
+
+//Contacteurs et Jumper
 
 bool SensorMgr::isJumpEngaged()
 {
 	return digitalRead(PIN_JMPR);
 }
 
-bool SensorMgr::isContEngaged()
+bool SensorMgr::isCont1Engaged()
 {
-	return digitalRead(PIN_CONT);
+	return digitalRead(PIN_CONT1);
 }

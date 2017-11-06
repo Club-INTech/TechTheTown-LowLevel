@@ -37,6 +37,6 @@
 
 	//CONT
 #define PIN_JMPR 0
-#define PIN_CONT 0
+#define PIN_CONT1 0
 
 #endif //_PIN_MAPPING_h

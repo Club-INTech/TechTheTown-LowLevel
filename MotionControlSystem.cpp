@@ -1,6 +1,6 @@
 ﻿#include "MotionControlSystem.h"
 
-MotionControlSystem::MotionControlSystem() :leftEncoder(PIN_A_LEFT_ENCODER, PIN_B_LEFT_ENCODER),
+MotionControlSystem::MotionControlSystem() :leftEncoder(PIN_B_LEFT_ENCODER, PIN_A_LEFT_ENCODER ),
 											rightEncoder(PIN_A_RIGHT_ENCODER, PIN_B_RIGHT_ENCODER),
 											leftMotor(Side::LEFT), rightMotor(Side::RIGHT), 
 											rightSpeedPID(&currentRightSpeed, &rightPWM, &rightSpeedSetpoint),
@@ -18,6 +18,8 @@ MotionControlSystem::MotionControlSystem() :leftEncoder(PIN_A_LEFT_ENCODER, PIN_
 	translationSetpoint = 0;
 	leftSpeedSetpoint = 0;
 	rightSpeedSetpoint = 0;
+	
+	speedTest = false;
 
 	lastLeftPWM = 0;
 	lastRightPWM = 0;
@@ -29,25 +31,25 @@ MotionControlSystem::MotionControlSystem() :leftEncoder(PIN_A_LEFT_ENCODER, PIN_
 	translation = true;
 	direction = NONE;
 
-	leftSpeedPID.setOutputLimits(-1023, 1023);
-	rightSpeedPID.setOutputLimits(-1023, 1023);
+	leftSpeedPID.setOutputLimits(-255, 255);
+	rightSpeedPID.setOutputLimits(-255, 255);
 
-	maxSpeed = 3000; // Vitesse maximum, des moteurs (avec une marge au cas o� on s'amuse � faire forcer un peu la bestiole).
-	maxSpeedTranslation = 2000; // Consigne max envoy�e au PID
+	maxSpeed = 3000; // Vitesse maximum, des moteurs (avec une marge au cas ou on s'amuse a faire forcer un peu la bestiole).
+	maxSpeedTranslation = 2000; // Consigne max envoyee au PID
 	maxSpeedRotation = 1400;
 
-	delayToStop = 100; // temps � l'arr�t avant de consid�rer un blocage
+	delayToStop = 100; // temps a l'arret avant de considerer un blocage
 	toleranceTranslation = 30;
 	toleranceRotation = 50;
 	toleranceSpeed = 40;
-	toleranceSpeedEstablished = 50; // Doit �tre la plus petite possible, sans bloquer les trajectoires courbes 50
+	toleranceSpeedEstablished = 50; // Doit etre la plus petite possible, sans bloquer les trajectoires courbes 50
 	delayToEstablish = 100;
-	toleranceDifferentielle = 500; // Pour les trajectoires "normales", v�rifie que les roues ne font pas nawak chacunes de leur cot�.
+	toleranceDifferentielle = 500; // Pour les trajectoires "normales", verifie que les roues ne font pas nawak chacunes de leur cote.
 	
 	translationPID.setTunings(10, 0, 50);
 	rotationPID.setTunings(17, 0, 220);
-	leftSpeedPID.setTunings(0.011, 0, 0.005); // ki 0.00001
-	rightSpeedPID.setTunings(0.011, 0, 0.005);
+	leftSpeedPID.setTunings(0.11, 0, 0.005); // ki 0.00001
+	rightSpeedPID.setTunings(0.11, 0, 0.005);
 
 	maxAcceleration = 4;
 
@@ -117,8 +119,8 @@ void MotionControlSystem::control() {
 		else if (rotationSpeed < -maxSpeedRotation)
 			rotationSpeed = -maxSpeedRotation;
 
-		leftSpeedSetpoint = (int32_t)(translationSpeed - rotationSpeed);
-		rightSpeedSetpoint = (int32_t)(translationSpeed + rotationSpeed);
+			leftSpeedSetpoint = (int32_t)(translationSpeed - rotationSpeed);
+			rightSpeedSetpoint = (int32_t)(translationSpeed + rotationSpeed);
 
 		// Limitation de la vitesse
 		if (leftSpeedSetpoint > maxSpeed) {
@@ -534,4 +536,80 @@ void MotionControlSystem::setLeftSpeedTunings(float kp, float ki, float kd) {
 }
 void MotionControlSystem::setRightSpeedTunings(float kp, float ki, float kd) {
 	rightSpeedPID.setTunings(kp, ki, kd);
+}
+
+void MotionControlSystem::getPWMS(uint16_t& left, uint16_t& right) {
+	left = leftPWM;
+	right = rightPWM;
+}
+
+void MotionControlSystem::getSpeedErrors(uint16_t& leftProp, uint16_t& leftIntegral, uint16_t& leftDerivative, uint16_t& rightProp, uint16_t& rightIntegral, uint16_t& rightDerivative) {
+	leftProp = leftSpeedPID.getError();
+	leftIntegral = leftSpeedPID.getIntegralErrol();
+	leftDerivative = leftSpeedPID.getDerivativeError();
+
+	rightProp = rightSpeedPID.getError();
+	rightIntegral = rightSpeedPID.getIntegralErrol();
+	rightDerivative = rightSpeedPID.getDerivativeError();
+}
+
+void MotionControlSystem::rawWheelSpeed(uint16_t speed, uint16_t& leftOut,uint16_t& rightOut) {
+	controlled = false;
+	translationControlled = false;
+	rotationControlled = false;
+
+	leftSpeedSetpoint = speed;
+	rightSpeedSetpoint = speed;
+	while (ABS(currentLeftSpeed - leftSpeedSetpoint) > 100 && ABS(currentRightSpeed - rightSpeedSetpoint) > 100) {
+		delayMicroseconds(MC_FREQUENCY);
+
+
+		static int32_t previousLeftTicks = 0;
+		static int32_t previousRightTicks = 0;
+
+		leftTicks = leftEncoder.read();
+		rightTicks = rightEncoder.read();
+
+		currentLeftSpeed = (leftTicks - previousLeftTicks) * MC_FREQUENCY;
+		currentRightSpeed = (rightTicks - previousRightTicks) * MC_FREQUENCY;
+
+		averageLeftSpeed.add(currentLeftSpeed);										//Mise à jour des moyennes des vitesses
+		averageRightSpeed.add(currentRightSpeed);
+
+		previousLeftTicks = leftTicks;
+		previousRightTicks = rightTicks;
+
+		averageLeftDerivativeError.add(ABS(leftSpeedPID.getDerivativeError()));		// Mise à jour des moyennes de dérivées de l'erreur (pour les blocages)
+		averageRightDerivativeError.add(ABS(rightSpeedPID.getDerivativeError()));
+
+		currentLeftSpeed = averageLeftSpeed.value(); // On utilise pour l'asserv la valeur moyenne des dernieres current Speed
+		currentRightSpeed = averageRightSpeed.value(); // sinon le robot il fait nawak.
+
+
+		leftSpeedPID.compute();
+		rightSpeedPID.compute();
+
+		leftMotor.run(leftPWM);
+		rightMotor.run(rightPWM);
+	}
+
+	leftOut = currentLeftSpeed;
+	rightOut = currentRightSpeed;
+
+	translationControlled = true;
+	rotationControlled = true;
+	controlled = true;
+}
+
+void MotionControlSystem::getSpeedSetpoints(uint16_t& left, uint16_t& right) {
+	left = leftSpeedSetpoint;
+	right = rightSpeedSetpoint;
+}
+
+void MotionControlSystem::printValues() {
+
+	Serial.print("LeftAvg  - ");Serial.println(this->averageLeftSpeed.value());
+	Serial.print("RightAvg - "); Serial.println(this->averageRightSpeed.value());
+	Serial.print("LeftPwm  - "); Serial.println(this->leftPWM);
+	Serial.print("RightPwm - "); Serial.println(this->rightPWM);
 }

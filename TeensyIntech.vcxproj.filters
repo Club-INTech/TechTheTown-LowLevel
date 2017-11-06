@@ -25,9 +25,6 @@
     <ClCompile Include="DynamixelMotor.cpp">
       <Filter>Library Files\Library Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="us_sr04.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="EthernetMgr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -84,9 +81,6 @@
     </ClInclude>
     <ClInclude Include="DynamixelMotor.h">
       <Filter>Library Files\Library Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="us_sr04.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="pid.hpp">
       <Filter>Library Files\Library Source Files</Filter>

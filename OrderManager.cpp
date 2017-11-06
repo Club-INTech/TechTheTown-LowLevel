@@ -15,6 +15,7 @@ OrderManager::OrderManager():	motionControlSystem(MotionControlSystem::Instance(
 	memset(readMessage, 0, RX_BUFFER_SIZE);
 	isSendingUS = false;
 	hooksEnabled = true;
+	highLevel.log("Communications ready");
 }
 
 void OrderManager::communicate() {
@@ -22,15 +23,21 @@ void OrderManager::communicate() {
 		execute(readMessage);
 	}
 	memset(readMessage, 0, RX_BUFFER_SIZE);
+	static Metro printValues = Metro(50);
+
+	if (printValues.check()) {
+		motionControlSystem.printValues();
+	}
 }
 
 void OrderManager::execute(const char* orderToExecute)
 {
-		char order[RX_BUFFER_SIZE];
-		strcpy(order, orderToExecute);
-		highLevel.log("Message recu: %s", order);
+	char order[RX_BUFFER_SIZE];
+	strcpy(order, orderToExecute);
+	highLevel.log("Message recu: %s", order);
 
-		int8_t n_param = split(order, orderData, SEPARATOR);		//Sépare l'ordre en plusieurs mots, n_param=nombre de paramètres
+	int8_t n_param = split(order, orderData, SEPARATOR);		//Sépare l'ordre en plusieurs mots, n_param=nombre de paramètres
+
 
 	if (n_param >= 0) {
 		strcpy(order, orderData.at(0));
@@ -226,6 +233,17 @@ void OrderManager::execute(const char* orderToExecute)
 			highLevel.log("asservi en vitesse");
 		}
 
+		/*			 _________________________________
+		* 		   *|                                 |*
+		*		   *|			  Capteurs            |*
+		*    	   *|_________________________________|*
+		*/
+
+		else if (!strcmp(order, "seti2c"))
+		{
+
+		}
+
 		/*			 ___________________________
 		* 		   *|                           |*
 		*		   *|					        |*
@@ -247,6 +265,26 @@ void OrderManager::execute(const char* orderToExecute)
 			//highLevel.printfln("%d", (int)motionControlSystem.getRightSetPoint());
 			//highLevel.printfln("%d", (int)motionControlSystem.getRightMotorPWM());
 			//highLevel.printfln("%d", (int)motionControlSystem.getCodD());
+		}
+		else if (!strcmp(order, "getpwm")) {
+			uint16_t left, right;
+			motionControlSystem.getPWMS(left, right);
+			highLevel.log("PWMS: %d - %d", left, right);
+		}
+		else if (!strcmp(order, "errors")) {
+			uint16_t leftProp, leftDer, leftInt, rightProp, rightDer, rightInt;
+			motionControlSystem.getSpeedErrors(leftProp, leftInt, leftDer, rightProp, rightInt, rightDer);
+			highLevel.log("Prop: %d - %d", leftProp, rightProp);
+			highLevel.log("Deriv: %d - %d", leftDer, rightDer);
+			highLevel.log("Integ: %d - %d", leftInt, rightInt);
+		}
+		else if (!strcmp(order, "rawspeed")) {
+			uint16_t leftsetpoint, rightsetpoint;
+
+			motionControlSystem.rawWheelSpeed(parseInt(orderData.at(1)), leftsetpoint, rightsetpoint);
+			highLevel.log("Speed set");
+			motionControlSystem.getSpeedSetpoints(leftsetpoint, rightsetpoint);
+			highLevel.log("speed setpoints: %d - %d", leftsetpoint, rightsetpoint);
 		}
 
 		/*			 ___________________________

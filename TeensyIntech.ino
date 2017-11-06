@@ -6,10 +6,29 @@
 **/
 
 #include "OrderManager.h"
+#include <i2c_t3\i2c_t3.h>
+
 //Initialisation de tout ce dont le robot a besoin
 void setup() {
 	/*série*/
 	Serial.begin(115200);
+	Serial.println("Série OK");
+	delay(250);
+	/*Wire.begin();
+	for (int i = 0; i < US_TOTAL; i++) {
+		boolean error = true;
+		while (error) {
+			Wire.beginTransmission(MPU_ADDRESS);
+			error = Wire.endTransmission(I2C_STOP, 500000); // if error !=0, connection error(50ms timeout)
+			if (error) { // Not connected, try to reset bus and connect again
+				Serial.println("\nNo I2C connection\n...trying again\n");
+				Wire.resetBus();
+				Wire.begin();
+				Wire.setClock(100000);
+			}
+			delay(200);
+		}
+	}*/
 }
 
 /* Interruptions d'asservissements */

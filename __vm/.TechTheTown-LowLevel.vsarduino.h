@@ -15,8 +15,8 @@
 #define __HARDWARE_MK64fx512__
 #define __HARDWARE_MK64FX512__
 #define __MK64FX512__
-#define TEENSYDUINO 136
-#define ARDUINO 10802
+#define TEENSYDUINO 140
+#define ARDUINO 10805
 #define F_CPU 120000000
 #define USB_SERIAL
 #define LAYOUT_US_ENGLISH
