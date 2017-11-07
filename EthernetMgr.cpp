@@ -139,6 +139,17 @@ void EthernetMgr::sendUS(uint16_t values[])
 	printfln(valueString);
 }
 
+void EthernetMgr::sendEvent(const char* event)
+{
+	String data = "";
+	char header[HEADER_LENGTH] = EVENT_HEADER;
+	for (int i = 0; i < HEADER_LENGTH; i++) {
+		data.append(header[i]);
+	}
+	data.append(event);
+	Serial.println(data);
+}
+
 void EthernetMgr::print(const char* message, ...) {
 	va_list args;										//Variable contenant la liste des arguments après log (...)
 	va_start(args, message);

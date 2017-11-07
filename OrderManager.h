@@ -144,7 +144,5 @@ public:
 	 bool hooksEnabled;
 };
 
-
-
 #endif //_ORDERMGR_h
 

@@ -28,8 +28,6 @@
 #define SENSOR_HEADER	{0x01, 0x10}
 #define POSITION_HEADER	{0x07, 0x05}
 
-#define EVENT_BLOCKED	"Ah!"
-
 //Separateurs des mots d'ordres
 #define SEPARATOR " "
 

@@ -23,18 +23,16 @@ void OrderManager::communicate() {
 	}
 	memset(readMessage, 0, RX_BUFFER_SIZE);
 	static Metro checkMovement = Metro(10);
-	/*
 	if (checkMovement.check())
 	{
-		if (!motionControlSystem.sentMoveAbnormal() && motionControlSystem.isMoveAbnormal) {//Si on est bloqué et qu'on n'a pas encore prévenu
+		if (!motionControlSystem.sentMoveAbnormal() && motionControlSystem.isMoveAbnormal()) {//Si on est bloqué et qu'on n'a pas encore prévenu
 			motionControlSystem.setMoveAbnormalSent(true);
-			highLevel.sendEvent(EVENT_BLOCKED);
+			highLevel.sendEvent("Ah");
 		}
 		else if (motionControlSystem.sentMoveAbnormal() && !motionControlSystem.isMoveAbnormal()) {//Si on est plus bloqué et qu'on avait prévenu
 			motionControlSystem.setMoveAbnormalSent(false);
 		}
 	}
-	*/
 }
 
 void OrderManager::execute(const char* orderToExecute)

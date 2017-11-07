@@ -28,6 +28,7 @@ public:
 	
 	/* ENVOI */
 	void sendUS(uint16_t);
+	void sendEvent(const char*);
 
 	template<typename T>
 	void print(T value) {

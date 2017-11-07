@@ -89,13 +89,21 @@ void SerialMgr::sendUS(uint16_t value)
 {
 	String data = "";
 	char header[HEADER_LENGTH] = SENSOR_HEADER;
-
 	for (int i = 0; i < HEADER_LENGTH;i++) {
 		data.append(header[i]);
 	}
-
 	data.append(value);
+	Serial.println(data);
+}
 
+void SerialMgr::sendEvent(const char* event) 
+{
+	String data = "";
+	char header[HEADER_LENGTH] = EVENT_HEADER;
+	for (int i = 0; i < HEADER_LENGTH; i++) {
+		data.append(header[i]);
+	}
+	data.append(event);
 	Serial.println(data);
 }
 
