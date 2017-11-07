@@ -14,7 +14,7 @@
 */
 
 //Utilise la série si true, l'ethernet si false
-#define DEBUG true
+#define DEBUG false
 
 //Nombre d'octets acceptables depuis le HL
 #define RX_BUFFER_SIZE	64		//Taille max des messages
@@ -22,9 +22,13 @@
 
 //Divers headers
 #define HEADER_LENGTH   2
+
 #define DEBUG_HEADER    {0x02, 0x20}
 #define EVENT_HEADER    {0x13, 0x37}
 #define SENSOR_HEADER	{0x01, 0x10}
+#define POSITION_HEADER	{0x07, 0x05}
+
+#define EVENT_BLOCKED	"Ah!"
 
 //Separateurs des mots d'ordres
 #define SEPARATOR " "

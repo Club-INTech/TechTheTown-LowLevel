@@ -108,10 +108,9 @@ public:
 class OrderManager : public Singleton<OrderManager>
 {
 private:
-	MotionControlSystem &motionControlSystem;
+	MotionControlSystem& motionControlSystem;
 	SensorMgr &sensorMgr;
 	ActuatorsMgr &actuatorsMgr;
-	SerialMgr &serialHL;
 	HookList hookList;
 	OrderData orderData;
 	char readMessage[RX_BUFFER_SIZE];
@@ -120,11 +119,11 @@ private:
 	bool isSendingUS;
 
 public:
-#if DEBUG
-	 SerialMgr &highLevel = serialHL;
-#else
+	#if DEBUG
+	 SerialMgr &highLevel;
+	#else
 	 EthernetMgr &highLevel;
-#endif
+	#endif
 
 	 OrderManager();
 	 

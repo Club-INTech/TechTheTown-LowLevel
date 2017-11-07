@@ -1,6 +1,7 @@
 ﻿#include "MotionControlSystem.h"
 
-MotionControlSystem::MotionControlSystem() :leftEncoder(PIN_B_LEFT_ENCODER, PIN_A_LEFT_ENCODER ),
+MotionControlSystem::MotionControlSystem() :
+											leftEncoder(PIN_B_LEFT_ENCODER, PIN_A_LEFT_ENCODER ),
 											rightEncoder(PIN_A_RIGHT_ENCODER, PIN_B_RIGHT_ENCODER),
 											leftMotor(Side::LEFT), rightMotor(Side::RIGHT), 
 											rightSpeedPID(&currentRightSpeed, &rightPWM, &rightSpeedSetpoint),
@@ -27,6 +28,7 @@ MotionControlSystem::MotionControlSystem() :leftEncoder(PIN_B_LEFT_ENCODER, PIN_
 	y = 0;
 	moving = false;
 	moveAbnormal = false;
+	moveAbnormalSent = false;
 	forcedMovement = false;
 	translation = true;
 	direction = NONE;
@@ -274,7 +276,6 @@ void MotionControlSystem::manageStop()
 				{ //Stoppé pour cause de fin de mouvement
 					stop();
 					moveAbnormal = false;
-
 				}
 			}
 		}
@@ -423,6 +424,14 @@ bool MotionControlSystem::isMoveAbnormal() const
 	return moveAbnormal;
 }
 
+bool MotionControlSystem::sentMoveAbnormal() const 
+{
+	return moveAbnormalSent;
+}
+
+void MotionControlSystem::setMoveAbnormalSent(bool status) {
+	moveAbnormalSent = status;
+}
 
 void MotionControlSystem::setRawPositiveTranslationSpeed() {
 	translationSpeed = maxSpeedTranslation;
@@ -451,12 +460,12 @@ void MotionControlSystem::setRawNullSpeed() {
 
 float MotionControlSystem::getAngleRadian() const
 {
-	return currentAngle;
+	return (float)(currentAngle * TICK_TO_RADIAN + originalAngle);
 }
 
 void MotionControlSystem::setOriginalAngle(float newAngle)
 {
-	originalAngle = newAngle;
+	originalAngle = newAngle - (getAngleRadian() - originalAngle);
 }
 
 float MotionControlSystem::getX() const

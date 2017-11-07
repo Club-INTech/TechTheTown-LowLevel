@@ -1,6 +1,7 @@
 ﻿#ifndef MOTION_CONTROL_H_
 #define MOTION_CONTROL_H_
 
+
 #include "Singleton.hpp"
 #include "Motor.h"
 #include "pid.hpp"
@@ -24,6 +25,7 @@ public:
 
 
 private:
+
 	//Codeuses
 	Encoder leftEncoder;
 	Encoder rightEncoder;
@@ -111,6 +113,7 @@ private:
 	volatile bool moving;
 	volatile MOVING_DIRECTION direction;
 	volatile bool moveAbnormal;
+	volatile bool moveAbnormalSent;
 
 	// Variables d'activation des diff�rents PID
 	volatile bool translationControlled;
@@ -205,6 +208,9 @@ public:
 	void stop();
 	bool isMoving() const;
 	bool isMoveAbnormal() const;
+	bool sentMoveAbnormal() const;
+	void setMoveAbnormalSent(bool);
+
 	MOVING_DIRECTION getMovingDirection() const;
 	void enable(bool);
 	void enableTranslationControl(bool);

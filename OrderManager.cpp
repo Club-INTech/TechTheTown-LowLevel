@@ -3,14 +3,13 @@
 OrderManager::OrderManager():	motionControlSystem(MotionControlSystem::Instance()), 
 								sensorMgr(SensorMgr::Instance()), 
 								actuatorsMgr(ActuatorsMgr::Instance()),
-								serialHL(SerialMgr::Instance()),
 								hookList(HookList()),
 								orderData(OrderData()),
-#if DEBUG
-								highLevel(SerialMgr::Instance())
-#else
-								highLevel(EthernetMgr::Instance())
-#endif
+								#if DEBUG 
+									highLevel(SerialMgr::Instance())
+								#else 
+									highLevel(EthernetMgr::Instance())
+								#endif
 {
 	memset(readMessage, 0, RX_BUFFER_SIZE);
 	isSendingUS = false;
@@ -23,11 +22,19 @@ void OrderManager::communicate() {
 		execute(readMessage);
 	}
 	memset(readMessage, 0, RX_BUFFER_SIZE);
-	static Metro printValues = Metro(50);
-
-	if (printValues.check()) {
-		motionControlSystem.printValues();
+	static Metro checkMovement = Metro(10);
+	/*
+	if (checkMovement.check())
+	{
+		if (!motionControlSystem.sentMoveAbnormal() && motionControlSystem.isMoveAbnormal) {//Si on est bloqué et qu'on n'a pas encore prévenu
+			motionControlSystem.setMoveAbnormalSent(true);
+			highLevel.sendEvent(EVENT_BLOCKED);
+		}
+		else if (motionControlSystem.sentMoveAbnormal() && !motionControlSystem.isMoveAbnormal()) {//Si on est plus bloqué et qu'on avait prévenu
+			motionControlSystem.setMoveAbnormalSent(false);
+		}
 	}
+	*/
 }
 
 void OrderManager::execute(const char* orderToExecute)
@@ -130,6 +137,7 @@ void OrderManager::execute(const char* orderToExecute)
 			if (n_param == 1) {
 				float o = parseFloat(orderData.at(1));
 				motionControlSystem.setOriginalAngle(o);
+				Serial.println(motionControlSystem.getAngleRadian());
 			}
 			else {
 				highLevel.log("ERREUR::Paramètres incorrects");
