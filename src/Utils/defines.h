@@ -3,17 +3,14 @@
 #ifndef _DEFINES_h
 #define _DEFINES_h
 
-#if defined(ARDUINO) && ARDUINO >= 100
-	#include <Arduino.h>
-#else
-	#include <WProgram.h>
-#endif
+#include <Arduino.h>
+
 
 /**
 *COMMUNICATION
 */
 
-//Utilise la série si true, l'ethernet si false
+//Utilise la sï¿½rie si true, l'ethernet si false
 #define DEBUG false
 
 //Nombre d'octets acceptables depuis le HL
@@ -36,8 +33,8 @@
 *ASSERVISSEMENT
 */
 
-#define MC_FREQUENCY 1000 //1kHz, à modifier
-#define MC_PERIOD	(double)(1000000/MC_FREQUENCY)  //Durée en µs entre deux mesures
+#define MC_FREQUENCY 1000 //1kHz, ï¿½ modifier
+#define MC_PERIOD	(double)(1000000/MC_FREQUENCY)  //Durï¿½e en ï¿½s entre deux mesures
 
 // 65,5mm diametre des roues
 // ~1000 ticks par tour de roue

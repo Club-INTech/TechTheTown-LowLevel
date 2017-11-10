@@ -368,3 +368,12 @@ __pycache__/
 # should be stored in the .pubxml.user file.
 
 # End of https://www.gitignore.io/api/clion,visualstudio,visualstudiocode
+.pioenvs
+.piolibdeps
+CMakeListsPrivate.txt
+Supprimerait .clang_complete
+Supprimerait .gcc-flags.json
+Supprimerait .travis.yml
+Supprimerait CMakeLists.txt
+Supprimerait lib/
+Supprimerait platformio.ini

@@ -1,18 +1,17 @@
 /**
-*Contient la boucle principale de gestion des entrées série du programme
+*Initialisation et boucle principale du programme
 *
-* @author caillou, sylvain, rémi, melanie, Ug
+* @author caillou, sylvain, rÃ©mi, melanie, Ug
 *
 **/
 
-#include "OrderManager.h"
-#include <i2c_t3\i2c_t3.h>
+#include "Com/OrderManager.h"
 
-//Initialisation de la Série
+//Initialisation de la Serie
 void setup() {
-	/*série*/
+	/*serie*/
 	Serial.begin(115200);
-	Serial.println("Série OK");
+	Serial.println("SÃ©rie OK");
 	delay(250);
 
 	/*Wire.begin();
@@ -25,7 +24,7 @@ void setup() {
 				Serial.println("\nNo I2C connection\n...trying again\n");
 				Wire.resetBus();
 				Wire.begin();
-				Wire.setClock(100000);
+				Wire.setClock(400000);
 			}
 			delay(200);
 		}
@@ -40,7 +39,7 @@ void motionControlInterrupt() {
 }
 
 
-//Boucle principale, gère entre autres la communication avec le HL
+//Boucle principale, gere entre autres la communication avec le HL
 void loop() {
 	OrderManager& orderMgr = OrderManager::Instance();
 
@@ -49,7 +48,7 @@ void loop() {
 	motionControlInterruptTimer.priority(253);
 	motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); //asservissements
 	
-	/* Gestion des ordres reçus */
+	/* Gestion des ordres recus */
 
 	while (true) {
 		//orderMgr.refreshUS();
@@ -65,7 +64,7 @@ void loop() {
 
 
 
-/* Ce bout de code permet de compiler avec std::vector, copié honteusement de chez INTech-Senpai */
+/* Ce bout de code permet de compiler avec std::vector, copiï¿½ honteusement de chez INTech-Senpai */
 namespace std {
 	void __throw_bad_alloc()
 	{
@@ -131,14 +130,6 @@ namespace std {
          `:::::::/h////::.-:::::::y-                                                                                                        
          :::::::ss`        -:/+sso:                                                                                                         
          .:/++sy:          `//*/
-
-
-
-
-
-
-
-
 
 
 

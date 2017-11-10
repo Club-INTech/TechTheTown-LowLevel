@@ -3,16 +3,12 @@
 #ifndef _SENSORMGR_h
 #define _SENSORMGR_h
 
-#if defined(ARDUINO) && ARDUINO >= 100
-	#include <Arduino.h>
-#else
-	#include <WProgram.h>
-#endif
+#include <Arduino.h>
 
-#include "Singleton.hpp"
-#include "pin_mapping.h"
-#include "MotionControlSystem.h"
-#include "pin_mapping.h"
+#include "Utils/Singleton.hpp"
+#include "Utils/pin_mapping.h"
+#include "MotionControl/MotionControlSystem.h"
+#include "Utils/pin_mapping.h"
 
 class SensorMgr : public Singleton<SensorMgr>
 {

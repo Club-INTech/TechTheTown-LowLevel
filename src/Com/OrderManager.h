@@ -1,31 +1,28 @@
 /**
+*Contient la liste des correspondances pour les entrÃ©es sÃ©rie du programme
 *
-*Classe gestionnaire d'ordres reçus depuis le haut niveau
+* @author caillou, sylvain, rÃ©mi, melanie, Ug
 *
-*/
+**/
 
 #ifndef _ORDERMGR_h
 #define _ORDERMGR_h
 
-#if defined(ARDUINO) && ARDUINO >= 100
-	#include <Arduino.h>
-#else
-	#include <WProgram.h>
-#endif
+#include <Arduino.h>
+
 
 #include <vector>
 #include <map>
-#include "Singleton.hpp"
-#include "MotionControlSystem.h"
-#include "SensorMgr.h"
+#include "Utils/Singleton.hpp"
+#include "MotionControl/MotionControlSystem.h"
+#include "MotionControl/SensorMgr.h"
 #include "SerialMgr.h"
-#include "EthernetMgr.h"
-#include "ActuatorsMgr.h"
-#include <WString.h>
-#include "defines.h"
-#include "Wstring.h"
-#include "utils.h"
-#include "Hook.h"
+#include "Com/EthernetMgr.h"
+#include "Actuators/ActuatorsMgr.h"
+#include "Utils/defines.h"
+#include "WString.h"
+#include "Utils/utils.h"
+#include "Com/Hook.h"
 #include <Metro.h>
 
 
@@ -70,7 +67,7 @@ public:
 
 	void addHook(uint8_t id, int16_t x, int16_t y, uint16_t r, const char* o) {
 		hooks.emplace(std::make_pair(id, Hook(id, x, y, r, o)));	//On ajoute un couple (id, hook(id)) au dictionnaire de hooks
-		ids.push_back(id);	//On ajoute l'id à la liste des ids disponibles
+		ids.push_back(id);	//On ajoute l'id ï¿½ la liste des ids disponibles
 	}
 
 	void enableHook(uint8_t id) {
@@ -90,15 +87,15 @@ public:
 	}
 
 	const char* getReadyHookOrder(uint8_t i) {
-		hooks.at(readyIds.at(i)).setActive(false); //Si un hook est à effectuer maintenant, il ne sera plus activable
+		hooks.at(readyIds.at(i)).setActive(false); //Si un hook est ï¿½ effectuer maintenant, il ne sera plus activable
 		return hooks.at(readyIds.at(i)).getOrder();
 	}
 	void check(float x, float y) {
 		for (uint8_t i = 0; i < ids.size(); ++i) {
 			Hook currentHook = (hooks.at(ids.at(i)));
 			if (currentHook.isActive() && !currentHook.isReady() && currentHook.check(x, y)) {
-				currentHook.setReady();			//Les conditions du hook sont réunies !
-				readyIds.push_back(ids.at(i));	//Il faudra l'executer dès que possible
+				currentHook.setReady();			//Les conditions du hook sont rï¿½unies !
+				readyIds.push_back(ids.at(i));	//Il faudra l'executer dï¿½s que possible
 			}
 		}
 	}
@@ -115,7 +112,7 @@ private:
 	OrderData orderData;
 	char readMessage[RX_BUFFER_SIZE];
 
-	//Variables booleennes pour envoi de données au HL
+	//Variables booleennes pour envoi de donnï¿½es au HL
 	bool isSendingUS;
 
 public:

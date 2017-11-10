@@ -11,19 +11,17 @@ MOSI	11
 #ifndef _ETHERNETMGR_h
 #define _ETHERNETMGR_h
 
-#if defined(ARDUINO) && ARDUINO >= 100
-	#include <Arduino.h>
-#else
-	#include <WProgram.h>
-#endif
+#include <Arduino.h>
 
-#include "Singleton.hpp"
-#include "stdarg.h"
+
+#include "Utils/Singleton.hpp"
+#include "Utils/stdarg.h"
 #include <WString.h>
-#include "defines.h"
+#include "Utils/defines.h"
+#include <SPI.h>
 #include <Ethernet.h>
-#include "MotionControlSystem.h"
-#include "pin_mapping.h"
+#include "MotionControl/MotionControlSystem.h"
+#include "Utils/pin_mapping.h"
 
 
 
@@ -34,7 +32,7 @@ MOSI	11
 class EthernetMgr : public Singleton<EthernetMgr>
 {
 private:
-	//Paramètres TCP/IP
+	//Paramï¿½tres TCP/IP
 	uint8_t mac[6]{ 0x04, 0xE9, 0xE5, 0x04, 0xE9, 0xE5 };  //Addresse mac de la Teensy, ne pas changer
 	IPAddress ip{ 192,168,0,1 };
 	IPAddress dns{ 8,8,8,8 };

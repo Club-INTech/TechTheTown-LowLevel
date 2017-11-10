@@ -3,7 +3,7 @@
 *
 * Classe de gestion d'un moteur (PWM, direction...)
 *
-* Récapitulatif pins utilisées pour contrôler les deux moteurs :
+* Recapitulatif pins utilisees pour controler les deux moteurs :
 *
 * Gauche :
 * 	-pins de sens : ??
@@ -17,10 +17,10 @@
 #ifndef COMPLETE_LOW_LEVEL_MOTOR_H
 #define COMPLETE_LOW_LEVEL_MOTOR_H
 
-#include "safe_enum.hpp"
+#include "Utils/safe_enum.hpp"
 #include <stdint.h>
-#include "pin_mapping.h"
-#include "utils.h"
+#include "Utils/pin_mapping.h"
+#include "Utils/utils.h"
 #include <Arduino.h>
 
 struct direction_def {

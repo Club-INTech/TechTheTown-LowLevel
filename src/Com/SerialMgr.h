@@ -1,15 +1,12 @@
 #ifndef _SERIALHL_h
 #define _SERIALHL_h
 
-#if defined(ARDUINO) && ARDUINO >= 100
-	#include <Arduino.h>
-#else
-	#include <WProgram.h>
-#endif
+#include <Arduino.h>
 
-#include "Singleton.hpp"
-#include "stdarg.h"
-#include "defines.h"
+
+#include "Utils/Singleton.hpp"
+#include "Utils/stdarg.h"
+#include "Utils/defines.h"
 
 
 
