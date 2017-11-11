@@ -377,3 +377,7 @@ Supprimerait .travis.yml
 Supprimerait CMakeLists.txt
 Supprimerait lib/
 Supprimerait platformio.ini
+/.travis.yml
+/CMakeLists.txt
+/platformio.ini
+*.gitignore
