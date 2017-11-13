@@ -7,44 +7,12 @@
 
 #include "Com/OrderManager.h"
 
-HardwareSerial God;
-DynamixelInterface Jesus(God,1);
-
-DynamixelPacket* evangileSelonStPaul;
-DynamixelPacket* evangileSelonStPierre;
-DynamixelPacket* evangileSelonStMarc;
-
-uint8_t go0[2] = { 0x00 , 0x00 };
-uint8_t go300[2] = { 0xFF , 0x03 };
-uint8_t speed[2] = { 42 , 0};
-
-DynamixelMotor LaBible(Jesus,254);
-
 //Initialisation de la Serie
 void setup() {
 	/*serie*/
 	Serial.begin(115200);
 	Serial.println("Série OK");
 	delay(250);
-
-	God.begin(115200);
-
-	LaBible.init();
-	LaBible.enableTorque();
-	LaBible.jointMode();
-	LaBible.speed(42);
-
-    //evangileSelonStPaul = new DynamixelPacket(0xFE,0x03,5,go0,0x1E);
-    //evangileSelonStPierre = new DynamixelPacket(0xFE,0x03,5,go300,0x1E);
-	//evangileSelonStMarc = new DynamixelPacket(0xFE,0x03,5,speed,0x20);
-
-	//Serial.println("On a écrit les évangiles");
-	//delay(1000);
-
-	//Jesus->sendPacket(*evangileSelonStMarc);
-
-	//Serial.println("Jesus donne le tempo");
-	//delay(1000);
 
 
     /*Wire.begin();
@@ -73,23 +41,8 @@ void motionControlInterrupt() {
 
 
 //Boucle principale, gere entre autres la communication avec le HL
-void loop() {
-    //Broadcast ID : 0xFE
-    //Jesus->sendPacket(*evangileSelonStPaul);
-	//Serial.println("St. Paul a parlé");
-    //delay(1000);
-    //Jesus->sendPacket(*evangileSelonStPierre);
-	//Serial.println("St Pierre a parlé");
-    //delay(1000);
 
-	delay(1000);
-	LaBible.goalPositionDegree(0);
-	delay(1000);
-	LaBible.goalPositionDegree(300);
-}
-
-//Hijack du main parce que fuck platformio
-void loop2(){
+void loop(){
     OrderManager& orderMgr = OrderManager::Instance();
 
     /* MotionControlSystem */
