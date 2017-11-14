@@ -111,9 +111,33 @@ DynamixelStatus DynamixelMotor::goalPosition(uint16_t aPosition)
 	return write(DYN_ADDRESS_GOAL_POSITION, aPosition);
 }
 
+DynamixelStatus DynamixelMotor::goalPositionWait(uint16_t aPosition)
+{
+ 	DynamixelStatus status = write(DYN_ADDRESS_GOAL_POSITION, aPosition);
+	if( status == DynStatus::DYN_STATUS_OK )
+	{
+		while( currentPosition() != aPosition )
+		{
+		}
+	}
+	return status;
+}
+
 DynamixelStatus DynamixelMotor::goalPositionDegree(uint16_t posDeg)
 {
 	return goalPosition(posDeg * 3.41);
+}
+
+DynamixelStatus DynamixelMotor::goalPositionDegreeWait(uint16_t posdeg)
+{
+	DynamixelStatus status = write(DYN_ADDRESS_GOAL_POSITION, posdeg);
+	if( status == DynStatus::DYN_STATUS_OK )
+	{
+		while( currentPositionDegree() != posdeg )
+		{
+		}
+	}
+	return status;
 }
 
 void DynamixelMotor::setId(uint8_t newId)
@@ -144,4 +168,3 @@ uint16_t DynamixelMotor::currentPositionDegree()
 {
 	return (uint16_t)((float)currentPosition() / 3.41);
 }
-
