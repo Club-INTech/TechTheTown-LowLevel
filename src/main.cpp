@@ -14,21 +14,22 @@ void setup() {
 	Serial.println("Série OK");
 	delay(250);
 
-	/*Wire.begin();
-	for (int i = 0; i < US_TOTAL; i++) {
-		boolean error = true;
-		while (error) {
-			Wire.beginTransmission(SLAVE_ADDRESS);
-			error = Wire.endTransmission(I2C_STOP, 50000); // if error !=0, connection error(50ms timeout)
-			if (error) { // Not connected, try to reset bus and connect again
-				Serial.println("\nNo I2C connection\n...trying again\n");
-				Wire.resetBus();
-				Wire.begin();
-				Wire.setClock(400000);
-			}
-			delay(200);
-		}
-	}*/
+
+    /*Wire.begin();
+    for (int i = 0; i < US_TOTAL; i++) {
+        boolean error = true;
+        while (error) {
+            Wire.beginTransmission(SLAVE_ADDRESS);
+            error = Wire.endTransmission(I2C_STOP, 50000); // if error !=0, connection error(50ms timeout)
+            if (error) { // Not connected, try to reset bus and connect again
+                Serial.println("\nNo I2C connection\n...trying again\n");
+                Wire.resetBus();
+                Wire.begin();
+                Wire.setClock(400000);
+            }
+            delay(200);
+        }
+    }*/
 }
 
 /* Interruptions d'asservissements */
@@ -40,24 +41,23 @@ void motionControlInterrupt() {
 
 
 //Boucle principale, gere entre autres la communication avec le HL
-void loop() {
-	OrderManager& orderMgr = OrderManager::Instance();
 
-	/* MotionControlSystem */
-	IntervalTimer motionControlInterruptTimer;
-	motionControlInterruptTimer.priority(253);
-	motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); //asservissements
-	
-	/* Gestion des ordres recus */
+void loop(){
+    OrderManager& orderMgr = OrderManager::Instance();
 
-	while (true) {
-		//orderMgr.refreshUS();
-		orderMgr.communicate();
-		//orderMgr.sendUSData();
-	}
+    /* MotionControlSystem */
+    IntervalTimer motionControlInterruptTimer;
+    motionControlInterruptTimer.priority(253);
+    motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); //asservissements
+
+    /* Gestion des ordres recus */
+
+    while (true) {
+        //orderMgr.refreshUS();
+        orderMgr.communicate();
+        //orderMgr.sendUSData();
+    }
 }
-
-
 
 
 
