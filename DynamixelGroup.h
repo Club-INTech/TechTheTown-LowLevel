@@ -20,12 +20,8 @@ class DynamixelGroup
 {
   private:
     std::map< const DynamixelID , std::pair<DynamixelMotor*,const DynSym> > m_motors;
-    DynamixelInterface* dyn_interface = nullptr;
   public:
     DynamixelGroup()
-    {}
-
-    DynamixelGroup( DynamixelInterface* aInterface ) : dyn_interface(aInterface)
     {}
 
     inline void add( DynamixelMotor* aMotor , const DynSym& aSym = DynSym::BASE )
@@ -41,11 +37,6 @@ class DynamixelGroup
     inline void clear()
     {
       m_motors.clear();
-    }
-
-    inline void setInterface( DynamixelInterface* aInterface )
-    {
-      dyn_interface = aInterface;
     }
 
     DynamixelMotor* get( const DynamixelID& aID ) const;
