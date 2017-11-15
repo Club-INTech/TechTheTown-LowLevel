@@ -11,7 +11,7 @@ DynamixelInterface::DynamixelInterface(HardwareSerial &aStream, uint8_t aDirecti
 	}
 }
 
-void DynamixelInterface::begin(unsigned long aBaud, unsigned long timeout)
+void DynamixelInterface::begin( const unsigned long aBaud, unsigned long timeout)
 {
 	mStream.begin(aBaud);
 #if defined(__MK20DX128__) || defined(__MK20DX256__) || defined(__MK64FX512__) || defined(__MK66FX1M0__) // Teensy 3.0 3.1 3.2 3.5 3.6
@@ -158,28 +158,28 @@ void DynamixelInterface::transaction(bool aExpectStatus, uint8_t answerSize)
 	}
 }
 
-DynamixelStatus DynamixelInterface::read(uint8_t aID, uint8_t aAddress, uint8_t aSize, uint8_t *aPtr, uint8_t aStatusReturnLevel)
+DynamixelStatus DynamixelInterface::read(const uint8_t aID, const uint8_t aAddress, const uint8_t aSize, uint8_t *aPtr, uint8_t aStatusReturnLevel)
 {
 	mPacket = DynamixelPacket(aID, DYN_READ, 4, aPtr, aAddress, aSize);
 	transaction(aStatusReturnLevel > 0 && aID != BROADCAST_ID, aSize);
 	return mPacket.mStatus;
 }
 
-DynamixelStatus DynamixelInterface::write(uint8_t aID, uint8_t aAddress, uint8_t aSize, const uint8_t *aPtr, uint8_t aStatusReturnLevel)
+DynamixelStatus DynamixelInterface::write(const uint8_t aID, const uint8_t aAddress, const uint8_t aSize, const uint8_t *aPtr, uint8_t aStatusReturnLevel)
 {
 	mPacket = DynamixelPacket(aID, DYN_WRITE, aSize+3, aPtr, aAddress);
 	transaction(aStatusReturnLevel > 1 && aID != BROADCAST_ID);
 	return mPacket.mStatus;
 }
 
-DynamixelStatus DynamixelInterface::regWrite(uint8_t aID, uint8_t aAddress, uint8_t aSize, const uint8_t *aPtr, uint8_t aStatusReturnLevel)
+DynamixelStatus DynamixelInterface::regWrite(const uint8_t aID, const uint8_t aAddress, const uint8_t aSize, const uint8_t *aPtr, uint8_t aStatusReturnLevel)
 {
 	mPacket = DynamixelPacket(aID, DYN_REG_WRITE, aSize+3, aPtr, aAddress);
 	transaction(aStatusReturnLevel > 1 && aID != BROADCAST_ID);
 	return mPacket.mStatus;
 }
 
-DynamixelStatus DynamixelInterface::syncWrite(uint8_t nID, const uint8_t *aID, uint8_t aAddress, uint8_t aSize, const uint8_t *aPtr, uint8_t aStatusReturnLevel)
+DynamixelStatus DynamixelInterface::syncWrite( const uint8_t nID, const uint8_t *aID, const uint8_t aAddress, const uint8_t aSize, const uint8_t *aPtr, uint8_t aStatusReturnLevel)
 {
 	mPacket = DynamixelPacket(BROADCAST_ID, DYN_SYNC_WRITE, (aSize+1)*nID+4, aPtr, aAddress, aSize, nID, aID);
 	transaction(false);

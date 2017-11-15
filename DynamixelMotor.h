@@ -11,7 +11,7 @@
 class DynamixelDevice
 {
 public:
-	DynamixelDevice(DynamixelInterface &aInterface, DynamixelID aId);
+	DynamixelDevice(DynamixelInterface &aInterface, const DynamixelID aId);
 
 	DynamixelStatus init();
 
@@ -35,19 +35,19 @@ public:
 
 
 	template<class T>
-	inline DynamixelStatus read(uint8_t aAddress, T& aData)
+	inline DynamixelStatus read(const uint8_t aAddress, T& aData)
 	{
 		return mStatus = mInterface.read<T>(mID, aAddress, aData, mStatusReturnLevel);
 	}
 
 	template<class T>
-	inline DynamixelStatus write(uint8_t aAddress, const T& aData)
+	inline DynamixelStatus write(const uint8_t aAddress, const T& aData)
 	{
 		return mStatus = mInterface.write<T>(mID, aAddress, aData, mStatusReturnLevel);
 	}
 
 	template<class T>
-	inline DynamixelStatus regWrite(uint8_t aAddress, const T& aData)
+	inline DynamixelStatus regWrite(const uint8_t aAddress, const T& aData)
 	{
 		return mStatus = mInterface.regWrite<T>(mID, aAddress, aData, mStatusReturnLevel);
 	}
@@ -82,23 +82,23 @@ class DynamixelMotor:public DynamixelDevice
 {
 public:
 
-	DynamixelMotor(DynamixelInterface &aInterface, DynamixelID aId);
+	DynamixelMotor(DynamixelInterface &aInterface, const DynamixelID aId);
 
 	void wheelMode();
 	void jointMode(uint16_t aCWLimit = 0, uint16_t aCCWLimit = 0x3FF);
 
 	void enableTorque(bool aTorque = true);
 	DynamixelStatus alarmShutdown(uint8_t aMode = 0x04);
-	DynamixelStatus speed(uint16_t aSpeed);
-	DynamixelStatus torqueLimit(uint16_t aTorque);
-	DynamixelStatus goalPosition(uint16_t aPosition);
-	DynamixelStatus goalPositionWait(uint16_t aPosition);
-	DynamixelStatus goalPositionDegree(uint16_t posDeg);
-	DynamixelStatus goalPositionDegreeWait(uint16_t posdeg);
+	DynamixelStatus speed(const uint16_t aSpeed);
+	DynamixelStatus torqueLimit(const uint16_t aTorque);
+	DynamixelStatus goalPosition(const uint16_t aPosition);
+	DynamixelStatus goalPositionWait(const uint16_t aPosition);
+	DynamixelStatus goalPositionDegree(const uint16_t posDeg);
+	DynamixelStatus goalPositionDegreeWait(const uint16_t posdeg);
 
-	void setId(uint8_t newId);
+	void setId(const uint8_t newId);
 
-	void led(uint8_t aState);
+	void led(const uint8_t aState);
 
 	uint16_t currentPosition();
 	uint16_t currentPositionDegree();

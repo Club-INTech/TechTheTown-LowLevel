@@ -1,6 +1,6 @@
 #include "DynamixelMotor.h"
 
-DynamixelDevice::DynamixelDevice(DynamixelInterface &aInterface, DynamixelID aID):
+DynamixelDevice::DynamixelDevice(DynamixelInterface &aInterface, const DynamixelID aID):
 	mInterface(aInterface), mStatusReturnLevel(255), mID(aID)
 {
 	mStatus = DYN_STATUS_OK;
@@ -69,7 +69,7 @@ DynamixelStatus DynamixelDevice::init()
 
 
 
-DynamixelMotor::DynamixelMotor(DynamixelInterface &aInterface, DynamixelID aId):
+DynamixelMotor::DynamixelMotor(DynamixelInterface &aInterface, const DynamixelID aId):
 	DynamixelDevice(aInterface, aId)
 {}
 
@@ -96,22 +96,22 @@ DynamixelStatus DynamixelMotor::alarmShutdown(uint8_t aMode)
 	return write(DYN_ADDRESS_ALARM_SHUTDOWN, aMode);
 }
 
-DynamixelStatus DynamixelMotor::speed(uint16_t aSpeed)
+DynamixelStatus DynamixelMotor::speed(const uint16_t aSpeed)
 {
 	return write(DYN_ADDRESS_GOAL_SPEED, aSpeed);
 }
 
-DynamixelStatus DynamixelMotor::torqueLimit(uint16_t aTorque)
+DynamixelStatus DynamixelMotor::torqueLimit(const uint16_t aTorque)
 {
 	return write(DYN_ADDRESS_TORQUE_LIMIT, aTorque);
 }
 
-DynamixelStatus DynamixelMotor::goalPosition(uint16_t aPosition)
+DynamixelStatus DynamixelMotor::goalPosition(const uint16_t aPosition)
 {
 	return write(DYN_ADDRESS_GOAL_POSITION, aPosition);
 }
 
-DynamixelStatus DynamixelMotor::goalPositionWait(uint16_t aPosition)
+DynamixelStatus DynamixelMotor::goalPositionWait(const uint16_t aPosition)
 {
  	DynamixelStatus status = write(DYN_ADDRESS_GOAL_POSITION, aPosition);
 	if( status == DynStatus::DYN_STATUS_OK )
@@ -123,12 +123,12 @@ DynamixelStatus DynamixelMotor::goalPositionWait(uint16_t aPosition)
 	return status;
 }
 
-DynamixelStatus DynamixelMotor::goalPositionDegree(uint16_t posDeg)
+DynamixelStatus DynamixelMotor::goalPositionDegree(const uint16_t posDeg)
 {
 	return goalPosition(posDeg * 3.41);
 }
 
-DynamixelStatus DynamixelMotor::goalPositionDegreeWait(uint16_t posdeg)
+DynamixelStatus DynamixelMotor::goalPositionDegreeWait(const uint16_t posdeg)
 {
 	DynamixelStatus status = write(DYN_ADDRESS_GOAL_POSITION, posdeg);
 	if( status == DynStatus::DYN_STATUS_OK )
@@ -140,13 +140,13 @@ DynamixelStatus DynamixelMotor::goalPositionDegreeWait(uint16_t posdeg)
 	return status;
 }
 
-void DynamixelMotor::setId(uint8_t newId)
+void DynamixelMotor::setId(const uint8_t newId)
 {
 	write(DYN_ADDRESS_ID, newId);
 	mID = newId;
 }
 
-void DynamixelMotor::led(uint8_t aState)
+void DynamixelMotor::led(const uint8_t aState)
 {
 	write(DYN_ADDRESS_LED, aState);
 }

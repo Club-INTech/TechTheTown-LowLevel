@@ -31,7 +31,7 @@ public:
 	*
 	* Start the interface with desired baudrate, call once before using the interface
 	*/
-	void begin(unsigned long aBaud, unsigned long timeout = 50);
+	void begin(const unsigned long aBaud, unsigned long timeout = 50);
 
 	/**
 	* \brief Send a packet on bus
@@ -49,30 +49,30 @@ public:
 	* Return error code in case of communication error (timeout, checksum error, ...)
 	*/
 	void receivePacket(DynamixelPacket &aPacket, uint8_t answerSize = 0);
-	
+
 	/**
 	* \brief Send the current packet, wait for the answer and update the mStatus acordingly
 	* \param[in] aExpectStatus : should be "aStatusReturnLevel>0 && aID!=BROADCAST_ID"
 	*/
 	void transaction(bool aExpectStatus, uint8_t memorySize = 0);
-	
+
 	//sizeof(T) must be lower than DYN_INTERNAL_BUFFER_SIZE, and in any case lower than 256
 	template<class T>
-	inline DynamixelStatus read(uint8_t aID, uint8_t aAddress, T& aData, uint8_t aStatusReturnLevel = 2);
+	inline DynamixelStatus read(const uint8_t aID, const uint8_t aAddress, T& aData, uint8_t aStatusReturnLevel = 2);
 	template<class T>
-	inline DynamixelStatus write(uint8_t aID, uint8_t aAddress, const T& aData, uint8_t aStatusReturnLevel = 2);
+	inline DynamixelStatus write(const uint8_t aID, const uint8_t aAddress, const T& aData, uint8_t aStatusReturnLevel = 2);
 	template<class T>
-	inline DynamixelStatus regWrite(uint8_t aID, uint8_t aAddress, const T& aData, uint8_t aStatusReturnLevel = 2);
-	
-	DynamixelStatus read(uint8_t aID, uint8_t aAddress, uint8_t aSize, uint8_t *aPtr, uint8_t aStatusReturnLevel = 2);
-	DynamixelStatus write(uint8_t aID, uint8_t aAddress, uint8_t aSize, const uint8_t *aPtr, uint8_t aStatusReturnLevel = 2);
-	DynamixelStatus regWrite(uint8_t aID, uint8_t aAddress, uint8_t aSize, const uint8_t *aPtr, uint8_t aStatusReturnLevel = 2);
-	DynamixelStatus syncWrite(uint8_t nID, const uint8_t *aID, uint8_t aAddress, uint8_t aSize, const uint8_t *aPtr, uint8_t aStatusReturnLevel = 2);
-	
-	DynamixelStatus ping(uint8_t aID);
+	inline DynamixelStatus regWrite(const uint8_t aID, const uint8_t aAddress, const T& aData, uint8_t aStatusReturnLevel = 2);
+
+	DynamixelStatus read( const uint8_t aID, const uint8_t aAddress, const uint8_t aSize, uint8_t *aPtr, uint8_t aStatusReturnLevel = 2);
+	DynamixelStatus write( const uint8_t aID, const uint8_t aAddress, const uint8_t aSize, const uint8_t *aPtr, uint8_t aStatusReturnLevel = 2);
+	DynamixelStatus regWrite( const uint8_t aID, const uint8_t aAddress, const uint8_t aSize, const uint8_t *aPtr, uint8_t aStatusReturnLevel = 2);
+	DynamixelStatus syncWrite(uint8_t nID, const uint8_t *aID, const uint8_t aAddress, const uint8_t aSize, const uint8_t *aPtr, uint8_t aStatusReturnLevel = 2);
+
+	DynamixelStatus ping(const uint8_t aID);
 	DynamixelStatus action(uint8_t aID=BROADCAST_ID, uint8_t aStatusReturnLevel = 2);
-	DynamixelStatus reset(uint8_t aID, uint8_t aStatusReturnLevel=2);
-	
+	DynamixelStatus reset(const uint8_t aID, uint8_t aStatusReturnLevel=2);
+
 private:
 
 	/** \brief Switch stream to read (receive) mode */
@@ -83,7 +83,7 @@ private:
 
 	void setReadMode(HardwareSerial &);
 	void setWriteMode(HardwareSerial &);
-	
+
 	DynamixelPacket mPacket;
 	static const uint8_t NO_DIR_PORT = 255;
 	HardwareSerial &mStream;
@@ -92,19 +92,19 @@ private:
 
 
 template<class T>
-DynamixelStatus DynamixelInterface::read(uint8_t aID, uint8_t aAddress, T& aData, uint8_t aStatusReturnLevel)
+DynamixelStatus DynamixelInterface::read(const uint8_t aID, const uint8_t aAddress, T& aData, uint8_t aStatusReturnLevel)
 {
 	return read(aID, aAddress, uint8_t(sizeof(T)), (uint8_t*)&aData, aStatusReturnLevel);
 }
 
 template<class T>
-DynamixelStatus DynamixelInterface::write(uint8_t aID, uint8_t aAddress, const T& aData, uint8_t aStatusReturnLevel)
+DynamixelStatus DynamixelInterface::write(const uint8_t aID, const uint8_t aAddress, const T& aData, uint8_t aStatusReturnLevel)
 {
 	return write(aID, aAddress, uint8_t(sizeof(T)), (const uint8_t*)&aData, aStatusReturnLevel);
 }
 
 template<class T>
-DynamixelStatus DynamixelInterface::regWrite(uint8_t aID, uint8_t aAddress, const T& aData, uint8_t aStatusReturnLevel)
+DynamixelStatus DynamixelInterface::regWrite(const uint8_t aID, const uint8_t aAddress, const T& aData, uint8_t aStatusReturnLevel)
 {
 	return regWrite(aID, aAddress, uint8_t(sizeof(T)), (const uint8_t*)aData, aStatusReturnLevel);
 }
