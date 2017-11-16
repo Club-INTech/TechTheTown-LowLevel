@@ -97,8 +97,10 @@ public:
 	DynamixelStatus goalPositionDegreeWait(const uint16_t posdeg);
 
 	void setId(const uint8_t newId);
-
 	void led(const uint8_t aState);
+	void recoverTorque();
+
+	DynamixelStatus resetSecuritySettings();
 
 	uint16_t currentPosition();
 	uint16_t currentPositionDegree();
