@@ -603,9 +603,12 @@ void OrderManager::execute(const char* orderToExecute)
 		}
 		else if (!strcmp(order, "eh")) {
 			//TODO: active un hook
+			hookList.enableHook(parseInt(orderData.at(1))); //Singe proof ?
+
 		}
 		else if (!strcmp(order, "dh")) {
 			//TODO: désactive un hook
+			hookList.disableHook(parseInt(orderData.at(1)));
 		}
 		else
 		{

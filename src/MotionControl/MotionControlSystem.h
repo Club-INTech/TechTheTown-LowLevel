@@ -2,13 +2,13 @@
 #define MOTION_CONTROL_H_
 
 
-#include "Singleton.hpp"
+#include "Utils/Singleton.hpp"
 #include "Motor.h"
-#include "pid.hpp"
-#include "average.hpp"
-#include "pin_mapping.h"
-#include "defines.h"
-#include "Encoder.h"
+#include "Utils/pid.hpp"
+#include "Utils/average.hpp"
+#include "Utils/pin_mapping.h"
+#include "Utils/defines.h"
+#include "MotionControl/Encoder.h"
 
 enum MOVING_DIRECTION { FORWARD, BACKWARD, NONE };
 

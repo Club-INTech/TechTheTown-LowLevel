@@ -1,35 +1,35 @@
 /**
-*Contient la boucle principale de gestion des entrées série du programme
+*Initialisation et boucle principale du programme
 *
-* @author caillou, sylvain, rémi, melanie, Ug
+* @author caillou, sylvain, rÃ©mi, melanie, Ug
 *
 **/
 
-#include "OrderManager.h"
-#include <i2c_t3\i2c_t3.h>
+#include "Com/OrderManager.h"
 
-//Initialisation de la Série
+//Initialisation de la Serie
 void setup() {
-	/*série*/
+	/*serie*/
 	Serial.begin(115200);
-	Serial.println("Série OK");
+	Serial.println("SÃ©rie OK");
 	delay(250);
 
-	/*Wire.begin();
-	for (int i = 0; i < US_TOTAL; i++) {
-		boolean error = true;
-		while (error) {
-			Wire.beginTransmission(SLAVE_ADDRESS);
-			error = Wire.endTransmission(I2C_STOP, 50000); // if error !=0, connection error(50ms timeout)
-			if (error) { // Not connected, try to reset bus and connect again
-				Serial.println("\nNo I2C connection\n...trying again\n");
-				Wire.resetBus();
-				Wire.begin();
-				Wire.setClock(100000);
-			}
-			delay(200);
-		}
-	}*/
+
+    /*Wire.begin();
+    for (int i = 0; i < US_TOTAL; i++) {
+        boolean error = true;
+        while (error) {
+            Wire.beginTransmission(SLAVE_ADDRESS);
+            error = Wire.endTransmission(I2C_STOP, 50000); // if error !=0, connection error(50ms timeout)
+            if (error) { // Not connected, try to reset bus and connect again
+                Serial.println("\nNo I2C connection\n...trying again\n");
+                Wire.resetBus();
+                Wire.begin();
+                Wire.setClock(400000);
+            }
+            delay(200);
+        }
+    }*/
 }
 
 /* Interruptions d'asservissements */
@@ -40,22 +40,23 @@ void motionControlInterrupt() {
 }
 
 
-//Boucle principale, gère entre autres la communication avec le HL
-void loop() {
-	OrderManager& orderMgr = OrderManager::Instance();
+//Boucle principale, gere entre autres la communication avec le HL
 
-	/* MotionControlSystem */
-	IntervalTimer motionControlInterruptTimer;
-	motionControlInterruptTimer.priority(253);
-	motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); //asservissements
-	
-	/* Gestion des ordres reçus */
+void loop(){
+    OrderManager& orderMgr = OrderManager::Instance();
 
-	while (true) {
-		//orderMgr.refreshUS();
-		orderMgr.communicate();
-		//orderMgr.sendUSData();
-	}
+    /* MotionControlSystem */
+    IntervalTimer motionControlInterruptTimer;
+    motionControlInterruptTimer.priority(253);
+    motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); //asservissements
+
+    /* Gestion des ordres recus */
+
+    while (true) {
+        //orderMgr.refreshUS();
+        orderMgr.communicate();
+        //orderMgr.sendUSData();
+    }
 }
 
 
@@ -63,9 +64,7 @@ void loop() {
 
 
 
-
-
-/* Ce bout de code permet de compiler avec std::vector, copié honteusement de chez INTech-Senpai */
+/* Ce bout de code permet de compiler avec std::vector, copiï¿½ honteusement de chez INTech-Senpai */
 namespace std {
 	void __throw_bad_alloc()
 	{
@@ -131,14 +130,6 @@ namespace std {
          `:::::::/h////::.-:::::::y-                                                                                                        
          :::::::ss`        -:/+sso:                                                                                                         
          .:/++sy:          `//*/
-
-
-
-
-
-
-
-
 
 
 
