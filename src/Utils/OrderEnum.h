@@ -1,0 +1,63 @@
+#ifndef ORDER_ENUM_H
+#define ORDER_ENUM_H
+
+enum OrderEnum
+{
+  /*<===== DEPLACEMENTS =====>*/
+  STOP = 0,
+  MOVE_LENGHWISE = 1,
+  TURN = 2,
+  TURN_RIGHT_ONLY = 3,
+  TURN_LEFT_ONLY = 4,
+  IS_ROBOT_MOVING = 5,
+  SEND_POSITION = 6,
+
+  /*<===== INIT =====>*/
+  SET_TRANSLATION_SPEED = 7,
+  SET_ROTATIONNAL_SPEED = 8,
+  SET_X = 9,
+  SET_Y = 10,
+  SET_ORIENTATION = 11,
+  SET_POSITION = 12,
+  INITIALISE_HOOK = 13,
+  ENABLE_HOOK = 14,
+  DISABLE_HOOK = 15,
+
+  /*<===== ASSERV =====>*/
+  NO_ASSERV_TRANSLATION = 16,
+  ASSERV_TRANSLATION = 17,
+  NO_ASSERV_ROTATION = 18,
+  ASSERV_ROTATION = 19,
+  NO_ASSERV_SPEED = 20,
+  ASSERV_SPEED = 21,
+  DEBUG = 22,
+
+  /*<===== MONTLHERY =====>*/
+  MONTLHERY = 23,
+  MOVE_FORWARD = 24,
+  MOVE_BACKWARD = 25,
+  TURN_RIGHT = 26,
+  TURN_LEFT = 27,
+  SSTOP = 28,
+
+  /*<==== capteurs =====*/
+  DIST_US_BACK_RIGHT = 29,
+  DIST_US_BACK_LEFT = 30,
+  DIST_US_FRONT_RIGHT = 31,
+  DIST_US_FRONT_LEFT = 32,
+  SWITCH_US = 33,
+
+  /*<==== CONTACTEUR ET JUMPER =====>*/
+  JUMPER_STATE = 34,  //etat 0=en place , 1=retiré
+  // etats contacteurs : 0=non appuyé ; 1=appuyé
+  CONTACTOR1_STATE = 35,
+  CONTACTOR2_STATE = 36,
+  CONTACTOR3_STATE = 37,
+  CONTACTOR4_STATE = 38,
+  CONTACTOR5_STATE = 39,
+
+  /*TODO ACTIONNEURS*/
+
+};
+
+#endif //ORDER_ENUM_H

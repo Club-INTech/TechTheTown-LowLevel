@@ -7,7 +7,7 @@
 #define DYNAMIXEL_H
 
 #include <stdint.h>
-#include <stdlib.h> 
+#include <stdlib.h>
 
 /** \brief Type of dynamixel device ID */
 typedef uint8_t DynamixelID;
@@ -39,14 +39,14 @@ enum DynInstruction
  *
  * How to interpret status value :
  *
- * If (status&DYN_STATUS_COM_ERROR)==0 , the value is the 
+ * If (status&DYN_STATUS_COM_ERROR)==0 , the value is the
  * the status returned by the motor, describing its internal
  * error.
  * If (status&DYN_STATUS_COM_ERROR)==1, there was an error during
  * communication, and the value describe that error.
  *
  * DYN_STATUS_CHECKSUM_ERROR may appear in both cases, in the first
- * case, it means there was an error in the checksum of the 
+ * case, it means there was an error in the checksum of the
  * instruction packet, in second case in the response packet.
  *
  *
@@ -54,7 +54,7 @@ enum DynInstruction
 enum DynStatus
 {
 	DYN_STATUS_OK					= 0,
-	
+
 	DYN_STATUS_INPUT_VOLTAGE_ERROR	= 1,
 	DYN_STATUS_ANGLE_LIMIT_ERROR	= 2,
 	DYN_STATUS_OVERHEATING_ERROR	= 4,
@@ -62,9 +62,9 @@ enum DynStatus
 	DYN_STATUS_CHECKSUM_ERROR		= 16,
 	DYN_STATUS_OVERLOAD_ERROR		= 32,
 	DYN_STATUS_INSTRUCTION_ERROR	= 64,
-	
+
 	DYN_STATUS_TIMEOUT				= 1,
-	
+
 	DYN_STATUS_COM_ERROR			= 128,
 	DYN_STATUS_INTERNAL_ERROR		= 255
 };
@@ -83,7 +83,7 @@ struct DynamixelPacket
 	{
 		mCheckSum = checkSum();
 	}
-	
+
 	/** \brief Packet ID */
 	DynamixelID mID;
 	/** \brief ID list, used for sync write, set to 0 if not used */
@@ -105,7 +105,7 @@ struct DynamixelPacket
 	uint8_t *mData;
 	/** \brief Packet checksum */
 	uint8_t mCheckSum;
-	
+
 	/**
 	 * \brief Compute checksum of the packet
 	 * \return Checksum value
@@ -130,14 +130,14 @@ enum DynCommonAddress
 	DYN_ADDRESS_BAUDRATE	=0x04,
 	/** \brief Return Delay Time , uint8_t, writable */
 	DYN_ADDRESS_RDT			=0x05,
-	/** \brief Status Return Level , uint8_t, writable 
+	/** \brief Status Return Level , uint8_t, writable
 	 *
 	 * Define when the device will send back a status packet :
 	 * 0 : Ping only
 	 * 1 : Read and ping
 	 * 2 : All instructions
 	*/
-	DYN_ADDRESS_SRL			=0x10 
+	DYN_ADDRESS_SRL			=0x10
 };
 
 /**
@@ -181,18 +181,18 @@ enum DynModel
 	DYN_MODEL_AX12A	=0x0C,
 	DYN_MODEL_AX12W	=0x2C,
 	DYN_MODEL_AX18A	=0x12,
-	
+
 	DYN_MODEL_DX113	=0x71,
 	DYN_MODEL_DX114	=0x74,
 	DYN_MODEL_DX117	=0x75,
-	
+
 	DYN_MODEL_RX10	=0x0A,
 	DYN_MODEL_RX24F	=0x18,
 	DYN_MODEL_RX28	=0x1C,
 	DYN_MODEL_RX64	=0x40,
-	
+
 	DYN_MODEL_EX106	=0x6B,
-	
+
 	DYN_MODEL_MX12W	=0x68,
 	DYN_MODEL_MX28T	=0x1D,
 	DYN_MODEL_MX28R	=0x1D,
@@ -200,10 +200,9 @@ enum DynModel
 	DYN_MODEL_MX64R	=0x36,
 	DYN_MODEL_MX106T=0x40,
 	DYN_MODEL_MX106R=0x40,
-	
+
 	DYN_MODEL_AXS1	=0x0D
 };
 
 
 #endif
-
