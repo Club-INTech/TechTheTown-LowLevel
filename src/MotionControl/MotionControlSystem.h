@@ -101,8 +101,7 @@ private:
 	*
 	* 	Toutes ces variables sont initialis�es � 0. Elles doivent donc �tre r�gl�es ensuite
 	* 	par le haut niveau pour correspondre � son syst�me de coordonn�es.
-	* 	Le bas niveau met � jour la valeur de ces variables mais ne les utilise jamais pour
-	* 	lui m�me, il se contente de les transmettre au haut niveau.
+	* 	Le bas niveau met � jour la valeur de ces variables et les
 	*/
 	volatile float x;                // Positionnement 'x' (mm)
 	volatile float y;                // Positionnement 'y' (mm)
