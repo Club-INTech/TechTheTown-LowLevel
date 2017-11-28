@@ -55,11 +55,10 @@ class HookList
 {
 private:
 	std::map<uint8_t, Hook> hooks;
-	std::vector<uint8_t> ids;
 	std::vector<uint8_t> readyIds;
 
 public:
-	HookList() : hooks(std::map<uint8_t, Hook>()), ids(std::vector<uint8_t>()), readyIds(std::vector<uint8_t>()){}
+	HookList() : hooks(std::map<uint8_t, Hook>()), readyIds(std::vector<uint8_t>()){}
 
 	Hook& getHook(uint8_t id) {
 		return hooks.at(id);
@@ -67,7 +66,6 @@ public:
 
 	void addHook(uint8_t id, int16_t x, int16_t y, uint16_t r, const char* o) {
 		hooks.emplace(std::make_pair(id, Hook(id, x, y, r, o)));	//On ajoute un couple (id, hook(id)) au dictionnaire de hooks
-		ids.push_back(id);	//On ajoute l'id � la liste des ids disponibles
 	}
 
 	void enableHook(uint8_t id) {
@@ -78,11 +76,11 @@ public:
 		hooks.at(id).setActive(false);
 	}
 
-	uint8_t getSize() {
-		return ids.size();
+	int getSize() {
+		return hooks.size();
 	}
 
-	uint8_t getReadySize() {
+	int getReadySize() {
 		return readyIds.size();
 	}
 
@@ -91,14 +89,33 @@ public:
 		return hooks.at(readyIds.at(i)).getOrder();
 	}
 	void check(float x, float y) {
-		for (uint8_t i = 0; i < ids.size(); ++i) {
-			Hook currentHook = (hooks.at(ids.at(i)));
+		int size = hooks.size();
+		auto start = hooks.begin();
+		auto end = hooks.end();
+		while (start != end )
+		{
+			Hook currentHook = start->second;
 			if (currentHook.isActive() && !currentHook.isReady() && currentHook.check(x, y)) {
 				currentHook.setReady();			//Les conditions du hook sont r�unies !
-				readyIds.push_back(ids.at(i));	//Il faudra l'executer d�s que possible
+				readyIds.push_back(start->first);	//Il faudra l'executer d�s que possible
 			}
 		}
 	}
+
+    bool hookWithId(int hookId)
+    {
+        auto start = hooks.begin();
+        auto end = hooks.end();
+        while (start != end )
+        {
+            if(start->first == hookId)
+            {
+                return true;
+            }
+            ++start;
+        }
+        return false;
+    }
 };
 
 

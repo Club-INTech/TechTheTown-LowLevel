@@ -602,13 +602,29 @@ void OrderManager::execute(const char* orderToExecute)
 
 		}
 		else if (!strcmp(order, "eh")) {
-			//TODO: active un hook
-			hookList.enableHook(parseInt(orderData.at(1))); //Singe proof ?
+            int hookId = parseInt(orderData.at(1));
 
-		}
+            if(hookList.hookWithId(hookId))
+            {
+                hookList.enableHook(hookId); //Singe proof ?
+            }
+            else
+            {
+                highLevel.log("ERREUR::Activatoin d'un hook inexistant");
+            }
+
+        }
 		else if (!strcmp(order, "dh")) {
-			//TODO: désactive un hook
-			hookList.disableHook(parseInt(orderData.at(1)));
+            int hookId = parseInt(orderData.at(1));
+
+            if(hookList.hookWithId(hookId))
+            {
+                hookList.disableHook(hookId); //Singe proof ?
+            }
+            else
+            {
+                highLevel.log("ERREUR::Activation d'un hook inexistant");
+            }
 		}
 		else
 		{
