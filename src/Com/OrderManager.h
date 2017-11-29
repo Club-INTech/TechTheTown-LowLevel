@@ -162,7 +162,7 @@ public:
 	 void sendUSData();
 
 	 //Utilitaire
-	 int8_t split(char* , OrderData& , const char* separator = ",");
+	 uint8_t split(char* , OrderData& , const char* separator = " ");
 	 int parseInt(const char*);
 	 float parseFloat(const char*);
 

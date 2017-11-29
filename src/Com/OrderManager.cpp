@@ -674,35 +674,30 @@ void OrderManager::sendUSData() {
 *	Sépare une courte chaîne de caractères(RX_BUFFER_SIZE) selon un séparateur, dans un tableau output (au plus 4 mots)
 */
 
-int8_t OrderManager::split(char* input, OrderData& output, const char* separator) {
-	//uint32_t start = micros();
-	char* token;
-	int i = 0;
-	output.clear();
-	token = strtok(input, separator);
+uint8_t OrderManager::split(char* input, OrderData& output, const char* separator) {
+    char *token;
+    uint8_t i = 0;
+    output.clear();
+    token = strtok(input, separator);
 
-	if (token != NULL) {
-		output.push_back(token);
-	}
+    if (token != nullptr) {
+        output.push_back(token);
+    }
+    do {
+        token = strtok(nullptr, separator);
+        if (token != nullptr) {
+            output.push_back(token);
+            ++i;
+        }
+    } while (token != nullptr && i < RX_WORD_COUNT);
 
-	//Le premier caractère est le nombre de mots (max rx_word_count ici)
-
-	do {
-		token = strtok(NULL, separator);
-		if (token != NULL) {
-			output.push_back(token);
-			++i;
-		}
-	} while (token != NULL && i < RX_WORD_COUNT);
-
-	//Serial.println(micros() - start);
-	//Serial.println("C'était la durée du split");
-	return i;
+    return i;
 }
 
 int OrderManager::parseInt(const char* s) {
 	char currentChar = s[0];
 	int i = 0;
+
 	while (currentChar != '\0') {
 		if (!isDigit(currentChar)) {
 			highLevel.log("Not a digit at pos %d of:", i);
@@ -720,10 +715,9 @@ float OrderManager::parseFloat(const char* s) {
 	int i = 0;
 	uint8_t point = 0;
 	while (currentChar != '\0') {
-		if (!isDigit(currentChar) && currentChar != '.') {
+		if (!isDigit(currentChar) && currentChar != '.' && currentChar != '-') {
 			highLevel.log("Not a digit at pos %d of:", i);
 			highLevel.log(s);
-
 
 			return -1;
 		}
@@ -735,7 +729,7 @@ float OrderManager::parseFloat(const char* s) {
 		}
 		currentChar = s[++i];
 	}
-	return strtod(s, nullptr);
+	return strtof(s, nullptr);
 }
 
 
@@ -747,7 +741,7 @@ void OrderManager::checkHooks() {
 
 void OrderManager::executeHooks() {
 	if (hooksEnabled) {
-		uint8_t l = hookList.getReadySize();
+		int l = hookList.getReadySize();
 		for (uint8_t i = 0; i < l; ++i) {
 			execute(hookList.getReadyHookOrder(i));
 		}

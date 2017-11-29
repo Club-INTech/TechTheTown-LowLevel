@@ -1,3 +1,5 @@
+#ifndef UNIT_TEST
+
 /**
 *Initialisation et boucle principale du programme
 *
@@ -106,6 +108,7 @@ namespace std {
 	}
 }
 
+#endif //!UNIT_TEST
                    /*``.           `-:--.`                                                                                                 
                   `.-::::/.        .:::::::y                                                                                                
                  `::::::::o``````.-::::::/h-                                                                                                
@@ -156,3 +159,4 @@ namespace std {
 	 	~;_  >- . . -<  _i~
 	 	  `'         `'
 */
+
