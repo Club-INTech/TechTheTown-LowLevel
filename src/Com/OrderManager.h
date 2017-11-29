@@ -64,11 +64,8 @@ public:
 		return hooks.at(id);
 	}
 
-	void addHook(uint8_t id, int16_t x, int16_t y, uint16_t r, const char* o) {
-		hooks.emplace(std::make_pair(id, Hook(id, x, y, r, o)));	//On ajoute un couple (id, hook(id)) au dictionnaire de hooks
-	}
-    void addHook(uint8_t id, int16_t x, int16_t y, uint16_t r, float alpha, float tolerance, const char* o) {
-        hooks.emplace(std::make_pair(id, Hook(id, x, y, r, alpha, tolerance, o)));  //Idem mais avec un angle
+    void addHook(uint8_t id, int32_t x, int32_t y, uint32_t r, float alpha, float tolerance, const char* o) {
+        hooks.emplace(std::make_pair(id, Hook(id, x, y, r, alpha, tolerance, o)));  //On initialise le hook
     }
 
 	void enableHook(uint8_t id) {
@@ -97,23 +94,12 @@ public:
 		while (start != end )
 		{
 			Hook currentHook = start->second;
-            if(currentHook.isAngleTriggered())
+            if (currentHook.isActive() && !currentHook.isReady() && currentHook.check(x, y,alpha))
             {
-                if (currentHook.isActive() && !currentHook.isReady() && currentHook.check(x, y,alpha))
-                {
-                    currentHook.setReady();			//Les conditions du hook sont r�unies !
-                    readyIds.push_back(start->first);	//Il faudra l'executer d�s que possible
-                }
+                currentHook.setReady();			//Les conditions du hook sont r�unies !
+                readyIds.push_back(start->first);	//Il faudra l'executer d�s que possible
             }
-            else
-            {
-                if (currentHook.isActive() && !currentHook.isReady() && currentHook.check(x, y))
-                {
-                    currentHook.setReady();			//Les conditions du hook sont r�unies !
-                    readyIds.push_back(start->first);	//Il faudra l'executer d�s que possible
-                }
-            }
-		}
+        }
 	}
 
     bool hookWithId(int hookId)
