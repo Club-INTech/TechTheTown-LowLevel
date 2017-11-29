@@ -1,7 +1,7 @@
 #include <Utils/utils.h>
 #include "Hook.h"
 
-Hook::Hook(uint8_t id, int16_t x, int16_t y, uint16_t r, const char* o) : hookID(id), zoneX(x), zoneY(y), zoneR(r), order(o), angleTarget(0),angleTolerance(0)
+Hook::Hook(uint8_t id, int16_t x, int16_t y, uint16_t r, const char* o) : hookID(id), zoneX(x), zoneY(y), zoneR(r), angleTarget(0),angleTolerance(0), order(o)
 {
 	active = true;
 	ready = false;
@@ -48,4 +48,9 @@ void Hook::setActive(bool state) {
 
 bool Hook::isActive() {
 	return active;
+}
+
+bool Hook::isAngleTriggered()
+{
+	return angleTrigger;
 }

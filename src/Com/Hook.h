@@ -32,6 +32,7 @@ public:
 	void setReady();
 	bool isReady();
 	bool isActive();
+	bool isAngleTriggered();
 };
 
 #endif

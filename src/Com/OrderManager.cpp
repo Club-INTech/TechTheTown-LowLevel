@@ -573,12 +573,17 @@ void OrderManager::execute(const char* orderToExecute)
 
 		/*			 _________________________________
 		* 		   *|                                 |*
-		*		   *|			   HOOKS	              |*
+		*		   *|			   HOOKS	          |*
 		*    	   *|_________________________________|*
 		*/
 		else if(!strcmp(order, "nh")){
 			int16_t id, x, y, r;
-			if (n_param >=5) {
+			if (n_param < 5)
+			{
+				highLevel.log("ERREUR::Paramètres incorrects");
+			}
+			else
+			{
 				id = parseInt(orderData.at(1));
 				x = parseInt(orderData.at(2));
 				y = parseInt(orderData.at(3));
@@ -586,18 +591,32 @@ void OrderManager::execute(const char* orderToExecute)
 
 				char hookOrder[RX_BUFFER_SIZE] = "";
 
-				for (int i = 5; i < n_param + 1; i++) {
-					strcat(hookOrder, orderData.at(i));
-					strcat(hookOrder, " ");
-				}
-				hookOrder[RX_BUFFER_SIZE - 1] = '\0';
+				if (n_param >=5)
+				{
 
-				hookList.addHook(id, x, y, r, hookOrder);
+					for (int i = 5; i < n_param + 1; i++) {
+						strcat(hookOrder, orderData.at(i));
+						strcat(hookOrder, " ");
+					}
+					hookOrder[RX_BUFFER_SIZE - 1] = '\0';
+
+					hookList.addHook(id, x, y, r, hookOrder);
+				}
+				else if (n_param >= 7) //Assuming there are no three-argument orders
+				{
+					float angleHook = parseFloat(orderData.at(5));
+					float angleTolerance = parseFloat(orderData.at(6));
+
+					for (int i = 7; i < n_param + 1; i++) {
+						strcat(hookOrder, orderData.at(i));
+						strcat(hookOrder, " ");
+					}
+					hookOrder[RX_BUFFER_SIZE - 1] = '\0';
+
+					hookList.addHook(id, x, y, r, angleHook, angleTolerance, hookOrder);
+				}
 				//TEST:
 				Serial.println(hookList.getHook(id).getOrder());
-			}
-			else {
-				highLevel.log("ERREUR::Paramètres incorrects");
 			}
 
 		}
@@ -722,7 +741,7 @@ float OrderManager::parseFloat(const char* s) {
 
 void OrderManager::checkHooks() {
 	if (hooksEnabled) {
-		hookList.check(motionControlSystem.getX(), motionControlSystem.getY());
+		hookList.check(motionControlSystem.getX(), motionControlSystem.getY(),motionControlSystem.getAngleRadian());
 	}
 }
 
