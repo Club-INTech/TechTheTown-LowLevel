@@ -2,7 +2,7 @@
 #include "Hook.h"
 
 
-Hook::Hook(uint8_t id, int32_t x, int32_t y, uint32_t r, float alpha, float tolerance, const char* o) : hookID(id), zoneX(x), zoneY(y), zoneR(r),angleTarget(alpha),angleTolerance(tolerance), order(o)
+Hook::Hook(uint8_t id, uint32_t x, uint32_t y, uint32_t r, float alpha, float tolerance, const char* o) : hookID(id), zoneX(x), zoneY(y), zoneR(r),angleTarget(alpha),angleTolerance(tolerance), order(o)
 {
 	active = true;
 	ready = false;
@@ -10,7 +10,7 @@ Hook::Hook(uint8_t id, int32_t x, int32_t y, uint32_t r, float alpha, float tole
 
 
 
-bool Hook::check(int32_t currentX, int32_t currentY, float currentAngle)
+bool Hook::check(uint32_t currentX, uint32_t currentY, float currentAngle)
 {
 	return ((zoneX-currentX)*(zoneX-currentX) + (zoneY - currentY)*(zoneY - currentY) <= zoneR*zoneR
 			&& (ABS(currentAngle-angleTarget) <= angleTolerance));

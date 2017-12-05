@@ -16,7 +16,6 @@ void setup() {
 	Serial.println("Série OK");
 	delay(250);
 
-
     /*Wire.begin();
     for (int i = 0; i < US_TOTAL; i++) {
         boolean error = true;
@@ -43,9 +42,14 @@ void motionControlInterrupt() {
 
 
 //Boucle principale, gere entre autres la communication avec le HL
-
+bool first=true;
 void loop(){
     OrderManager& orderMgr = OrderManager::Instance();
+
+	if(first)
+	{
+		orderMgr.execute("nh 1 1500 1000 50 0 3.2 6");
+	}
 
     /* MotionControlSystem */
     IntervalTimer motionControlInterruptTimer;
