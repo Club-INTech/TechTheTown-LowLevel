@@ -96,9 +96,10 @@ public:
 			Hook currentHook = start->second;
             if (currentHook.isActive() && !currentHook.isReady() && currentHook.check(x, y,alpha))
             {
-                currentHook.setReady();			//Les conditions du hook sont r�unies !
+                currentHook.setReady(); //Les conditions du hook sont r�unies !
                 readyIds.push_back(start->first);	//Il faudra l'executer d�s que possible
             }
+			++start;
         }
 	}
 

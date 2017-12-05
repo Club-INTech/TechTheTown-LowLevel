@@ -16,6 +16,10 @@ void setup() {
 	Serial.println("Série OK");
 	delay(250);
 
+	pinMode(13, OUTPUT);
+	digitalWrite(13, HIGH);
+	
+
     /*Wire.begin();
     for (int i = 0; i < US_TOTAL; i++) {
         boolean error = true;
@@ -31,6 +35,8 @@ void setup() {
             delay(200);
         }
     }*/
+
+
 }
 
 /* Interruptions d'asservissements */
@@ -42,19 +48,32 @@ void motionControlInterrupt() {
 
 
 //Boucle principale, gere entre autres la communication avec le HL
-bool first=true;
+
 void loop(){
+
+	for(int i=0;i<10;i++)
+	{
+		digitalWrite(13,HIGH);
+		delay(200);
+		digitalWrite(13,LOW);
+		delay(200);
+	}
+
     OrderManager& orderMgr = OrderManager::Instance();
 
-	if(first)
-	{
-		orderMgr.execute("nh 1 1500 1000 50 0 3.2 6");
-	}
+	orderMgr.execute("nh 1 1500 1000 50 0 3.2 6");
 
     /* MotionControlSystem */
     IntervalTimer motionControlInterruptTimer;
     motionControlInterruptTimer.priority(253);
     motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); //asservissements
+
+	orderMgr.execute("cod");
+
+	delay(2000);
+	orderMgr.execute("d 100");
+	delay(2000);
+	orderMgr.execute("d -100");
 
     /* Gestion des ordres recus */
 
