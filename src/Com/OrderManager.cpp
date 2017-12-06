@@ -577,7 +577,7 @@ void OrderManager::execute(const char* orderToExecute)
 		*    	   *|_________________________________|*
 		*/
 		else if(!strcmp(order, "nh")){
-			int16_t id
+			int16_t id;
             int32_t x, y, r;
             float angleHook,angleTolerance;
 			if (n_param < 5)
@@ -639,9 +639,13 @@ void OrderManager::execute(const char* orderToExecute)
 			highLevel.log("T'es un déchêt");
 		}
 	}
-
+    highLevel.log("beforecheckhooks");
 	checkHooks();
-	executeHooks();
+    highLevel.log("aftercheckhooks");
+
+    executeHooks();
+    highLevel.log("endexecute");
+
 }
 
 void OrderManager::refreshUS()
@@ -667,7 +671,6 @@ uint8_t OrderManager::split(char* input, OrderData& output, const char* separato
     uint8_t i = 0;
     output.clear();
     token = strtok(input, separator);
-
     if (token != nullptr) {
         output.push_back(token);
     }
@@ -683,40 +686,10 @@ uint8_t OrderManager::split(char* input, OrderData& output, const char* separato
 }
 
 int OrderManager::parseInt(const char* s) {
-	char currentChar = s[0];
-	int i = 0;
-
-	while (currentChar != '\0') {
-		if (!isDigit(currentChar)) {
-			highLevel.log("Not a digit at pos %d of:", i);
-			highLevel.log(s);
-
-			return -1;
-		}
-		currentChar = s[++i];
-	}
 	return strtol(s, nullptr, DEC);
 }
 
 float OrderManager::parseFloat(const char* s) {
-	char currentChar = s[0];
-	int i = 0;
-	uint8_t point = 0;
-	while (currentChar != '\0') {
-		if (!isDigit(currentChar) && currentChar != '.' && currentChar != '-') {
-			highLevel.log("Not a digit at pos %d of:", i);
-			highLevel.log(s);
-
-			return -1;
-		}
-		if (currentChar == '.') {
-			++point;
-		}
-		if (point > 1) {
-			return -1;
-		}
-		currentChar = s[++i];
-	}
 	return strtof(s, nullptr);
 }
 

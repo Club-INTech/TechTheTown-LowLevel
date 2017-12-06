@@ -23,7 +23,9 @@
 #include "WString.h"
 #include "Utils/utils.h"
 #include "Com/Hook.h"
+#include <string>
 #include <Metro.h>
+#include <cstdlib>
 
 
 class OrderData {

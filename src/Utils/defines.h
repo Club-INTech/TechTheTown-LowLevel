@@ -21,7 +21,7 @@
 #define HEADER_LENGTH   2
 
 #define DEBUG_HEADER    {0x02, 0x20}
-#define EVENT_HEADER    {0x13, 0x37}
+#define EVENT_HEADER    {0x13, 0x17}
 #define SENSOR_HEADER	{0x01, 0x10}
 #define POSITION_HEADER	{0x07, 0x05}
 
