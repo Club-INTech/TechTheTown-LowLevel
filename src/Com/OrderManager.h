@@ -66,7 +66,7 @@ public:
 		return hooks.at(id);
 	}
 
-    void addHook(uint8_t id, int32_t x, int32_t y, uint32_t r, float alpha, float tolerance, const char* o) {
+    void addHook(uint8_t id, uint32_t x, uint32_t y, uint32_t r, float alpha, float tolerance, const char* o) {
         hooks.emplace(std::make_pair(id, Hook(id, x, y, r, alpha, tolerance, o)));  //On initialise le hook
     }
 
@@ -98,9 +98,10 @@ public:
 			Hook currentHook = start->second;
             if (currentHook.isActive() && !currentHook.isReady() && currentHook.check(x, y,alpha))
             {
-                currentHook.setReady();			//Les conditions du hook sont r�unies !
+                currentHook.setReady(); //Les conditions du hook sont r�unies !
                 readyIds.push_back(start->first);	//Il faudra l'executer d�s que possible
             }
+			++start;
         }
 	}
 

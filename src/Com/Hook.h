@@ -10,8 +10,8 @@ class Hook
 {
 private:
 	const uint8_t hookID;
-	const int32_t zoneX;
-	const int32_t zoneY;
+	const uint32_t zoneX;
+	const uint32_t zoneY;
 	const uint32_t zoneR;
 	const float angleTarget;
 	const float angleTolerance;
@@ -21,8 +21,8 @@ private:
 	const char* order;
 
 public:
-	Hook(uint8_t, int32_t, int32_t, uint32_t, float, float, const char*);
-	bool check(int32_t, int32_t, float);
+	Hook(uint8_t, uint32_t, uint32_t, uint32_t, float, float, const char*);
+	bool check(uint32_t, uint32_t, float);
 	const char* getOrder();
 	void setActive(bool);
 	void setReady();

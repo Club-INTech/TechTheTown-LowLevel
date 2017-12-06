@@ -577,9 +577,10 @@ void OrderManager::execute(const char* orderToExecute)
 		*    	   *|_________________________________|*
 		*/
 		else if(!strcmp(order, "nh")){
-			int16_t id;
-            int32_t x, y, r;
+			uint8_t id;
+            uint32_t x, y, r;
             float angleHook,angleTolerance;
+
 			if (n_param < 5)
 			{
 				highLevel.log("ERREUR::Paramètres incorrects");
