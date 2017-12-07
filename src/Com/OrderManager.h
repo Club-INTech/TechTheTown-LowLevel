@@ -26,6 +26,7 @@
 #include <string>
 #include <Metro.h>
 #include <cstdlib>
+#include <Actuators/DynamixelGroup.h>
 
 
 class OrderData {
@@ -149,6 +150,7 @@ public:
 	 void communicate();
 	 void execute(const char*);	//public pour pouvoir executer des scripts de hook
 	 void sendUSData();
+
 
 	 //Utilitaire
 	 uint8_t split(char* , OrderData& , const char* separator = " ");

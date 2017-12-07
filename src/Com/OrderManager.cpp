@@ -559,17 +559,51 @@ void OrderManager::execute(const char* orderToExecute)
 		*    	   *|_________________________________|*
 		*/
 
-		else if (!strcmp(order, "axTest"))
-		{
-			if (n_param == 1) {
-				int16_t goal = 150;
-				goal = parseFloat(orderData.at(1));
-				actuatorsMgr.testGoto(goal);
-			}
-			else {
-				highLevel.log("ERREUR::Paramètres incorrects");
-			}
-		}
+
+        else if (!strcmp(order,"AXm"))
+        {
+            if (n_param == 2)
+            {
+                actuatorsMgr.movAX12(parseInt(orderData.at(1)),parseInt(orderData.at(2)));
+            }
+            else
+            {
+                highLevel.log("ERREUR::Paramètres incorrects");
+            }
+        }
+        else if (!strcmp(order,"AXGm"))
+        {
+            if(n_param == 2)
+            {
+                actuatorsMgr.movAX12G(parseInt(orderData.at(1)),parseInt(orderData.at(2)));
+            }
+            else
+            {
+                highLevel.log("ERREUR::Paramètres incorrects");
+            }
+        }
+        else if (!strcmp(order,"AXs"))
+        {
+            if(n_param == 2)
+            {
+                actuatorsMgr.setAX12Speed(parseInt(orderData.at(1)),parseInt(orderData.at(2)));
+            }
+            else
+            {
+                highLevel.log("ERREUR::Paramètres incorrects");
+            }
+        }
+        else if (!strcmp(order,"AXGs"))
+        {
+            if(n_param == 2)
+            {
+                actuatorsMgr.setAX12GSpeed(parseInt(orderData.at(1)),parseInt(orderData.at(2)));
+            }
+            else
+            {
+                highLevel.log("ERREUR::Paramètres incorrects");
+            }
+        }
 
 		/*			 _________________________________
 		* 		   *|                                 |*
@@ -618,7 +652,7 @@ void OrderManager::execute(const char* orderToExecute)
             }
             else
             {
-                highLevel.log("ERREUR::Activatoin d'un hook inexistant");
+                highLevel.log("ERREUR::Activation d'un hook inexistant");
             }
 
         }
@@ -662,6 +696,7 @@ void OrderManager::sendUSData() {
 		lastSent = millis();
 	}
 }
+
 
 /**
 *	Sépare une courte chaîne de caractères(RX_BUFFER_SIZE) selon un séparateur, dans un tableau output (au plus 4 mots)

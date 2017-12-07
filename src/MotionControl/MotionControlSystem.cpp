@@ -332,20 +332,20 @@ void MotionControlSystem::orderTranslation(int32_t mmDistance) {
 }
 
 
-void MotionControlSystem::orderRotation(float angleConsigneRadian, RotationWay rotationWay) {
+void MotionControlSystem::orderRotation(float targetAngleRadian, RotationWay rotationWay) {
 
 	static int32_t deuxPiTick = (int32_t)(2 * PI / TICK_TO_RADIAN);
 	static int32_t piTick = (int32_t)(PI / TICK_TO_RADIAN);
 
 	int32_t highLevelOffset = originalAngle / TICK_TO_RADIAN;
 
-	int32_t angleConsigneTick = angleConsigneRadian / TICK_TO_RADIAN;
-	int32_t angleCourantTick = currentAngle + highLevelOffset;
+	int32_t targetAngleTick = targetAngleRadian / TICK_TO_RADIAN;
+	int32_t currentAngleTick = currentAngle + highLevelOffset;
 
-	angleConsigneTick = modulo(angleConsigneTick, deuxPiTick);
-	angleCourantTick = modulo(angleCourantTick, deuxPiTick);
+    targetAngleTick = modulo(targetAngleTick, deuxPiTick);
+	currentAngleTick = modulo(currentAngleTick, deuxPiTick);
 
-	int32_t rotationTick = angleConsigneTick - angleCourantTick;
+	int32_t rotationTick = targetAngleTick - currentAngleTick;
 
 	if (rotationWay == FREE)
 	{

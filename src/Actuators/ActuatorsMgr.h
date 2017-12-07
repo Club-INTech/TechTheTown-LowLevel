@@ -6,24 +6,44 @@
 
 #include "Arduino.h"
 
+#include <map>
+#include <vector>
 
 #include "Dynamixel.h"
 #include "DynamixelInterface.h"
 #include "DynamixelMotor.h"
 #include "Utils/Singleton.hpp"
+#include "DynamixelGroup.h"
 
 class ActuatorsMgr : public Singleton<ActuatorsMgr>
 {
 private:
+
 	DynamixelInterface serialAX;
-	DynamixelMotor axTest;
+
+	std::map<int,DynamixelMotor*> axList;
+
+	std::vector<DynamixelGroup> axGroupsList;
 
 public:
-	ActuatorsMgr();
 
+	ActuatorsMgr();
 	~ActuatorsMgr();
 
-	void testGoto(uint16_t);
+
+	//Gestion des AX12
+	bool addAX12(int);
+	bool checkIfAX(int);
+
+	void addAX12Group();
+	bool populateAX12Group(int, int, DynSym);
+
+	//Contrôle des AX12
+	bool movAX12(int, uint16_t);
+	bool setAX12Speed(int, uint16_t);
+
+	bool movAX12G(unsigned int, uint16_t);
+	bool setAX12GSpeed(unsigned int, uint16_t);
 };
 
 #endif

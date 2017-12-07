@@ -24,7 +24,7 @@ class DynamixelGroup
     DynamixelGroup()
     {}
 
-    inline void add( DynamixelMotor* aMotor , const DynSym& aSym = DynSym::BASE )
+    inline void add( DynamixelMotor* aMotor , const DynSym& aSym = DynSym::BASE ) //TODO Singeproofer l'ajout d'AX
     {
       m_motors.insert( { aMotor->id() , { aMotor , aSym } } );
     }
