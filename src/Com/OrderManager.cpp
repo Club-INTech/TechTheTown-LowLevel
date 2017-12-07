@@ -37,15 +37,24 @@ void OrderManager::communicate() {
 
 void OrderManager::execute(const char* orderToExecute)
 {
+	#ifdef DEBUG
 	char order[RX_BUFFER_SIZE];
-	strcpy(order, orderToExecute);
+    #else
+    int order;
+    #endif
+    char orderBuffer[RX_BUFFER_SIZE];
+	strcpy(orderBuffer, orderToExecute);
 	highLevel.log("Message recu: %s", order);
 
-	int8_t n_param = split(order, orderData, SEPARATOR);		//Sépare l'ordre en plusieurs mots, n_param=nombre de paramètres
+	int8_t n_param = split(orderBuffer, orderData, SEPARATOR);		//Sépare l'ordre en plusieurs mots, n_param=nombre de paramètres
 
 
 	if (n_param >= 0) {
+		#ifdef DEBUG
 		strcpy(order, orderData.at(0));
+        #else
+        order = parseInt(orderData.at(0));
+        #endif //DEBUG
 
 		/*			 __________________
 		* 		   *|                  |*
@@ -264,7 +273,7 @@ void OrderManager::execute(const char* orderToExecute)
 			highLevel.log("Droite:");
 			highLevel.log("%ld", motionControlSystem.getRightTick());
 		}
-		else if (!strcmp("pfdebug", order))
+		else if (!strcmp(order, "pfdebug"))
 		{
 			//highLevel.printfln("%d", (int)motionControlSystem.getRightSpeed());
 			//highLevel.printfln("%d", (int)motionControlSystem.getRightMotorDir());
@@ -560,7 +569,7 @@ void OrderManager::execute(const char* orderToExecute)
 		*/
 
 
-        else if (!strcmp(order,"AXm"))
+        else if (!strcmp(order, "AXm"))
         {
             if (n_param == 2)
             {
@@ -571,7 +580,7 @@ void OrderManager::execute(const char* orderToExecute)
                 highLevel.log("ERREUR::Paramètres incorrects");
             }
         }
-        else if (!strcmp(order,"AXGm"))
+        else if (!strcmp(order, "AXGm"))
         {
             if(n_param == 2)
             {
@@ -582,7 +591,7 @@ void OrderManager::execute(const char* orderToExecute)
                 highLevel.log("ERREUR::Paramètres incorrects");
             }
         }
-        else if (!strcmp(order,"AXs"))
+        else if (!strcmp(order, "AXs"))
         {
             if(n_param == 2)
             {
@@ -593,7 +602,7 @@ void OrderManager::execute(const char* orderToExecute)
                 highLevel.log("ERREUR::Paramètres incorrects");
             }
         }
-        else if (!strcmp(order,"AXGs"))
+        else if (!strcmp(order, "AXGs"))
         {
             if(n_param == 2)
             {
@@ -615,7 +624,7 @@ void OrderManager::execute(const char* orderToExecute)
             uint32_t x, y, r;
             float angleHook,angleTolerance;
 
-			if (n_param < 5)
+			if (n_param < 7)
 			{
 				highLevel.log("ERREUR::Paramètres incorrects");
 			}
