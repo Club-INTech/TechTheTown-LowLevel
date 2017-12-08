@@ -1,7 +1,7 @@
 # TechTheTown-LowLevel
 Au boulot les 1A !
 
-### TODO
+## TODO
 
 - [x] Communication Ethernet de base
 - [ ] Ordres Des Actionneurs
@@ -10,7 +10,9 @@ Au boulot les 1A !
 - [ ] MotionControl point à point(avec réorientation progressive)
 - [ ] Asservissement
 
-### TABLE DES ORDRES
+## TABLE DES ORDRES
+### ORDRES HL ⇒ LL
+#### ORDRES GENERAUX
 
 |   Ordres  |                       Actions                      |
 |:---------:|:--------------------------------------------------:|
@@ -48,6 +50,26 @@ Au boulot les 1A !
 |     td    |                   Tourne à droite                  |
 |     tg    |                   Tourne à gauche                  |
 |   sstop   |                        Arrêt                       |
+|     nh    | Créé un nouveau hook (id,x,y,r,α,tolerance,action) |
+|     eh    |                   Active le hook                   |
+|     dh    |                  Désactive le hook                 |
+
+
+#### ORDRES DE CONTRÔLE D'ACTION
+
+|   Ordres  |                       Actions                      |
+|:---------:|:--------------------------------------------------:|
+|    AXm    |              Envoie l'AX12 à un α en °             |
+|    AXGm   |             Envoi un groupe à un α en °            |
+|    AXs    |            Modifie la vitesse d'un AX12            |
+|    AXGs   |           Modifie la vitesse d'un groupe           |
+
+
+
+### ORDRES SPECIFIQUES LL
+
+|   Ordres  |                       Actions                      |
+|:---------:|:--------------------------------------------------:|
 |   toggle  |         Change le mode de réglage d'asserv         |
 |  display  |          Retourne les constantes d'asserv          |
 |    kpt    |              Set le kp de translation              |
@@ -62,10 +84,3 @@ Au boulot les 1A !
 |    kpd    |            Set le kd de vitesse à droite           |
 |    kdg    |            Set le kd de vitesse à droite           |
 |    kig    |            Set le ki de vitesse à droite           |
-|    AXm    |              Envoie l'AX12 à un α en °             |
-|    AXGm   |             Envoi un groupe à un α en °            |
-|    AXs    |            Modifie la vitesse d'un AX12            |
-|    AXGs   |           Modifie la vitesse d'un groupe           |
-|     nh    | Créé un nouveau hook (id,x,y,r,α,tolerance,action) |
-|     eh    |                   Active le hook                   |
-|     dh    |                  Désactive le hook                 |
