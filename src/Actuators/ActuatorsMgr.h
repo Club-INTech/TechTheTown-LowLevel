@@ -33,10 +33,12 @@ public:
 
 	//Gestion des AX12
 	bool addAX12(int);
+	bool addAX12(int, uint16_t);
 	bool checkIfAX(int);
 
 	void addAX12Group();
 	bool populateAX12Group(int, int, DynSym);
+	bool populateAX12Group(int, int, uint16_t, DynSym);
 
 	//Contrôle des AX12
 	bool movAX12(int, uint16_t);

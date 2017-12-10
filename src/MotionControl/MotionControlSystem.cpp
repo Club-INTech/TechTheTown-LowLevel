@@ -336,8 +336,6 @@ void MotionControlSystem::orderTranslation(int32_t mmDistance) {
 
 void MotionControlSystem::orderRotation(float targetAngleRadian, RotationWay rotationWay) {
 
-	Serial.println("ANGLE DE DESTINATION: ");
-	Serial.println(targetAngleRadian);
 	static int32_t deuxPiTick = (int32_t)(2 * PI / TICK_TO_RADIAN);
 	static int32_t piTick = (int32_t)(PI / TICK_TO_RADIAN);
 

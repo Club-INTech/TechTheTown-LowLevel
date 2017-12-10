@@ -25,6 +25,17 @@ bool ActuatorsMgr::addAX12(int id)
 	axList.at(id)->jointMode();
 	return(true);
 }
+
+bool ActuatorsMgr::addAX12(int id, uint16_t speed)	//Initialise l'AX avec une vitesse définie
+{
+	if(!this->addAX12(id))
+	{
+		return(false);
+	}
+	axList.at(id)->speed(speed);
+	return(true);
+}
+
 bool ActuatorsMgr::checkIfAX(int id)
 {
 	return(axList.count(id)!=0);
@@ -63,6 +74,17 @@ bool ActuatorsMgr::populateAX12Group(int groupId, int motorId, DynSym symmetry)
 	}
 	axGroupsList.at(groupId).add(axList.at(motorId),symmetry);
 	return(true);
+}
+
+bool ActuatorsMgr::populateAX12Group(int groupId, int motorId, uint16_t speed, DynSym symmetry)
+{
+	if(!this->populateAX12Group(groupId, motorId, symmetry))
+	{
+		return(false);
+	}
+	axGroupsList.at(groupId).speed(speed);
+	return(true);
+
 }
 
 bool ActuatorsMgr::movAX12G(unsigned int groupId, uint16_t angleDegree)

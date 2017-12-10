@@ -63,6 +63,9 @@ Au boulot les 1A !
 |    AXGm   |             Envoi un groupe à un α en °            |
 |    AXs    |            Modifie la vitesse d'un AX12            |
 |    AXGs   |           Modifie la vitesse d'un groupe           |
+|     eP    |                   Active la pompe                  |
+|     dP    |                  Désactive la pompe                |
+
 
 
 

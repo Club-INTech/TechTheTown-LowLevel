@@ -613,6 +613,14 @@ void OrderManager::execute(const char* orderToExecute)
                 highLevel.log("ERREUR::Paramètres incorrects");
             }
         }
+        else if (!strcmp(order, "eP"))
+        {
+            if(parseInt(orderData.at(1))){}
+        }
+        else if (!strcmp(order, "dP"))
+        {
+
+        }
 
 		/*			 _________________________________
 		* 		   *|                                 |*

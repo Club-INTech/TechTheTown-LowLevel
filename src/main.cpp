@@ -18,7 +18,7 @@ void setup() {
 
 	pinMode(13, OUTPUT);
 	digitalWrite(13, HIGH);
-	
+
 
     /*Wire.begin();
     for (int i = 0; i < US_TOTAL; i++) {
@@ -59,9 +59,31 @@ void loop(){
 		delay(200);
 	}
 
+    /*ActuatorsMgr& actuatorMgr = ActuatorsMgr::Instance();
+    actuatorMgr.addAX12Group();
+    actuatorMgr.populateAX12Group(0,1,100,BASE);
+    actuatorMgr.populateAX12Group(0,8,100,MIRROR);
+    actuatorMgr.addAX12(3,100);*/
+
+    pinMode(24,OUTPUT);
+
     OrderManager& orderMgr = OrderManager::Instance();
 
-	orderMgr.execute("nh 1 1500 1000 50 0 3.2 6");
+//	orderMgr.execute("nh 1 1500 1000 50 0 3.2 6");
+
+    digitalWrite(24, HIGH);
+
+//    orderMgr.execute("AXm 3 10");
+//    orderMgr.execute("AXGm 0 89");
+
+    delay(2000);
+
+//    orderMgr.execute("AXGm 0 130");
+
+    delay(4000);
+
+    digitalWrite(24,LOW);
+
 
     /* MotionControlSystem */
     IntervalTimer motionControlInterruptTimer;
@@ -70,10 +92,27 @@ void loop(){
 
 	orderMgr.execute("cod");
 
+
+	/*delay(2000);
+	orderMgr.execute("d 500");
 	delay(2000);
-	orderMgr.execute("d 100");
-	delay(2000);
-	orderMgr.execute("d -100");
+	orderMgr.execute("d -500");
+    delay(2000);
+    orderMgr.execute("d 1000");
+    delay(4000);
+    orderMgr.execute("d -1000");
+    delay(4000);
+    orderMgr.execute("t 3.14");
+    delay(5000);
+    orderMgr.execute("t -3.14");
+    delay(5000);
+    orderMgr.execute("t 0");
+    delay(5000);
+    orderMgr.execute("t 1.6");
+    delay(5000);
+    orderMgr.execute("t -1.6");
+    delay(5000);
+    orderMgr.execute("t 0");*/
 
     /* Gestion des ordres recus */
 
