@@ -161,6 +161,9 @@ public:
 	 void checkHooks();
 	 void executeHooks();
 	 bool hooksEnabled;
+
+
+//    std::map<std::string,int> lookupTable;
 };
 
 #endif //_ORDERMGR_h

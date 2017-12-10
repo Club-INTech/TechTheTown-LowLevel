@@ -98,7 +98,7 @@ void OrderManager::execute(const char* orderToExecute)
 		{
 			if (n_param == 1) {
 				float angle = motionControlSystem.getAngleRadian();
-				angle = parseFloat(orderData.at(1));
+				angle = strtof(orderData.at(1),nullptr);
 				highLevel.log("angle : %f", angle);
 				motionControlSystem.orderRotation(angle, MotionControlSystem::FREE);
 			}

@@ -48,7 +48,7 @@ MotionControlSystem::MotionControlSystem() :
 	delayToEstablish = 100;
 	toleranceDifferentielle = 500; // Pour les trajectoires "normales", verifie que les roues ne font pas nawak chacunes de leur cote.
 	
-	translationPID.setTunings(10, 0, 50);
+	translationPID.setTunings(10, 0, 50);			//10,0,50
 	rotationPID.setTunings(17, 0, 220);
 	leftSpeedPID.setTunings(0.11, 0, 0.005); // ki 0.00001
 	rightSpeedPID.setTunings(0.11, 0, 0.005);
@@ -99,7 +99,7 @@ void MotionControlSystem::control() {
 		currentRightSpeed = averageRightSpeed.value(); // sinon le robot il fait nawak.
 
 		currentDistance = (leftTicks + rightTicks) / 2;
-		currentAngle = ((rightTicks - currentDistance)*RAYON_COD_GAUCHE / RAYON_COD_DROITE - (leftTicks - currentDistance)) / 2;
+		currentAngle = ((rightTicks - currentDistance)*DISTANCE_COD_GAUCHE_CENTRE / DISTANCE_COD_DROITE_CENTRE - (leftTicks - currentDistance)) / 2;
 
 		//Mise à jour des pids
 		if (translationControlled) {
@@ -317,8 +317,10 @@ void MotionControlSystem::resetPosition()
 
 
 void MotionControlSystem::orderTranslation(int32_t mmDistance) {
-	
+
+	Serial.println(translationSetpoint);
 	translationSetpoint += (int32_t)mmDistance / TICK_TO_MM;
+	Serial.println(translationSetpoint);
 
 	if (!moving)
 	{
@@ -334,12 +336,15 @@ void MotionControlSystem::orderTranslation(int32_t mmDistance) {
 
 void MotionControlSystem::orderRotation(float targetAngleRadian, RotationWay rotationWay) {
 
+	Serial.println("ANGLE DE DESTINATION: ");
+	Serial.println(targetAngleRadian);
 	static int32_t deuxPiTick = (int32_t)(2 * PI / TICK_TO_RADIAN);
 	static int32_t piTick = (int32_t)(PI / TICK_TO_RADIAN);
 
 	int32_t highLevelOffset = originalAngle / TICK_TO_RADIAN;
 
 	int32_t targetAngleTick = targetAngleRadian / TICK_TO_RADIAN;
+	Serial.println(targetAngleTick);
 	int32_t currentAngleTick = currentAngle + highLevelOffset;
 
     targetAngleTick = modulo(targetAngleTick, deuxPiTick);

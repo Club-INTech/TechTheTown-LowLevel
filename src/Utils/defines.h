@@ -36,16 +36,19 @@
 #define MC_FREQUENCY 1000 //1kHz, � modifier
 #define MC_PERIOD	(double)(1000000/MC_FREQUENCY)  //Dur�e en �s entre deux mesures
 
-// 65,5mm diametre des roues
+// 65,3mm diametre des roues
 // ~1000 ticks par tour de roue
-// 17cm ?cartement des roues
+// 17cm écartement des roues
 
-#define RAYON_COD_GAUCHE 140
-#define RAYON_COD_DROITE 144
-#define TICK_TO_MM 0.2088			// unit? : mm/ticks
+#define TICKS_PER_TURN 2400                //unité : ticks
+#define COD_WHEEL_DIAMETER 65.3            //unité : mm
 
-//#define TICK_TO_RADIAN 0.0014569	// unit? : radians/ticks
-#define TICK_TO_RADIAN (TICK_TO_MM/RAYON_COD_GAUCHE)
+#define DISTANCE_COD_GAUCHE_CENTRE 112     //unité : mm
+#define DISTANCE_COD_DROITE_CENTRE 111     //unité : mm
+#define TICK_TO_MM (float)(PI*COD_WHEEL_DIAMETER/TICKS_PER_TURN)     // unité : mm/ticks old value 0.20567
+
+//#define TICK_TO_RADIAN 0.0014569	// unité : radians/ticks
+#define TICK_TO_RADIAN (float)(TICK_TO_MM/DISTANCE_COD_GAUCHE_CENTRE)
 
 #define AVERAGE_SPEED_SIZE	25
 #define AVERAGE_DERIVATIVE_SIZE 100
