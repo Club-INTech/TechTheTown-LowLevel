@@ -613,13 +613,36 @@ void OrderManager::execute(const char* orderToExecute)
                 highLevel.log("ERREUR::Paramètres incorrects");
             }
         }
-        else if (!strcmp(order, "eP"))
-        {
-            if(parseInt(orderData.at(1))){}
-        }
-        else if (!strcmp(order, "dP"))
+
+       /*			 _________________________________
+        * 		   *|                                 |*
+        *		   *|     Actionneurs spécifiques     |*
+        *    	   *|_________________________________|*
+        */
+
+        else if (!strcmp(order, "dlp"))    //TODO Mettre les pins de contrôle de la pompe (Quand elle marchera...)
         {
 
+        }
+        else if (!strcmp(order, "alp"))
+        {
+
+        }
+        else if (!strcmp(order, "blb"))
+        {
+            actuatorsMgr.movAX12G(0,30);    //TODO PLACEHOLDER POSITION
+        }
+        else if (!strcmp(order, "rlb"))
+        {
+            actuatorsMgr.movAX12G(0,160);   //TODO PLACEHOLDER POSITION
+        }
+        else if (!strcmp(order, "flp"))
+        {
+            actuatorsMgr.movAX12(3,10);
+        }
+        else if (!strcmp(order, "olp"))
+        {
+            actuatorsMgr.movAX12(3,100);
         }
 
 		/*			 _________________________________

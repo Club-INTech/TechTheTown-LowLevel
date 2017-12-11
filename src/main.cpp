@@ -10,6 +10,7 @@
 #include "Com/OrderManager.h"
 
 //Initialisation de la Serie
+ActuatorsMgr& actuatorMgr = ActuatorsMgr::Instance();
 void setup() {
 	/*serie*/
 	Serial.begin(115200);
@@ -18,6 +19,13 @@ void setup() {
 
 	pinMode(13, OUTPUT);
 	digitalWrite(13, HIGH);
+
+    /*Actuators*/
+
+    actuatorMgr.addAX12Group();
+    actuatorMgr.populateAX12Group(0,1,100,BASE);
+    actuatorMgr.populateAX12Group(0,8,100,MIRROR);
+    actuatorMgr.addAX12(3,100);
 
 
     /*Wire.begin();
@@ -59,31 +67,11 @@ void loop(){
 		delay(200);
 	}
 
-    /*ActuatorsMgr& actuatorMgr = ActuatorsMgr::Instance();
-    actuatorMgr.addAX12Group();
-    actuatorMgr.populateAX12Group(0,1,100,BASE);
-    actuatorMgr.populateAX12Group(0,8,100,MIRROR);
-    actuatorMgr.addAX12(3,100);*/
-
-    pinMode(24,OUTPUT);
 
     OrderManager& orderMgr = OrderManager::Instance();
 
-//	orderMgr.execute("nh 1 1500 1000 50 0 3.2 6");
-
-    digitalWrite(24, HIGH);
-
-//    orderMgr.execute("AXm 3 10");
-//    orderMgr.execute("AXGm 0 89");
-
-    delay(2000);
-
-//    orderMgr.execute("AXGm 0 130");
-
-    delay(4000);
-
-    digitalWrite(24,LOW);
-
+//	orderMgr.execute("nh 1 1500 1000 50 0 3.2 6"); //Test de hooks
+    orderMgr.execute("nh 1 0 0 20 0 3.2 AXm 3 100");
 
     /* MotionControlSystem */
     IntervalTimer motionControlInterruptTimer;

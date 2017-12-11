@@ -4,7 +4,7 @@ Au boulot les 1A !
 ## TODO
 
 - [x] Communication Ethernet de base
-- [ ] Ordres Des Actionneurs
+- [x] Ordres Des Actionneurs
 - [ ] Hooks
 - [ ] Capteurs
 - [ ] MotionControl point à point(avec réorientation progressive)
@@ -63,8 +63,12 @@ Au boulot les 1A !
 |    AXGm   |             Envoi un groupe à un α en °            |
 |    AXs    |            Modifie la vitesse d'un AX12            |
 |    AXGs   |           Modifie la vitesse d'un groupe           |
-|     eP    |                   Active la pompe                  |
-|     dP    |                  Désactive la pompe                |
+|    alp    |                  Active la pompe                   |
+|    dlp    |                 Désactive la pompe                 |
+|    blb    |                   Baisse le bras                   |
+|    rlb    |                   Relève le bras                   |
+|    flp    |                   Ferme la porte                   |
+|    olp    |                   Ouvre la porte                   |
 
 
 
