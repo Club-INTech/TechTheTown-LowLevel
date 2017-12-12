@@ -57,6 +57,7 @@ void setup() {
 void motionControlInterrupt() {
 	static MotionControlSystem &motionControlSystem = MotionControlSystem::Instance();
 	motionControlSystem.control();
+	motionControlSystem.updatePosition();
 	motionControlSystem.manageStop();
 }
 
@@ -82,12 +83,18 @@ void loop(){
     motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); //asservissements
 
 
-    orderMgr.execute("nh 1 0 0 20 1.6 0.2 AXm 3 100");
+//    orderMgr.execute("nh 1 0 0 20 1.6 0.3 olp");
+//    orderMgr.execute("t 1.6");
 
-
-    orderMgr.execute("demo");
-
-
+//    orderMgr.execute("ctrv 3000 100");
+//    orderMgr.execute("demo");
+//	orderMgr.execute("ctv 2000");
+    orderMgr.execute("d 1000");
+    for(int i=0;i<10000/5;i++)
+    {
+        orderMgr.execute("rawposdata");
+        delay(5);
+    }
 
     /* Gestion des ordres recus */
 

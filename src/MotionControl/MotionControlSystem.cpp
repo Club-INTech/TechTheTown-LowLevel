@@ -53,6 +53,12 @@ MotionControlSystem::MotionControlSystem() :
 	leftSpeedPID.setTunings(0.11, 0, 0.005); // ki 0.00001
 	rightSpeedPID.setTunings(0.11, 0, 0.005);
 
+//	translationPID.setTunings(10,0,50);
+//	rotationPID.setTunings(17,0,220);
+//	leftSpeedPID.setTunings(1.1,0,0.005);
+//	rightSpeedPID.setTunings(1.1,0,0.005);
+
+
 	maxAcceleration = 4;
 
 	leftMotor.init();
