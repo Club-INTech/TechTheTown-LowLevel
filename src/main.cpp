@@ -11,6 +11,7 @@
 
 //Initialisation de la Serie
 ActuatorsMgr& actuatorMgr = ActuatorsMgr::Instance();
+OrderManager& orderMgr = OrderManager::Instance();
 void setup() {
 	/*serie*/
 	Serial.begin(115200);
@@ -23,9 +24,14 @@ void setup() {
     /*Actuators*/
 
     actuatorMgr.addAX12Group();
-    actuatorMgr.populateAX12Group(0,1,100,BASE);
-    actuatorMgr.populateAX12Group(0,8,100,MIRROR);
-    actuatorMgr.addAX12(3,100);
+    actuatorMgr.populateAX12Group(0,1,120,BASE);
+    actuatorMgr.populateAX12Group(0,8,120,MIRROR);
+    actuatorMgr.addAX12(3,200);
+
+    orderMgr.execute("rlb");
+    delay(1000);
+    orderMgr.execute("flp");
+    delay(1000);
 
 
     /*Wire.begin();
@@ -47,7 +53,7 @@ void setup() {
 
 }
 
-/* Interruptions d'asservissements */
+/* Interruptions1 d'asservissements */
 void motionControlInterrupt() {
 	static MotionControlSystem &motionControlSystem = MotionControlSystem::Instance();
 	motionControlSystem.control();
@@ -68,39 +74,20 @@ void loop(){
 	}
 
 
-    OrderManager& orderMgr = OrderManager::Instance();
-
 //	orderMgr.execute("nh 1 1500 1000 50 0 3.2 6"); //Test de hooks
-    orderMgr.execute("nh 1 0 0 20 0 3.2 AXm 3 100");
 
     /* MotionControlSystem */
     IntervalTimer motionControlInterruptTimer;
     motionControlInterruptTimer.priority(253);
     motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); //asservissements
 
-	orderMgr.execute("cod");
+
+    orderMgr.execute("nh 1 0 0 20 1.6 0.2 AXm 3 100");
 
 
-	/*delay(2000);
-	orderMgr.execute("d 500");
-	delay(2000);
-	orderMgr.execute("d -500");
-    delay(2000);
-    orderMgr.execute("d 1000");
-    delay(4000);
-    orderMgr.execute("d -1000");
-    delay(4000);
-    orderMgr.execute("t 3.14");
-    delay(5000);
-    orderMgr.execute("t -3.14");
-    delay(5000);
-    orderMgr.execute("t 0");
-    delay(5000);
-    orderMgr.execute("t 1.6");
-    delay(5000);
-    orderMgr.execute("t -1.6");
-    delay(5000);
-    orderMgr.execute("t 0");*/
+    orderMgr.execute("demo");
+
+
 
     /* Gestion des ordres recus */
 

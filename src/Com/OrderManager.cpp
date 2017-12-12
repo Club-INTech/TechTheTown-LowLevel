@@ -630,11 +630,11 @@ void OrderManager::execute(const char* orderToExecute)
         }
         else if (!strcmp(order, "blb"))
         {
-            actuatorsMgr.movAX12G(0,30);    //TODO PLACEHOLDER POSITION
+            actuatorsMgr.movAX12G(0,95);
         }
         else if (!strcmp(order, "rlb"))
         {
-            actuatorsMgr.movAX12G(0,160);   //TODO PLACEHOLDER POSITION
+            actuatorsMgr.movAX12G(0,177);
         }
         else if (!strcmp(order, "flp"))
         {
@@ -708,12 +708,43 @@ void OrderManager::execute(const char* orderToExecute)
                 highLevel.log("ERREUR::Activation d'un hook inexistant");
             }
 		}
+
+/*			 _________________________________
+ * 		   *|                                 |*
+ *		   *|			   RANDOM	          |*
+ *    	   *|_________________________________|*
+ */
+
+        else if (!strcmp(order, "demo"))
+        {
+            motionControlSystem.orderTranslation(400);
+            delay(3000);
+            motionControlSystem.orderRotation(-1.6, MotionControlSystem::FREE);
+            delay(2000);
+            motionControlSystem.orderTranslation(200);
+            delay(2000);
+            actuatorsMgr.movAX12(3,100);
+            delay(1000);
+            motionControlSystem.orderTranslation(-200);
+            delay(2000);
+            motionControlSystem.orderRotation(0, MotionControlSystem::FREE);
+            actuatorsMgr.movAX12(3,10);
+            delay(2000);
+            motionControlSystem.orderTranslation(-400);
+            actuatorsMgr.movAX12G(0,95);
+            delay(2000);
+            actuatorsMgr.movAX12G(0,177);
+        }
+
 		else
 		{
 			highLevel.printfln("ordre inconnu");
 			highLevel.log("T'es un déchêt");
 		}
+
 	}
+
+
     highLevel.log("beforecheckhooks");
 	checkHooks();
     highLevel.log("aftercheckhooks");
