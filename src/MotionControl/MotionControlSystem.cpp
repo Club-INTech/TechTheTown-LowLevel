@@ -36,9 +36,9 @@ MotionControlSystem::MotionControlSystem() :
 	leftSpeedPID.setOutputLimits(-255, 255);
 	rightSpeedPID.setOutputLimits(-255, 255);
 
-	maxSpeed = 3000; // Vitesse maximum, des moteurs (avec une marge au cas ou on s'amuse a faire forcer un peu la bestiole).
-	maxSpeedTranslation = 2000; // Consigne max envoyee au PID
-	maxSpeedRotation = 1400;
+	maxSpeed = 10000; // Vitesse maximum, des moteurs (avec une marge au cas ou on s'amuse a faire forcer un peu la bestiole).
+	maxSpeedTranslation = 9000; // Consigne max envoyee au PID
+	maxSpeedRotation = 3900;
 
 	delayToStop = 100; // temps a l'arret avant de considerer un blocage
 	toleranceTranslation = 30;
@@ -48,10 +48,10 @@ MotionControlSystem::MotionControlSystem() :
 	delayToEstablish = 100;
 	toleranceDifferentielle = 500; // Pour les trajectoires "normales", verifie que les roues ne font pas nawak chacunes de leur cote.
 	
-	translationPID.setTunings(10, 0, 50);			//10,0,50
+	translationPID.setTunings(10, 0, 10);			//10,0,50
 	rotationPID.setTunings(17, 0, 220);
-	leftSpeedPID.setTunings(0.11, 0, 0.005); // ki 0.00001
-	rightSpeedPID.setTunings(0.11, 0, 0.005);
+	leftSpeedPID.setTunings(0.21, 0, 0.001); // ki 0.00001
+	rightSpeedPID.setTunings(0.21, 0, 0.001);
 
 //	translationPID.setTunings(10,0,50);
 //	rotationPID.setTunings(17,0,220);
@@ -59,7 +59,7 @@ MotionControlSystem::MotionControlSystem() :
 //	rightSpeedPID.setTunings(1.1,0,0.005);
 
 
-	maxAcceleration = 4;
+	maxAcceleration = 25;
 
 	leftMotor.init();
 	rightMotor.init();
@@ -443,7 +443,7 @@ void MotionControlSystem::setMoveAbnormalSent(bool status) {
 }
 
 void MotionControlSystem::setRawPositiveTranslationSpeed() {
-	translationSpeed = maxSpeedTranslation;
+	translationSpeed = maxSpeedTranslation;	//Pas de sur 4
 }
 
 void MotionControlSystem::setRawPositiveRotationSpeed() {

@@ -44,6 +44,7 @@ Au boulot les 1A !
 |   getpwn  |          Retourne le PWN des deux moteurs          |
 |   errors  |         Retourne les erreurs d'incertitude         |
 |  rawspeed |               Vitesse brute des roues              |
+| rawposdata|              Position du robot en x,y              |
 | monthlery |                Mode de présentation                |
 |     av    |                       Avance                       |
 |     rc    |                       Recule                       |
