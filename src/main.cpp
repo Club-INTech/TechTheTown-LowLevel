@@ -88,13 +88,25 @@ void loop(){
 
 //    orderMgr.execute("ctrv 3000 100");
 //    orderMgr.execute("demo");
-//	orderMgr.execute("ctv 2000");
-    orderMgr.execute("d 1000");
-    for(int i=0;i<10000/5;i++)
-    {
-        orderMgr.execute("rawposdata");
-        delay(5);
-    }
+//      orderMgr.execute("ctv 250");
+//    orderMgr.execute("ct0");
+//    orderMgr.execute("cr0");
+//    delay(3000);
+//    digitalWrite(13,HIGH);
+//    orderMgr.execute("d 500");
+//    orderMgr.execute("av");
+//    while(true)
+//    {
+//        orderMgr.execute("cod");
+//        delay(250);
+//    }
+//    for(int i=0;i<500/1;i++)
+//    {
+//        orderMgr.execute("rawposdata");
+//        delay(1);
+//    }
+//    orderMgr.execute("sstop");
+//    orderMgr.execute("d -100");
 
     /* Gestion des ordres recus */
 

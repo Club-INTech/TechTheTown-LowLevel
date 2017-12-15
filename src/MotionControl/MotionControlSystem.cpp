@@ -36,9 +36,13 @@ MotionControlSystem::MotionControlSystem() :
 	leftSpeedPID.setOutputLimits(-255, 255);
 	rightSpeedPID.setOutputLimits(-255, 255);
 
-	maxSpeed = 10000; // Vitesse maximum, des moteurs (avec une marge au cas ou on s'amuse a faire forcer un peu la bestiole).
-	maxSpeedTranslation = 9000; // Consigne max envoyee au PID
-	maxSpeedRotation = 3900;
+//	maxSpeed = 3000 ; // Vitesse maximum, des moteurs (avec une marge au cas ou on s'amuse a faire forcer un peu la bestiole).
+//	maxSpeedTranslation = 2000;// Consigne max envoyee au PID
+//	maxSpeedRotation = 1400;
+//
+    maxSpeed = 5000;
+    maxSpeedTranslation = 4000;
+    maxSpeedRotation = 1400*2;
 
 	delayToStop = 100; // temps a l'arret avant de considerer un blocage
 	toleranceTranslation = 30;
@@ -48,18 +52,18 @@ MotionControlSystem::MotionControlSystem() :
 	delayToEstablish = 100;
 	toleranceDifferentielle = 500; // Pour les trajectoires "normales", verifie que les roues ne font pas nawak chacunes de leur cote.
 	
-	translationPID.setTunings(10, 0, 10);			//10,0,50
-	rotationPID.setTunings(17, 0, 220);
-	leftSpeedPID.setTunings(0.21, 0, 0.001); // ki 0.00001
-	rightSpeedPID.setTunings(0.21, 0, 0.001);
+//	translationPID.setTunings(5, 0, 50);			//10,0,50
+//	rotationPID.setTunings(17, 0, 220);
+//	leftSpeedPID.setTunings(0.21, 0, 0.001); // ki 0.00001
+//	rightSpeedPID.setTunings(0.21, 0, 0.001);
+//
+	translationPID.setTunings(10,0,50);
+	rotationPID.setTunings(17,0,110);
+	leftSpeedPID.setTunings(0.11,0,0.005);
+	rightSpeedPID.setTunings(0.11,0,0.005);
 
-//	translationPID.setTunings(10,0,50);
-//	rotationPID.setTunings(17,0,220);
-//	leftSpeedPID.setTunings(1.1,0,0.005);
-//	rightSpeedPID.setTunings(1.1,0,0.005);
 
-
-	maxAcceleration = 25;
+	maxAcceleration = 20;
 
 	leftMotor.init();
 	rightMotor.init();
