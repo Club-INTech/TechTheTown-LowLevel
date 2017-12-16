@@ -8,6 +8,7 @@
 
 #include <map>
 #include <vector>
+#include <Utils/pin_mapping.h>
 
 #include "Dynamixel.h"
 #include "DynamixelInterface.h"
@@ -24,6 +25,8 @@ private:
 	std::map<int,DynamixelMotor*> axList;
 
 	std::vector<DynamixelGroup> axGroupsList;
+
+	bool pumpCurrentState;
 
 public:
 
@@ -46,6 +49,11 @@ public:
 
 	bool movAX12G(unsigned int, uint16_t);
 	bool setAX12GSpeed(unsigned int, uint16_t);
+
+	//Contrôle de la pompe
+	bool setPumpState(bool);
+	uint8_t pin_pompe=PIN_POMPE;
+
 };
 
 #endif

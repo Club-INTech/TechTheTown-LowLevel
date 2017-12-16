@@ -22,7 +22,7 @@ void setup() {
 	digitalWrite(13, HIGH);
 
     /*Actuators*/
-
+        /*AX12*/
     actuatorMgr.addAX12Group();
     actuatorMgr.populateAX12Group(0,1,120,BASE);
     actuatorMgr.populateAX12Group(0,8,120,MIRROR);
@@ -32,6 +32,10 @@ void setup() {
     delay(1000);
     orderMgr.execute("flp");
     delay(1000);
+
+        /*Pompe*/
+    pinMode(PIN_POMPE,OUTPUT);
+
 
 
     /*Wire.begin();

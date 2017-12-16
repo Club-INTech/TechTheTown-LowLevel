@@ -106,3 +106,23 @@ bool ActuatorsMgr::setAX12GSpeed(unsigned int groupId, uint16_t speed)
 	axGroupsList.at(groupId).speed(speed);
 	return(true);
 }
+
+bool ActuatorsMgr::setPumpState(bool stateToBe)
+{
+	if (pumpCurrentState==stateToBe)
+	{
+		return(true);
+	}
+	else
+	{
+		if (stateToBe==true)
+		{
+			digitalWrite(pin_pompe,HIGH);
+		}
+		else
+		{
+			digitalWrite(pin_pompe,LOW);
+		}
+	}
+	return(true);
+}
