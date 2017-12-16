@@ -28,6 +28,8 @@
 #define PIN_DIR_RIGHT 4
 #define PIN_PWM_RIGHT 5
 
+/* Pompe a vide */
+#define PIN_POMPE 6
 
 /* CAPTEURS */
 
