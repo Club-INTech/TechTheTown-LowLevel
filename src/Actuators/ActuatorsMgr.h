@@ -52,7 +52,7 @@ public:
 
 	//Contrôle de la pompe
 	bool setPumpState(bool);
-	uint8_t pin_pompe=PIN_POMPE;
+	uint8_t pin_pwm_pompe=PIN_PWM_POMPE;
 
 };
 

@@ -34,9 +34,8 @@ void setup() {
     delay(1000);
 
         /*Pompe*/
-    pinMode(PIN_POMPE,OUTPUT);
-
-
+    pinMode(PIN_PWM_POMPE,OUTPUT);
+	orderMgr.execute("dlp");
 
     /*Wire.begin();
     for (int i = 0; i < US_TOTAL; i++) {
@@ -111,8 +110,23 @@ void loop(){
 //    }
 //    orderMgr.execute("sstop");
 //    orderMgr.execute("d -100");
-    orderMgr.execute("t -3.14");
 
+	orderMgr.execute("alp");
+
+
+	/*orderMgr.execute("d 500");
+	delay(5000);
+	for (int i=0; i<4; i++) {
+		orderMgr.execute("blb");
+		delay(2000);
+		orderMgr.execute("alp");
+		delay(2000);
+		orderMgr.execute("rlb");
+		delay(2000);
+		orderMgr.execute("dlp");
+		delay(2000);
+		orderMgr.execute("d 60");
+	}*/
     /* Gestion des ordres recus */
 
     while (true) {

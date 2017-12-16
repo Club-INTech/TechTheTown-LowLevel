@@ -620,7 +620,7 @@ void OrderManager::execute(const char* orderToExecute)
         *    	   *|_________________________________|*
         */
 
-        else if (!strcmp(order, "alp"))    //TODO Mettre les pins de contrôle de la pompe (Quand elle marchera...)
+        else if (!strcmp(order, "alp"))
         {
 			actuatorsMgr.setPumpState(true);
         }
@@ -650,6 +650,7 @@ void OrderManager::execute(const char* orderToExecute)
 		*		   *|			   HOOKS	          |*
 		*    	   *|_________________________________|*
 		*/
+
 		else if(!strcmp(order, "nh")){
 			uint8_t id;
             uint32_t x, y, r;

@@ -117,11 +117,11 @@ bool ActuatorsMgr::setPumpState(bool stateToBe)
 	{
 		if (stateToBe==true)
 		{
-			digitalWrite(pin_pompe,HIGH);
+			analogWrite(pin_pwm_pompe,64);
 		}
 		else
 		{
-			digitalWrite(pin_pompe,LOW);
+			analogWrite(pin_pwm_pompe,0);
 		}
 	}
 	return(true);
