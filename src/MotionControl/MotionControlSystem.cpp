@@ -42,7 +42,7 @@ MotionControlSystem::MotionControlSystem() :
 //
     maxSpeed = 5000;
     maxSpeedTranslation = 4000;
-    maxSpeedRotation = 1400*2;
+    maxSpeedRotation = 2800;
 
 	delayToStop = 100; // temps a l'arret avant de considerer un blocage
 	toleranceTranslation = 30;
@@ -58,7 +58,7 @@ MotionControlSystem::MotionControlSystem() :
 //	rightSpeedPID.setTunings(0.21, 0, 0.001);
 //
 	translationPID.setTunings(10,0,50);
-	rotationPID.setTunings(17,0,110);
+	rotationPID.setTunings(2,0,1);
 	leftSpeedPID.setTunings(0.11,0,0.005);
 	rightSpeedPID.setTunings(0.11,0,0.005);
 

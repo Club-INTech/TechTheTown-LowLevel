@@ -88,7 +88,7 @@ void loop(){
 
 //    orderMgr.execute("ctrv 3000 100");
 //    orderMgr.execute("demo");
-//      orderMgr.execute("ctv 250");
+//    orderMgr.execute("ctv 250");
 //    orderMgr.execute("ct0");
 //    orderMgr.execute("cr0");
 //    delay(3000);
@@ -107,6 +107,7 @@ void loop(){
 //    }
 //    orderMgr.execute("sstop");
 //    orderMgr.execute("d -100");
+    orderMgr.execute("t -3.14");
 
     /* Gestion des ordres recus */
 
