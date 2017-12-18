@@ -6,27 +6,15 @@
 
 #include "Arduino.h"
 
-#include <map>
-#include <vector>
-#include <Utils/pin_mapping.h>
+#include "DynamixelMgr.h"
 
-#include "Dynamixel.h"
-#include "DynamixelInterface.h"
-#include "DynamixelMotor.h"
+#include "Utils/pin_mapping.h"
 #include "Utils/Singleton.hpp"
-#include "DynamixelGroup.h"
 
 class ActuatorsMgr : public Singleton<ActuatorsMgr>
 {
 private:
 
-	DynamixelInterface serialAX;
-
-	std::map<int,DynamixelMotor*> axList;
-
-	std::vector<DynamixelGroup> axGroupsList;
-
-	bool pumpCurrentState;
 
 public:
 
@@ -35,24 +23,18 @@ public:
 
 
 	//Gestion des AX12
-	bool addAX12(int);
-	bool addAX12(int, uint16_t);
-	bool checkIfAX(int);
-
-	void addAX12Group();
-	bool populateAX12Group(int, int, DynSym);
-	bool populateAX12Group(int, int, uint16_t, DynSym);
+    DynamixelMgr& dynamixelMgr;
 
 	//Contrôle des AX12
-	bool movAX12(int, uint16_t);
-	bool setAX12Speed(int, uint16_t);
+	void movAX12(int, uint16_t);
+	void setAX12Speed(int, uint16_t);
 
-	bool movAX12G(unsigned int, uint16_t);
-	bool setAX12GSpeed(unsigned int, uint16_t);
+	void movAX12G(unsigned int, uint16_t);
+	void setAX12GSpeed(unsigned int, uint16_t);
 
 	//Contrôle de la pompe
-	bool setPumpState(bool);
-	uint8_t pin_pwm_pompe=PIN_PWM_POMPE;
+
+	void setPumpState(bool);
 
 };
 

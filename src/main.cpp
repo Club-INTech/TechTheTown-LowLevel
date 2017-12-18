@@ -22,11 +22,7 @@ void setup() {
 	digitalWrite(13, HIGH);
 
     /*Actuators*/
-        /*AX12*/
-    actuatorMgr.addAX12Group();
-    actuatorMgr.populateAX12Group(0,1,120,BASE);
-    actuatorMgr.populateAX12Group(0,8,120,MIRROR);
-    actuatorMgr.addAX12(3,200);
+        /*AX12*/    
 
     orderMgr.execute("rlb");
     delay(1000);

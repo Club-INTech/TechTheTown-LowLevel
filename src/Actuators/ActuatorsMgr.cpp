@@ -4,125 +4,42 @@
 
 #include "ActuatorsMgr.h"
 
-ActuatorsMgr::ActuatorsMgr() : serialAX(DynamixelInterface(Serial1))
+ActuatorsMgr::ActuatorsMgr() : dynamixelMgr(DynamixelMgr::Instance())
 {
-	serialAX.begin(9600);
 }
 
 ActuatorsMgr::~ActuatorsMgr()
 {
 }
 
-bool ActuatorsMgr::addAX12(int id)
+
+void ActuatorsMgr::movAX12(int id, uint16_t angleDegree)
 {
-	if(checkIfAX(id))
-	{
-		return(false);
-	}
-	axList.insert({id,new DynamixelMotor(serialAX,id)});
-	axList.at(id)->init();
-	axList.at(id)->enableTorque();
-	axList.at(id)->jointMode();
-	return(true);
+	dynamixelMgr.movAX12(id, angleDegree);
+}
+void ActuatorsMgr::setAX12Speed(int id, uint16_t speed)
+{
+	dynamixelMgr.setAX12Speed(id, speed);
 }
 
-bool ActuatorsMgr::addAX12(int id, uint16_t speed)	//Initialise l'AX avec une vitesse définie
+void ActuatorsMgr::movAX12G(unsigned int groupId, uint16_t angleDegree)
 {
-	if(!this->addAX12(id))
-	{
-		return(false);
-	}
-	axList.at(id)->speed(speed);
-	return(true);
+	dynamixelMgr.movAX12G(groupId, angleDegree);
 }
 
-bool ActuatorsMgr::checkIfAX(int id)
+void ActuatorsMgr::setAX12GSpeed(unsigned int groupId, uint16_t speed)
 {
-	return(axList.count(id)!=0);
+	dynamixelMgr.setAX12GSpeed(groupId, speed);
 }
 
-
-bool ActuatorsMgr::movAX12(int id, uint16_t angleDegree)
+void ActuatorsMgr::setPumpState(bool newState)
 {
-	if(!checkIfAX(id))
-	{
-		return(false);
-	}
-	axList.at(id)->goalPositionDegree(angleDegree);
-	return(true);
-}
-bool ActuatorsMgr::setAX12Speed(int id, uint16_t speed)
-{
-	if(!checkIfAX(id))
-	{
-		return(false);
-	}
-	axList.at(id)->speed(speed);
-	return(true);
-}
-
-void ActuatorsMgr::addAX12Group()
-{
-	axGroupsList.emplace_back();
-}
-
-bool ActuatorsMgr::populateAX12Group(int groupId, int motorId, DynSym symmetry)
-{
-	if(!addAX12(motorId))
-	{
-		return(false);
-	}
-	axGroupsList.at(groupId).add(axList.at(motorId),symmetry);
-	return(true);
-}
-
-bool ActuatorsMgr::populateAX12Group(int groupId, int motorId, uint16_t speed, DynSym symmetry)
-{
-	if(!this->populateAX12Group(groupId, motorId, symmetry))
-	{
-		return(false);
-	}
-	axGroupsList.at(groupId).speed(speed);
-	return(true);
-
-}
-
-bool ActuatorsMgr::movAX12G(unsigned int groupId, uint16_t angleDegree)
-{
-	if(groupId>=axGroupsList.size())
-	{
-		return(false);
-	}
-	axGroupsList.at(groupId).goalPositionDegree(angleDegree);
-	return(true);
-}
-
-bool ActuatorsMgr::setAX12GSpeed(unsigned int groupId, uint16_t speed)
-{
-	if(groupId>=axGroupsList.size())
-	{
-		return(false);
-	}
-	axGroupsList.at(groupId).speed(speed);
-	return(true);
-}
-
-bool ActuatorsMgr::setPumpState(bool stateToBe)
-{
-	if (pumpCurrentState==stateToBe)
-	{
-		return(true);
-	}
-	else
-	{
-		if (stateToBe==true)
-		{
-			analogWrite(pin_pwm_pompe,64);
-		}
-		else
-		{
-			analogWrite(pin_pwm_pompe,0);
-		}
-	}
-	return(true);
+    if (newState)
+    {
+        analogWrite(PIN_PWM_POMPE,64);
+    }
+    else
+    {
+        analogWrite(PIN_PWM_POMPE,0);
+    }
 }
