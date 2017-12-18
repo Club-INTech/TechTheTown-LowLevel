@@ -44,7 +44,7 @@ void OrderManager::execute(const char* orderToExecute)
     #endif
     char orderBuffer[RX_BUFFER_SIZE];
 	strcpy(orderBuffer, orderToExecute);
-	highLevel.log("Message recu: %s", order);
+//	highLevel.log("Message recu: %s", order);
 
 	int8_t n_param = split(orderBuffer, orderData, SEPARATOR);		//Sépare l'ordre en plusieurs mots, n_param=nombre de paramètres
 
@@ -300,6 +300,12 @@ void OrderManager::execute(const char* orderToExecute)
 			highLevel.log("Speed set");
 			motionControlSystem.getSpeedSetpoints(leftsetpoint, rightsetpoint);
 			highLevel.log("speed setpoints: %d - %d", leftsetpoint, rightsetpoint);
+		}
+		else if (!strcmp(order, "rawposdata"))
+		{
+			Serial.print(motionControlSystem.getX());
+			Serial.print(",");
+			Serial.println(motionControlSystem.getY());
 		}
 
 		/*			 ___________________________
@@ -746,12 +752,12 @@ void OrderManager::execute(const char* orderToExecute)
 	}
 
 
-    highLevel.log("beforecheckhooks");
+//    highLevel.log("beforecheckhooks");
 	checkHooks();
-    highLevel.log("aftercheckhooks");
+//    highLevel.log("aftercheckhooks");
 
     executeHooks();
-    highLevel.log("endexecute");
+//    highLevel.log("endexecute");
 
 }
 
