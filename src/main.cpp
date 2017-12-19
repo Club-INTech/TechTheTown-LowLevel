@@ -18,8 +18,8 @@ void setup() {
 	Serial.println("Série OK");
 	delay(250);
 
-	pinMode(13, OUTPUT);
-	digitalWrite(13, HIGH);
+	//pinMode(13, OUTPUT);
+    //digitalWrite(13, HIGH);
 
     /*Actuators*/
         /*AX12*/    
@@ -64,7 +64,7 @@ void motionControlInterrupt() {
 //Boucle principale, gere entre autres la communication avec le HL
 
 void loop(){
-
+/*  Virez moi la pin/led 13  du code !
 	for(int i=0;i<10;i++)
 	{
 		digitalWrite(13,HIGH);
@@ -72,7 +72,7 @@ void loop(){
 		digitalWrite(13,LOW);
 		delay(200);
 	}
-
+*/
 
 //	orderMgr.execute("nh 1 1500 1000 50 0 3.2 6"); //Test de hooks
 

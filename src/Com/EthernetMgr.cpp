@@ -1,6 +1,6 @@
 /**
 *
-*Classe gérant la communication avec le Haut Niveau(messages arrivant, sortant)
+*Classe gï¿½rant la communication avec le Haut Niveau(messages arrivant, sortant)
 *
 *ASCII:13 = CR, 10 = LF
 */
@@ -57,16 +57,16 @@ bool EthernetMgr::read(char* order)
 	//manageClient();
 	client = server.available();
 
-	if (client) {							//Si on est connectés et il ya des choses à lire
+	if (client) {							//Si on est connectï¿½s et il ya des choses ï¿½ lire
 		char readChar;
 		int i = 0;
 
-		while (read_char(readChar) && i < RX_BUFFER_SIZE) {	//Tant qu'on n'est pas à la fin d'un message(\r)
+		while (read_char(readChar) && i < RX_BUFFER_SIZE) {	//Tant qu'on n'est pas ï¿½ la fin d'un message(\r)
 			order[i] = readChar;
-			i++;												//Au cas où on ne reçoit jamais de terminaison, on limite le nombre de chars
+			i++;												//Au cas oï¿½ on ne reï¿½oit jamais de terminaison, on limite le nombre de chars
 		}
 		if (client.peek() == 10) {
-			read_char(readChar);		//On élimine le \n terminal
+			read_char(readChar);		//On ï¿½limine le \n terminal
 		}
 		lastMessage = millis();
 		return (strcmp(order, ""));
@@ -121,12 +121,12 @@ bool EthernetMgr::read(float& value) {
 }
 
 /**
-*	Envoie une chaine de caractères commençant par 2 headers Ultrason, puis les valeurs séparées par des virgules
+*	Envoie une chaine de caractï¿½res commenï¿½ant par 2 headers Ultrason, puis les valeurs sï¿½parï¿½es par des virgules
 */
 void EthernetMgr::sendUS(uint16_t values[])
 {
 	char valueString[HEADER_LENGTH] = SENSOR_HEADER;
-	char currentValue[4] = "";	//Comment gérer des values de tailles différentes?
+	char currentValue[4] = "";	//Comment gï¿½rer des values de tailles diffï¿½rentes?
 
 	for (int i = 0; i < 3; ++i) {
 		itoa(values[i], currentValue, DEC);
@@ -151,7 +151,7 @@ void EthernetMgr::sendEvent(const char* event)
 }
 
 void EthernetMgr::print(const char* message, ...) {
-	va_list args;										//Variable contenant la liste des arguments après log (...)
+	va_list args;										//Variable contenant la liste des arguments aprï¿½s log (...)
 	va_start(args, message);
 
 	char logToSend[64];
@@ -188,7 +188,7 @@ void EthernetMgr::log(const char* log, ...) {
 
 	strcat(data, log);
 
-	va_list args;								//Variable contenant la liste des arguments après log (...)
+	va_list args;								//Variable contenant la liste des arguments aprï¿½s log (...)
 	va_start(args, log);
 
 	char logToSend[HEADER_LENGTH + 64];
