@@ -22,16 +22,16 @@ void setup() {
     //digitalWrite(13, HIGH);
 
     /*Actuators*/
-        /*AX12*/    
+		/*Pompe*/
+	pinMode(PIN_PWM_POMPE,OUTPUT);
+	orderMgr.execute("dlp");
 
+        /*AX12*/
     orderMgr.execute("rlb");
     delay(1000);
     orderMgr.execute("flp");
     delay(1000);
 
-        /*Pompe*/
-    pinMode(PIN_PWM_POMPE,OUTPUT);
-	orderMgr.execute("dlp");
 
     /*Wire.begin();
     for (int i = 0; i < US_TOTAL; i++) {
@@ -107,7 +107,7 @@ void loop(){
 //    orderMgr.execute("sstop");
 //    orderMgr.execute("d -100");
 
-	orderMgr.execute("alp");
+	//orderMgr.execute("alp");
 
 
 	/*orderMgr.execute("d 500");

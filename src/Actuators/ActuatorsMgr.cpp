@@ -36,7 +36,7 @@ void ActuatorsMgr::setPumpState(bool newState)
 {
     if (newState)
     {
-        analogWrite(PIN_PWM_POMPE,64);
+        analogWrite(PIN_PWM_POMPE,255);
     }
     else
     {
