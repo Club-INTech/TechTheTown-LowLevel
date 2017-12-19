@@ -650,6 +650,12 @@ void OrderManager::execute(const char* orderToExecute)
         {
             actuatorsMgr.movAX12(3,100);
         }
+        else if (!strcmp(order, "tlp"))
+        {
+            actuatorsMgr.movAX12(3,18);
+            delay(500);
+            actuatorsMgr.movAX12(3,10);
+        }
 
 		/*			 _________________________________
 		* 		   *|                                 |*
