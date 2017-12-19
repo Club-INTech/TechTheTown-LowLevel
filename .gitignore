@@ -381,3 +381,4 @@ Supprimerait platformio.ini
 /CMakeLists.txt
 /platformio.ini
 *.gitignore
+.idea
