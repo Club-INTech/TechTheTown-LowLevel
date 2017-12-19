@@ -70,6 +70,7 @@ Au boulot les 1A !
 |    rlb    |                   Relève le bras                   |
 |    flp    |                   Ferme la porte                   |
 |    olp    |                   Ouvre la porte                   |
+|    tlp    |                   Tilt la porte                    |
 
 
 
