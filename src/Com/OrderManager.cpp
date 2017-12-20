@@ -23,6 +23,7 @@ void OrderManager::communicate() {
 	}
 	memset(readMessage, 0, RX_BUFFER_SIZE);
 	static Metro checkMovement = Metro(10);
+    Metro checkHooksTimer = Metro(20);
 	if (checkMovement.check())
 	{
 		if (!motionControlSystem.sentMoveAbnormal() && motionControlSystem.isMoveAbnormal()) {//Si on est bloqué et qu'on n'a pas encore prévenu
@@ -33,6 +34,14 @@ void OrderManager::communicate() {
 			motionControlSystem.setMoveAbnormalSent(false);
 		}
 	}
+    if (checkHooksTimer.check())
+    {
+//        highLevel.log("beforecheckhooks");
+        checkHooks();
+//        highLevel.log("aftercheckhooks");
+        executeHooks();
+//        highLevel.log("endexecute");
+    }
 }
 
 void OrderManager::execute(const char* orderToExecute)
@@ -619,7 +628,7 @@ void OrderManager::execute(const char* orderToExecute)
                 highLevel.log("ERREUR::Paramètres incorrects");
             }
         }
-
+check
        /*			 _________________________________
         * 		   *|                                 |*
         *		   *|     Actionneurs spécifiques     |*
@@ -763,14 +772,9 @@ void OrderManager::execute(const char* orderToExecute)
 
 	}
 
-
 //    highLevel.log("beforecheckhooks");
-	checkHooks();
+    checkHooks();
 //    highLevel.log("aftercheckhooks");
-
-    executeHooks();
-//    highLevel.log("endexecute");
-
 }
 
 void OrderManager::refreshUS()
@@ -823,6 +827,7 @@ float OrderManager::parseFloat(const char* s) {
 void OrderManager::checkHooks() {
 	if (hooksEnabled) {
 		hookList.check(motionControlSystem.getX(), motionControlSystem.getY(),motionControlSystem.getAngleRadian());
+        executeHooks();
 	}
 }
 
