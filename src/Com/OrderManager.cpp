@@ -37,11 +37,11 @@ void OrderManager::communicate() {
 
 void OrderManager::execute(const char* orderToExecute)
 {
-	#ifdef DEBUG
+//	#ifdef DEBUG                    /*A LAISSER COMMENTÉ
 	char order[RX_BUFFER_SIZE];
-    #else
-    int order;
-    #endif
+//    #else                          *TANT QU'ON RESTE EN ORDRES
+//    int order;                     *SOUS FORME STRINGS
+//    #endif                        \*m'voyez
     char orderBuffer[RX_BUFFER_SIZE];
 	strcpy(orderBuffer, orderToExecute);
 //	highLevel.log("Message recu: %s", order);
@@ -50,11 +50,11 @@ void OrderManager::execute(const char* orderToExecute)
 
 
 	if (n_param >= 0) {
-		#ifdef DEBUG
+//		#ifdef DEBUG
 		strcpy(order, orderData.at(0));
-        #else
-        order = parseInt(orderData.at(0));
-        #endif //DEBUG
+//        #else
+//        order = parseInt(orderData.at(0));
+//        #endif //DEBUG
 
 		/*			 __________________
 		* 		   *|                  |*
@@ -641,6 +641,12 @@ void OrderManager::execute(const char* orderToExecute)
         else if (!strcmp(order, "rlb"))
         {
             actuatorsMgr.movAX12G(0,177);
+        }
+        else if (!strcmp(order, "albl"))
+        {
+            actuatorsMgr.movAX12G(1,60);
+            delay(1000);
+            actuatorsMgr.movAX12G(1,240);
         }
         else if (!strcmp(order, "flp"))
         {

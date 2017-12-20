@@ -10,7 +10,6 @@
 #include "Com/OrderManager.h"
 
 //Initialisation de la Serie
-ActuatorsMgr& actuatorMgr = ActuatorsMgr::Instance();
 OrderManager& orderMgr = OrderManager::Instance();
 void setup() {
 	/*serie*/
