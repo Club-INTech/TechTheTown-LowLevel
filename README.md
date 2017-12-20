@@ -68,6 +68,7 @@ Au boulot les 1A !
 |    dlp    |                 Désactive la pompe                 |
 |    blb    |                   Baisse le bras                   |
 |    rlb    |                   Relève le bras                   |
+|    albl   |              Active les bras latéraux              |
 |    flp    |                   Ferme la porte                   |
 |    olp    |                   Ouvre la porte                   |
 |    tlp    |                   Tilt la porte                    |

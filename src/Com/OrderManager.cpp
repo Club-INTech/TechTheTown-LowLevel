@@ -628,7 +628,6 @@ void OrderManager::execute(const char* orderToExecute)
                 highLevel.log("ERREUR::Paramètres incorrects");
             }
         }
-check
        /*			 _________________________________
         * 		   *|                                 |*
         *		   *|     Actionneurs spécifiques     |*

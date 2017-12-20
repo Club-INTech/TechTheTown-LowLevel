@@ -4,6 +4,7 @@
 //TODO:pin mapping
 
 /* Ethernet */
+//Ne pas oublier: PIN13 (LED) utilisée par l'ethernet
 #define PWD 15
 #define RST 14
 
