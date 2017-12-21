@@ -1,5 +1,5 @@
 # TechTheTown-LowLevel
-Au boulot les 1A !
+Au boulot les 1As !
 
 ## TODO
 
@@ -7,6 +7,8 @@ Au boulot les 1A !
 - [x] Ordres Des Actionneurs
 - [ ] Hooks
 - [ ] Capteurs
+- [ ] Canal de Position (établir la fréquence d'envoie et le header associé avec le HL) & détection de fin de mouvement
+- [ ] Détection des blocages & mise en place de la basic Detection, en utilisant le ThreadEvent pour prévenir le HL
 - [ ] MotionControl point à point(avec réorientation progressive)
 - [ ] Asservissement
 
