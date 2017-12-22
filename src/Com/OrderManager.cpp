@@ -42,6 +42,16 @@ void OrderManager::communicate() {
         executeHooks();
 //        highLevel.log("endexecute");
     }
+
+	uint32_t startTime;
+	startTime=millis();
+	if (startTime%round(1/F_ENV_POS)==0){
+		if (!DEBUG) {
+			float posToSend[3] = {motionControlSystem.getX(), motionControlSystem.getY(),
+								  motionControlSystem.getAngleRadian()};
+			highLevel.sendPosition(posToSend);
+		}
+	}
 }
 
 void OrderManager::execute(const char* orderToExecute)

@@ -147,7 +147,21 @@ void EthernetMgr::sendEvent(const char* event)
 		data.append(header[i]);
 	}
 	data.append(event);
-	Serial.println(data);
+	printfln(data.c_str());
+}
+
+void EthernetMgr::sendPosition(const float* event)
+{
+	String data = "";
+	char header[HEADER_LENGTH] = POSITION_HEADER;
+	for (int i = 0; i < HEADER_LENGTH; i++) {
+		data.append(header[i]);
+	}
+	for (int i=0; i<3; i++){
+		data.append(event[i]);
+		data.append(" ");
+	}
+	printfln(data.c_str());
 }
 
 void EthernetMgr::print(const char* message, ...) {

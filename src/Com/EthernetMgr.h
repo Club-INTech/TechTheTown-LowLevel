@@ -66,6 +66,7 @@ public:
 	/* ENVOI */
 	void sendUS(uint16_t[]);
 	void sendEvent(const char*);
+	void sendPosition(const float*);
 
 	template<typename T>
 	void print(T value) {
