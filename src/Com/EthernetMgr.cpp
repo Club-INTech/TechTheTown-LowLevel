@@ -7,7 +7,7 @@
 
 #include "EthernetMgr.h"
 
-EthernetMgr::EthernetMgr()
+EthernetMgr::EthernetMgr():server{ PORT }
 {
 	resetCard();
 

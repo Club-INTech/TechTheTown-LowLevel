@@ -5,12 +5,13 @@ Au boulot les 1As !
 
 - [x] Communication Ethernet de base
 - [x] Ordres Des Actionneurs
-- [ ] Hooks
-- [ ] Capteurs
-- [ ] Canal de Position (établir la fréquence d'envoie et le header associé avec le HL) & détection de fin de mouvement
-- [ ] Détection des blocages & mise en place de la basic Detection, en utilisant le ThreadEvent pour prévenir le HL
-- [ ] MotionControl point à point(avec réorientation progressive)
 - [ ] Asservissement
+- [ ] Capteurs
+- [ ] Hooks
+- [ ] Canal de Position (établir la fréquence d'envoie et le header associé avec le HL) & détection de fin de mouvement
+- [ ] Détection des blocages & mise en place de la basic Detection(arrêt si obstacle trop proche), en utilisant le Canal Event pour prévenir le HL
+- [ ] MotionControl point à point(avec réorientation progressive)
+
 
 ## TABLE DES ORDRES
 ### ORDRES HL ⇒ LL
