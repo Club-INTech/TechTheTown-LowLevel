@@ -385,3 +385,7 @@ Supprimerait platformio.ini
 .clang_complete
 .gcc-flags.json
 .vscode/c_cpp_properties.json
+.vscode/launch.json
+.vscode/settings.json
+.vscode/tasks.json
+lib/readme.txt
