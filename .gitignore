@@ -382,3 +382,6 @@ Supprimerait platformio.ini
 /platformio.ini
 *.gitignore
 .idea
+.clang_complete
+.gcc-flags.json
+.vscode/c_cpp_properties.json
