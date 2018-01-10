@@ -28,6 +28,9 @@
 //Separateurs des mots d'ordres
 #define SEPARATOR " "
 
+//Frequence envoi position
+#define F_ENV_POS 25
+
 
 /**
 *ASSERVISSEMENT

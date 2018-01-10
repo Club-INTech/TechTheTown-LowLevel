@@ -24,6 +24,8 @@ void OrderManager::communicate() {
 	memset(readMessage, 0, RX_BUFFER_SIZE);
 	static Metro checkMovement = Metro(10);
     Metro checkHooksTimer = Metro(20);
+    Metro sendPos = Metro(25);
+
 	if (checkMovement.check())
 	{
 		if (!motionControlSystem.sentMoveAbnormal() && motionControlSystem.isMoveAbnormal()) {//Si on est bloqué et qu'on n'a pas encore prévenu
@@ -42,6 +44,13 @@ void OrderManager::communicate() {
         executeHooks();
 //        highLevel.log("endexecute");
     }
+	if (sendPos.check()){
+		if (!DEBUG) {
+			float posToSend[3] = {motionControlSystem.getX(), motionControlSystem.getY(),
+								  motionControlSystem.getAngleRadian()};
+			highLevel.sendPosition(posToSend);
+		}
+	}
 }
 
 void OrderManager::execute(const char* orderToExecute)
