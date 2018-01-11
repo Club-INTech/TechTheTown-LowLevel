@@ -97,12 +97,21 @@ void loop(){
 //        orderMgr.execute("cod");
 //        delay(250);
 //    }
-//    for(int i=0;i<500/1;i++)
-//    {
-//        orderMgr.execute("rawposdata");
-//        delay(1);
-//    }
-//    orderMgr.execute("sstop");
+    orderMgr.execute("kit 0");
+    orderMgr.execute("kdt 0");
+    orderMgr.execute("kpt 40");
+    orderMgr.execute("kir 0");
+    orderMgr.execute("kdr 4");
+    orderMgr.execute("kpr 9"); //14 semble être autour de la limite du dépassement à 15
+    orderMgr.execute("ct0");
+    orderMgr.execute("t pi");
+//    orderMgr.execute("d 500");
+    for(int i=0;i<300/1;i++)
+    {
+        orderMgr.execute("rawposdata");
+        delay(10);
+    }
+    orderMgr.execute("t 0");
 //    orderMgr.execute("d -100");
 
 	//orderMgr.execute("alp");

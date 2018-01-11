@@ -44,11 +44,11 @@ void OrderManager::communicate() {
         executeHooks();
 //        highLevel.log("endexecute");
     }
-	if (sendPos.check()){
+	if (sendPos.check() && motionControlSystem.isMoving()){
 		if (!DEBUG) {
 			float posToSend[3] = {motionControlSystem.getX(), motionControlSystem.getY(),
 								  motionControlSystem.getAngleRadian()};
-			highLevel.sendPosition(posToSend);
+//			highLevel.sendPosition(posToSend);
 		}
 	}
 }
@@ -116,7 +116,14 @@ void OrderManager::execute(const char* orderToExecute)
 		{
 			if (n_param == 1) {
 				float angle = motionControlSystem.getAngleRadian();
-				angle = strtof(orderData.at(1),nullptr);
+                if(!strcmp(orderData.at(1),"pi"))
+                {
+                    angle = PI;
+                }
+                else
+                {
+                    angle = strtof(orderData.at(1),nullptr);
+                }
 				highLevel.log("angle : %f", angle);
 				motionControlSystem.orderRotation(angle, MotionControlSystem::FREE);
 			}
@@ -323,7 +330,9 @@ void OrderManager::execute(const char* orderToExecute)
 		{
 			Serial.print(motionControlSystem.getX());
 			Serial.print(",");
-			Serial.println(motionControlSystem.getY());
+			Serial.print(motionControlSystem.getY());
+			Serial.print(",");
+			Serial.println(motionControlSystem.getAngleRadian());
 		}
 
 		/*			 ___________________________
