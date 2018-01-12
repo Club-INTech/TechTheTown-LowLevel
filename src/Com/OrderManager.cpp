@@ -312,11 +312,11 @@ void OrderManager::execute(const char* orderToExecute)
 			highLevel.log("PWMS: %d - %d", left, right);
 		}
 		else if (!strcmp(order, "errors")) {
-			uint16_t leftProp, leftDer, leftInt, rightProp, rightDer, rightInt;
+			float leftProp, leftDer, leftInt, rightProp, rightDer, rightInt;
 			motionControlSystem.getSpeedErrors(leftProp, leftInt, leftDer, rightProp, rightInt, rightDer);
-			highLevel.log("Prop: %d - %d", leftProp, rightProp);
-			highLevel.log("Deriv: %d - %d", leftDer, rightDer);
-			highLevel.log("Integ: %d - %d", leftInt, rightInt);
+			highLevel.log("Prop: %f - %f", leftProp, rightProp);
+			highLevel.log("Deriv: %f - %f", leftDer, rightDer);
+			highLevel.log("Integ: %f - %f", leftInt, rightInt);
 		}
 		else if (!strcmp(order, "rawspeed")) {
 			uint16_t leftsetpoint, rightsetpoint;
@@ -332,7 +332,14 @@ void OrderManager::execute(const char* orderToExecute)
 			Serial.print(",");
 			Serial.print(motionControlSystem.getY());
 			Serial.print(",");
-			Serial.println(motionControlSystem.getAngleRadian());
+			Serial.print(motionControlSystem.getAngleRadian());
+            Serial.print(",");
+//            int32_t right, left;
+//            motionControlSystem.getPWMS(left,right);
+//            Serial.println(right);
+            float rotaProp, rotaDer, rotaInt;
+            motionControlSystem.getRotationErrors(rotaProp, rotaInt, rotaDer);
+            Serial.println(rotaProp);
 		}
 
 		/*			 ___________________________

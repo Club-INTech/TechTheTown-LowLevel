@@ -40,9 +40,9 @@ MotionControlSystem::MotionControlSystem() :
 //	maxSpeedTranslation = 2000;// Consigne max envoyee au PID
 //	maxSpeedRotation = 1400;
 //
-    maxSpeed = 5000;
+    maxSpeed = 10000;
     maxSpeedTranslation = 4000;
-    maxSpeedRotation = 4000;
+    maxSpeedRotation = 10000;
 
 	delayToStop = 100; // temps a l'arret avant de considerer un blocage
 	toleranceTranslation = 30;
@@ -63,7 +63,7 @@ MotionControlSystem::MotionControlSystem() :
 	rightSpeedPID.setTunings(0.11,0,0.005);
 
 
-	maxAcceleration = 15;
+	maxAcceleration = 40;
 
 	leftMotor.init();
 	rightMotor.init();
@@ -532,10 +532,20 @@ void MotionControlSystem::getTranslationTunings(float &kp, float &ki, float &kd)
 	ki = translationPID.getKi();
 	kd = translationPID.getKd();
 }
+void MotionControlSystem::getTranslationErrors(float& translationProp, float& translationIntegral, float& translationDerivative) {
+    translationProp = rotationPID.getError()*TICK_TO_MM;
+    translationIntegral = rotationPID.getIntegralErrol()*TICK_TO_MM;
+    translationDerivative = rotationPID.getDerivativeError()*TICK_TO_MM;
+}
 void MotionControlSystem::getRotationTunings(float &kp, float &ki, float &kd) const {
 	kp = rotationPID.getKp();
 	ki = rotationPID.getKi();
 	kd = rotationPID.getKd();
+}
+void MotionControlSystem::getRotationErrors(float& rotaProp, float& rotaIntegral, float& rotaDerivative) {
+    rotaProp = rotationPID.getError()*TICK_TO_RADIAN;
+    rotaIntegral = rotationPID.getIntegralErrol()*TICK_TO_RADIAN;
+    rotaDerivative = rotationPID.getDerivativeError()*TICK_TO_RADIAN;
 }
 void MotionControlSystem::getLeftSpeedTunings(float &kp, float &ki, float &kd) const {
 	kp = leftSpeedPID.getKp();
@@ -565,7 +575,7 @@ void MotionControlSystem::getPWMS(uint16_t& left, uint16_t& right) {
 	right = rightPWM;
 }
 
-void MotionControlSystem::getSpeedErrors(uint16_t& leftProp, uint16_t& leftIntegral, uint16_t& leftDerivative, uint16_t& rightProp, uint16_t& rightIntegral, uint16_t& rightDerivative) {
+void MotionControlSystem::getSpeedErrors(float& leftProp, float& leftIntegral, float& leftDerivative, float& rightProp, float& rightIntegral, float& rightDerivative) {
 	leftProp = leftSpeedPID.getError();
 	leftIntegral = leftSpeedPID.getIntegralErrol();
 	leftDerivative = leftSpeedPID.getDerivativeError();
