@@ -41,7 +41,7 @@ MotionControlSystem::MotionControlSystem() :
 //	maxSpeedRotation = 1400;
 //
     maxSpeed = 10000;
-    maxSpeedTranslation = 4000;
+    maxSpeedTranslation = 10000;
     maxSpeedRotation = 10000;
 
 	delayToStop = 100; // temps a l'arret avant de considerer un blocage
@@ -63,7 +63,7 @@ MotionControlSystem::MotionControlSystem() :
 	rightSpeedPID.setTunings(0.11,0,0.005);
 
 
-	maxAcceleration = 40;
+	maxAcceleration = 127;
 
 	leftMotor.init();
 	rightMotor.init();
@@ -556,6 +556,12 @@ void MotionControlSystem::getRightSpeedTunings(float &kp, float &ki, float &kd) 
 	kp = rightSpeedPID.getKp();
 	ki = rightSpeedPID.getKi();
 	kd = rightSpeedPID.getKd();
+}
+float MotionControlSystem::getLeftSpeed() {
+    return(averageRightSpeed.value()*TICK_TO_RADIAN);
+}
+float MotionControlSystem::getRightSpeed() {
+    return(averageRightSpeed.value()*TICK_TO_RADIAN);
 }
 void MotionControlSystem::setTranslationTunings(float kp, float ki, float kd) {
 	translationPID.setTunings(kp, ki, kd);

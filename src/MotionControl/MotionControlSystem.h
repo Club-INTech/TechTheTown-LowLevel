@@ -176,6 +176,8 @@ public:
 	void setRotationTunings(float, float, float);
 	void getLeftSpeedTunings(float &, float &, float &) const;
 	void getRightSpeedTunings(float &, float &, float &) const;
+    float getLeftSpeed();
+    float getRightSpeed();
 
 	void setRawPositiveTranslationSpeed();
 
