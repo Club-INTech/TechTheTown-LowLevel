@@ -558,10 +558,10 @@ void MotionControlSystem::getRightSpeedTunings(float &kp, float &ki, float &kd) 
 	kd = rightSpeedPID.getKd();
 }
 float MotionControlSystem::getLeftSpeed() {
-    return(averageRightSpeed.value()*TICK_TO_RADIAN);
+    return(currentLeftSpeed*TICK_TO_RADIAN);
 }
 float MotionControlSystem::getRightSpeed() {
-    return(averageRightSpeed.value()*TICK_TO_RADIAN);
+    return(currentRightSpeed*TICK_TO_RADIAN);
 }
 void MotionControlSystem::setTranslationTunings(float kp, float ki, float kd) {
 	translationPID.setTunings(kp, ki, kd);
@@ -639,7 +639,7 @@ void MotionControlSystem::rawWheelSpeed(uint16_t speed, uint16_t& leftOut,uint16
 	controlled = true;
 }
 
-void MotionControlSystem::getSpeedSetpoints(uint16_t& left, uint16_t& right) {
+void MotionControlSystem::getSpeedSetpoints(int32_t& left, int32_t& right) {
 	left = leftSpeedSetpoint;
 	right = rightSpeedSetpoint;
 }

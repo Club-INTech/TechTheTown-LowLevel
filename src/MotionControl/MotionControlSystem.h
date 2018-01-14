@@ -162,7 +162,7 @@ public:
 	void getPWMS(uint16_t & left, uint16_t & right);
 	void getSpeedErrors(float & leftProp, float & leftIntegral, float & leftDerivative, float & rightProp, float & rightIntegral, float & rightDerivative);
 	void rawWheelSpeed(uint16_t speed, uint16_t& leftsetpoint, uint16_t& rightsetpoint);
-	void getSpeedSetpoints(uint16_t & left, uint16_t & right);
+	void getSpeedSetpoints(int32_t & left, int32_t & right);
 	void printValues();
 	void getTranslationTunings(float &, float &, float &) const;
     void getTranslationErrors(float& translationProp, float& translationIntegral, float& translationDerivative);

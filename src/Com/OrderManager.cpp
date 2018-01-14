@@ -319,27 +319,36 @@ void OrderManager::execute(const char* orderToExecute)
 			highLevel.log("Integ: %f - %f", leftInt, rightInt);
 		}
 		else if (!strcmp(order, "rawspeed")) {
-			uint16_t leftsetpoint, rightsetpoint;
+			int32_t leftsetpoint, rightsetpoint;
 
-			motionControlSystem.rawWheelSpeed(parseInt(orderData.at(1)), leftsetpoint, rightsetpoint);
+//			motionControlSystem.rawWheelSpeed(parseInt(orderData.at(1)), leftsetpoint, rightsetpoint);
 			highLevel.log("Speed set");
 			motionControlSystem.getSpeedSetpoints(leftsetpoint, rightsetpoint);
-			highLevel.log("speed setpoints: %d - %d", leftsetpoint, rightsetpoint);
+			highLevel.log("speed setpoints: %f - %f", leftsetpoint, rightsetpoint);
 		}
 		else if (!strcmp(order, "rawposdata"))
 		{
+            int32_t leftsetpoint, rightsetpoint;
+            motionControlSystem.getSpeedSetpoints(leftsetpoint, rightsetpoint);
 			Serial.print(motionControlSystem.getX());
 			Serial.print(",");
 			Serial.print(motionControlSystem.getY());
 			Serial.print(",");
 			Serial.print(motionControlSystem.getAngleRadian());
             Serial.print(",");
+            Serial.print(motionControlSystem.getLeftSpeed());
+            Serial.print(",");
+            Serial.print(leftsetpoint);
+            Serial.print(",");
+            Serial.print(motionControlSystem.getRightSpeed());
+            Serial.print(",");
+            Serial.println(rightsetpoint);
 //            int32_t right, left;
 //            motionControlSystem.getPWMS(left,right);
 //            Serial.println(right);
-            float rotaProp, rotaDer, rotaInt;
-            motionControlSystem.getRotationErrors(rotaProp, rotaInt, rotaDer);
-            Serial.println(rotaProp);
+//            float rotaProp, rotaDer, rotaInt;
+//            motionControlSystem.getRotationErrors(rotaProp, rotaInt, rotaDer);
+//            Serial.println(rotaInt);
 		}
 
 		/*			 ___________________________
@@ -354,6 +363,7 @@ void OrderManager::execute(const char* orderToExecute)
 		{
 			motionControlSystem.enableTranslationControl(false);
 			motionControlSystem.enableRotationControl(false);
+            motionControlSystem.enableForcedMovement();
 		}
 		else if (!strcmp(order, "av"))
 		{
@@ -607,7 +617,6 @@ void OrderManager::execute(const char* orderToExecute)
 		*		   *|			 Actionneurs          |*
 		*    	   *|_________________________________|*
 		*/
-
 
         else if (!strcmp(order, "AXm"))
         {
