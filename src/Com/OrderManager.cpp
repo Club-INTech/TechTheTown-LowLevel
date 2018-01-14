@@ -44,13 +44,21 @@ void OrderManager::communicate() {
         executeHooks();
 //        highLevel.log("endexecute");
     }
-	if (sendPos.check() && motionControlSystem.isMoving()){
-		if (!DEBUG) {
-			float posToSend[3] = {motionControlSystem.getX(), motionControlSystem.getY(),
-								  motionControlSystem.getAngleRadian()};
-//			highLevel.sendPosition(posToSend);
-		}
-	}
+    if (!DEBUG) {
+	    if (sendPos.check()) {
+            if (motionControlSystem.isMoving()) {
+                float posToSend[3] = {motionControlSystem.getX(), motionControlSystem.getY(),
+                                      motionControlSystem.getAngleRadian()};
+                highLevel.sendPosition(posToSend);
+                motionControlSystem.setPreviousIsMoving(true);
+            } else {
+                if (motionControlSystem.previousIsMoving()==true){
+                    highLevel.sendEvent("stopped moving");
+                }
+                motionControlSystem.setPreviousIsMoving(false);
+            }
+        }
+    }
 }
 
 void OrderManager::execute(const char* orderToExecute)

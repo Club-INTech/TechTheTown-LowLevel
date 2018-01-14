@@ -110,6 +110,7 @@ private:
 
 									 // Variables d'�tat du mouvement
 	volatile bool moving;
+	volatile bool wasMoving;
 	volatile MOVING_DIRECTION direction;
 	volatile bool moveAbnormal;
 	volatile bool moveAbnormalSent;
@@ -210,6 +211,8 @@ public:
 	/* Autres */
 	void stop();
 	bool isMoving() const;
+	bool previousIsMoving() const;
+	void setPreviousIsMoving(bool);
 	bool isMoveAbnormal() const;
 	bool sentMoveAbnormal() const;
 	void setMoveAbnormalSent(bool);
@@ -222,6 +225,7 @@ public:
 	void manageStop();
 	void enableForcedMovement();
 	void disableForcedMovement();
+
 };
 
 #endif

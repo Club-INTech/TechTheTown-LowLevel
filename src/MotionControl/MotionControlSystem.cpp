@@ -432,6 +432,15 @@ bool MotionControlSystem::isMoving() const
 	return moving;
 }
 
+bool MotionControlSystem::previousIsMoving() const
+{
+	return wasMoving;
+}
+void MotionControlSystem::setPreviousIsMoving(bool value)
+{
+	wasMoving=value;
+}
+
 bool MotionControlSystem::isMoveAbnormal() const
 {
 	return moveAbnormal;
