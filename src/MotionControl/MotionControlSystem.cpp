@@ -40,9 +40,9 @@ MotionControlSystem::MotionControlSystem() :
 //	maxSpeedTranslation = 2000;// Consigne max envoyee au PID
 //	maxSpeedRotation = 1400;
 //
-    maxSpeed = 10000;
-    maxSpeedTranslation = 10000;
-    maxSpeedRotation = 10000;
+    maxSpeed = 5000; //10000; Pour tests, à ne pas mettre pour les scripts
+    maxSpeedTranslation = 4000; //10000;
+    maxSpeedRotation = 2800; //10000;
 
 	delayToStop = 100; // temps a l'arret avant de considerer un blocage
 	toleranceTranslation = 30;
@@ -52,21 +52,21 @@ MotionControlSystem::MotionControlSystem() :
 	delayToEstablish = 100;
 	toleranceDifferentielle = 500; // Pour les trajectoires "normales", verifie que les roues ne font pas nawak chacunes de leur cote.
 
-//	Sauvegarde PIDs "fonctionnels" - DECOMMENTER CEUX LA SI VOUS VOULEZ FAIRE JOUJOU
-//  Peut-être
-//	translationPID.setTunings(10,0,50);
-//	rotationPID.setTunings(17,0,100);
-//	leftSpeedPID.setTunings(0.11,0,0.005);
-//	rightSpeedPID.setTunings(0.11,0,0.005);
+    
+	translationPID.setTunings(10,0,50);
+	rotationPID.setTunings(17,0,100);
+	leftSpeedPID.setTunings(0.11,0,0.005);
+	rightSpeedPID.setTunings(0.11,0,0.005);
 
-	translationPID.setTunings(5, 0, 50);
-	rotationPID.setTunings(17, 0, 220);
-	leftSpeedPID.setTunings(0.14,0.00008,0.3);
-	rightSpeedPID.setTunings(0.135,0.00008,0.3);
+//  PIDs de test d'asserv'
+//	translationPID.setTunings(5, 0, 50);
+//	rotationPID.setTunings(17, 0, 220);
+//	leftSpeedPID.setTunings(0.14,0.00008,0.3);
+//	rightSpeedPID.setTunings(0.135,0.00008,0.3);
 
 
 
-	maxAcceleration = 127;
+	maxAcceleration = 10; //127; Pour les tests, ne pas prendre pour les scripts
 
 	leftMotor.init();
 	rightMotor.init();
