@@ -51,16 +51,19 @@ MotionControlSystem::MotionControlSystem() :
 	toleranceSpeedEstablished = 50; // Doit etre la plus petite possible, sans bloquer les trajectoires courbes 50
 	delayToEstablish = 100;
 	toleranceDifferentielle = 500; // Pour les trajectoires "normales", verifie que les roues ne font pas nawak chacunes de leur cote.
-	
-//	translationPID.setTunings(5, 0, 50);			//10,0,50
-//	rotationPID.setTunings(17, 0, 220);
-//	leftSpeedPID.setTunings(0.21, 0, 0.001); // ki 0.00001
-//	rightSpeedPID.setTunings(0.21, 0, 0.001);
-//
-	translationPID.setTunings(10,0,50);
-	rotationPID.setTunings(17,0,100);
-	leftSpeedPID.setTunings(0.11,0,0.005);
-	rightSpeedPID.setTunings(0.11,0,0.005);
+
+//	Sauvegarde PIDs "fonctionnels" - DECOMMENTER CEUX LA SI VOUS VOULEZ FAIRE JOUJOU
+//  Peut-être
+//	translationPID.setTunings(10,0,50);
+//	rotationPID.setTunings(17,0,100);
+//	leftSpeedPID.setTunings(0.11,0,0.005);
+//	rightSpeedPID.setTunings(0.11,0,0.005);
+
+	translationPID.setTunings(5, 0, 50);
+	rotationPID.setTunings(17, 0, 220);
+	leftSpeedPID.setTunings(0.14,0.00008,0.3);
+	rightSpeedPID.setTunings(0.135,0.00008,0.3);
+
 
 
 	maxAcceleration = 127;

@@ -14,6 +14,7 @@ OrderManager& orderMgr = OrderManager::Instance();
 void setup() {
 	/*serie*/
 	Serial.begin(115200);
+    Serial.flush();
 	Serial.println("Série OK");
 	delay(250);
 
@@ -97,16 +98,25 @@ void loop(){
 //        orderMgr.execute("cod");
 //        delay(250);
 //    }
-    orderMgr.execute("kpt 40");
+    orderMgr.execute("kpt 1");
     orderMgr.execute("kit 0");
     orderMgr.execute("kdt 0");
-    orderMgr.execute("kpr 12");
-    orderMgr.execute("kir 0");
-    orderMgr.execute("kdr 0");
+//    orderMgr.execute("kpr 10");
+//    orderMgr.execute("kir 0");
+//    orderMgr.execute("kdr 0");
     orderMgr.execute("ct0");
-    orderMgr.execute("t pi");
-//    orderMgr.execute("d 500");
-    for(int i=0;i<300/1;i++)
+//    orderMgr.execute("cr0");
+//    orderMgr.execute("monthlery");
+//    orderMgr.execute("kpg 0.14");
+//    orderMgr.execute("kig 0.00007");
+//    orderMgr.execute("kdg 0.3");
+//    orderMgr.execute("kpd 0.135");
+//    orderMgr.execute("kid 0.00007");
+//    orderMgr.execute("kdd 0.3");
+//    orderMgr.execute("t pi");
+//    orderMgr.execute("av");
+    orderMgr.execute("d 200");
+    for(int i=0;i<200;i++)
     {
         orderMgr.execute("rawposdata");
         delay(10);
@@ -118,6 +128,7 @@ void loop(){
 //        delay(10);
 //    }
     Serial.println("DATAEND");
+    orderMgr.execute("sstop");
 //    orderMgr.execute("d -100");
 
 	//orderMgr.execute("alp");
