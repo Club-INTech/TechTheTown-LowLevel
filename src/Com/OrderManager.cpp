@@ -354,11 +354,11 @@ void OrderManager::execute(const char* orderToExecute)
 			Serial.print(",");
 			Serial.print(motionControlSystem.getAngleRadian());
             Serial.print(",");
-            Serial.print(motionControlSystem.getLeftTick());
+            Serial.print(motionControlSystem.getLeftSpeed());
             Serial.print(",");
             Serial.print(leftsetpoint);
             Serial.print(",");
-            Serial.print(motionControlSystem.getRightTick());
+            Serial.print(motionControlSystem.getRightSpeed());
             Serial.print(",");
             Serial.println(rightsetpoint);
 //            int32_t right, left;
@@ -381,6 +381,7 @@ void OrderManager::execute(const char* orderToExecute)
 		{
 			motionControlSystem.enableTranslationControl(false);
 			motionControlSystem.enableRotationControl(false);
+            motionControlSystem.enableForcedMovement();
 		}
 		else if (!strcmp(order, "av"))
 		{
