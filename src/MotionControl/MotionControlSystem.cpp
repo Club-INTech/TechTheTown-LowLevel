@@ -42,7 +42,7 @@ MotionControlSystem::MotionControlSystem() :
     maxSpeedTranslation = 10000; //4000;
     maxSpeedRotation = 2800; //2800;
 
-	delayToStop = 200; // temps a l'arret avant de considerer un blocage
+	delayToStop = 100; // temps a l'arret avant de considerer un blocage
 	toleranceTranslation = 30;
 	toleranceRotation = 50;
 	toleranceSpeed = 40;
@@ -59,8 +59,8 @@ MotionControlSystem::MotionControlSystem() :
 //  PIDs de test d'asserv'
 	translationPID.setTunings(5, 0, 50);
 	rotationPID.setTunings(17, 0, 100);
-	leftSpeedPID.setTunings(0.14,0.00008,0.3);
-	rightSpeedPID.setTunings(0.135,0.00008,0.3);
+	leftSpeedPID.setTunings(0.165,0.0002,0.5);
+	rightSpeedPID.setTunings(0.16,0.0002,0.5);
 
 
 
@@ -571,10 +571,10 @@ void MotionControlSystem::getRightSpeedTunings(float &kp, float &ki, float &kd) 
 	kd = rightSpeedPID.getKd();
 }
 float MotionControlSystem::getLeftSpeed() {
-    return(currentLeftSpeed*TICK_TO_RADIAN);
+    return(currentLeftSpeed*TICK_TO_MM);
 }
 float MotionControlSystem::getRightSpeed() {
-    return(currentRightSpeed*TICK_TO_RADIAN);
+    return(currentRightSpeed*TICK_TO_MM);
 }
 void MotionControlSystem::setTranslationTunings(float kp, float ki, float kd) {
 	translationPID.setTunings(kp, ki, kd);
@@ -653,8 +653,8 @@ void MotionControlSystem::rawWheelSpeed(uint16_t speed, uint16_t& leftOut,uint16
 }
 
 void MotionControlSystem::getSpeedSetpoints(int32_t& left, int32_t& right) {
-	left = leftSpeedSetpoint;
-	right = rightSpeedSetpoint;
+	left = leftSpeedSetpoint*TICK_TO_MM;
+	right = rightSpeedSetpoint*TICK_TO_MM;
 }
 
 void MotionControlSystem::printValues() {
