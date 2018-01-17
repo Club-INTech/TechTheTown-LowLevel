@@ -49,7 +49,7 @@ void OrderManager::communicate() {
             if (motionControlSystem.isMoving()) {
                 float posToSend[3] = {motionControlSystem.getX(), motionControlSystem.getY(),
                                       motionControlSystem.getAngleRadian()};
-                highLevel.sendPosition(posToSend);
+//                highLevel.sendPosition(posToSend);
                 motionControlSystem.setPreviousIsMoving(true);
             } else {
                 if (motionControlSystem.previousIsMoving()==true){
@@ -314,6 +314,16 @@ void OrderManager::execute(const char* orderToExecute)
 			//highLevel.printfln("%d", (int)motionControlSystem.getRightMotorPWM());
 			//highLevel.printfln("%d", (int)motionControlSystem.getCodD());
 		}
+        else if (!strcmp(order, "rawpwm"))
+        {
+            uint8_t rawPWM = 255;
+            if(n_param==1)
+            {
+                rawPWM = parseInt(orderData.at(1));
+            }
+            motionControlSystem.orderRawPwm(Side::LEFT,rawPWM);
+            motionControlSystem.orderRawPwm(Side::RIGHT,rawPWM);
+        }
 		else if (!strcmp(order, "getpwm")) {
 			uint16_t left, right;
 			motionControlSystem.getPWMS(left, right);
@@ -332,7 +342,7 @@ void OrderManager::execute(const char* orderToExecute)
 //			motionControlSystem.rawWheelSpeed(parseInt(orderData.at(1)), leftsetpoint, rightsetpoint);
 			highLevel.log("Speed set");
 			motionControlSystem.getSpeedSetpoints(leftsetpoint, rightsetpoint);
-			highLevel.log("speed setpoints: %f - %f", leftsetpoint, rightsetpoint);
+			highLevel.log("speed setpoints: %ld - %ld", leftsetpoint, rightsetpoint);
 		}
 		else if (!strcmp(order, "rawposdata"))
 		{
@@ -344,11 +354,11 @@ void OrderManager::execute(const char* orderToExecute)
 			Serial.print(",");
 			Serial.print(motionControlSystem.getAngleRadian());
             Serial.print(",");
-            Serial.print(motionControlSystem.getLeftSpeed());
+            Serial.print(motionControlSystem.getLeftTick());
             Serial.print(",");
             Serial.print(leftsetpoint);
             Serial.print(",");
-            Serial.print(motionControlSystem.getRightSpeed());
+            Serial.print(motionControlSystem.getRightTick());
             Serial.print(",");
             Serial.println(rightsetpoint);
 //            int32_t right, left;
@@ -371,7 +381,6 @@ void OrderManager::execute(const char* orderToExecute)
 		{
 			motionControlSystem.enableTranslationControl(false);
 			motionControlSystem.enableRotationControl(false);
-            motionControlSystem.enableForcedMovement();
 		}
 		else if (!strcmp(order, "av"))
 		{

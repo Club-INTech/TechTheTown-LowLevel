@@ -44,6 +44,7 @@ Au boulot les 1As !
 |   seti2c  |                Set les capteurs I2C                |
 |    cod    |            Retourne les ticks de codeuse           |
 |  pfdebug  |            Info de debug sur la position           |
+|   rawpwm  |        Demande un PWM brut aux deux moteurs        |
 |   getpwn  |          Retourne le PWN des deux moteurs          |
 |   errors  |         Retourne les erreurs d'incertitude         |
 |  rawspeed |               Vitesse brute des roues              |

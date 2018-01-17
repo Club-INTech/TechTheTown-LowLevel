@@ -137,8 +137,6 @@ private:
 
 	int delayToEstablish; // Temps � attendre avant de consid�rer la vitesse stable
 
-	bool speedTest;
-
 	bool isPhysicallyStopped();//Indique si le robot est immobile.
 	bool isLeftWheelSpeedAbnormal();
 	bool isRightWheelSpeedAbnormal();
@@ -151,6 +149,7 @@ public:
 	/* Codeuses */
 	int32_t getLeftTick();
 	int32_t getRightTick();
+    void updateTicks();
 
 	/* Asservissement */
 		//LA fonction d'asservissement

@@ -19,8 +19,6 @@ MotionControlSystem::MotionControlSystem() :
 	translationSetpoint = 0;
 	leftSpeedSetpoint = 0;
 	rightSpeedSetpoint = 0;
-	
-	speedTest = false;
 
 	lastLeftPWM = 0;
 	lastRightPWM = 0;
@@ -40,11 +38,11 @@ MotionControlSystem::MotionControlSystem() :
 //	maxSpeedTranslation = 2000;// Consigne max envoyee au PID
 //	maxSpeedRotation = 1400;
 //
-    maxSpeed = 5000; //10000; Pour tests, à ne pas mettre pour les scripts
-    maxSpeedTranslation = 4000; //10000;
-    maxSpeedRotation = 2800; //10000;
+    maxSpeed = 10000; //5000;  Pour tests, à ne pas mettre pour les scripts
+    maxSpeedTranslation = 10000; //4000;
+    maxSpeedRotation = 2800; //2800;
 
-	delayToStop = 100; // temps a l'arret avant de considerer un blocage
+	delayToStop = 200; // temps a l'arret avant de considerer un blocage
 	toleranceTranslation = 30;
 	toleranceRotation = 50;
 	toleranceSpeed = 40;
@@ -52,21 +50,21 @@ MotionControlSystem::MotionControlSystem() :
 	delayToEstablish = 100;
 	toleranceDifferentielle = 500; // Pour les trajectoires "normales", verifie que les roues ne font pas nawak chacunes de leur cote.
 
-    
-	translationPID.setTunings(10,0,50);
-	rotationPID.setTunings(17,0,100);
-	leftSpeedPID.setTunings(0.11,0,0.005);
-	rightSpeedPID.setTunings(0.11,0,0.005);
+
+//	translationPID.setTunings(10,0,50);
+//	rotationPID.setTunings(17,0,100);
+//	leftSpeedPID.setTunings(0.11,0,0.005);
+//	rightSpeedPID.setTunings(0.11,0,0.005);
 
 //  PIDs de test d'asserv'
-//	translationPID.setTunings(5, 0, 50);
-//	rotationPID.setTunings(17, 0, 220);
-//	leftSpeedPID.setTunings(0.14,0.00008,0.3);
-//	rightSpeedPID.setTunings(0.135,0.00008,0.3);
+	translationPID.setTunings(5, 0, 50);
+	rotationPID.setTunings(17, 0, 100);
+	leftSpeedPID.setTunings(0.14,0.00008,0.3);
+	rightSpeedPID.setTunings(0.135,0.00008,0.3);
 
 
 
-	maxAcceleration = 10; //127; Pour les tests, ne pas prendre pour les scripts
+	maxAcceleration = 30; //10; Pour les tests, ne pas prendre pour les scripts
 
 	leftMotor.init();
 	rightMotor.init();
@@ -83,6 +81,10 @@ int32_t MotionControlSystem::getRightTick()
 	return rightTicks;
 }
 
+void MotionControlSystem::updateTicks(){
+    leftTicks = leftEncoder.read();
+    rightTicks = rightEncoder.read();
+}
 void MotionControlSystem::control() {
 	if (controlled) {
 		// Pour le calcul de la vitesse instantanee :
@@ -93,8 +95,7 @@ void MotionControlSystem::control() {
 		static int32_t previousLeftSpeedSetpoint = 0;
 		static int32_t previousRightSpeedSetpoint = 0;
 
-		leftTicks = leftEncoder.read();
-		rightTicks = rightEncoder.read();
+		updateTicks();
 
 		currentLeftSpeed = (leftTicks - previousLeftTicks) * MC_FREQUENCY;
 		currentRightSpeed = (rightTicks - previousRightTicks) * MC_FREQUENCY;
@@ -459,7 +460,7 @@ void MotionControlSystem::setMoveAbnormalSent(bool status) {
 }
 
 void MotionControlSystem::setRawPositiveTranslationSpeed() {
-	translationSpeed = maxSpeedTranslation;	//Pas de sur 4
+	translationSpeed = maxSpeedTranslation;
 }
 
 void MotionControlSystem::setRawPositiveRotationSpeed() {
@@ -545,9 +546,9 @@ void MotionControlSystem::getTranslationTunings(float &kp, float &ki, float &kd)
 	kd = translationPID.getKd();
 }
 void MotionControlSystem::getTranslationErrors(float& translationProp, float& translationIntegral, float& translationDerivative) {
-    translationProp = rotationPID.getError()*TICK_TO_MM;
-    translationIntegral = rotationPID.getIntegralErrol()*TICK_TO_MM;
-    translationDerivative = rotationPID.getDerivativeError()*TICK_TO_MM;
+    translationProp = translationPID.getError()*TICK_TO_MM;
+    translationIntegral = translationPID.getIntegralErrol()*TICK_TO_MM;
+    translationDerivative = translationPID.getDerivativeError()*TICK_TO_MM;
 }
 void MotionControlSystem::getRotationTunings(float &kp, float &ki, float &kd) const {
 	kp = rotationPID.getKp();
