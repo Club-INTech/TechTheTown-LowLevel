@@ -24,7 +24,7 @@ void OrderManager::communicate() {
 	memset(readMessage, 0, RX_BUFFER_SIZE);
 	static Metro checkMovement = Metro(10);
     Metro checkHooksTimer = Metro(20);
-    Metro sendPos = Metro(25);
+    Metro sendPos = Metro(F_ENV_POS);
 
 	if (checkMovement.check())
 	{
@@ -49,7 +49,7 @@ void OrderManager::communicate() {
             if (motionControlSystem.isMoving()) {
                 float posToSend[3] = {motionControlSystem.getX(), motionControlSystem.getY(),
                                       motionControlSystem.getAngleRadian()};
-//                highLevel.sendPosition(posToSend);
+                highLevel.sendPosition(posToSend);
                 motionControlSystem.setPreviousIsMoving(true);
             } else {
                 if (motionControlSystem.previousIsMoving()==true){
