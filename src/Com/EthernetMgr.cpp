@@ -150,7 +150,7 @@ void EthernetMgr::sendEvent(const char* event)
 	printfln(data.c_str());
 }
 
-void EthernetMgr::sendPosition(const float* event)
+void EthernetMgr::sendPosition(const float* pos)
 {
 	String data = "";
 	char header[HEADER_LENGTH] = POSITION_HEADER;
@@ -158,7 +158,7 @@ void EthernetMgr::sendPosition(const float* event)
 		data.append(header[i]);
 	}
 	for (int i=0; i<3; i++){
-		data.append(event[i]);
+		data.append(pos[i]);
 		data.append(" ");
 	}
 	printfln(data.c_str());
