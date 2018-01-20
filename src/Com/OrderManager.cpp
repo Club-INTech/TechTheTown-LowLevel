@@ -44,7 +44,7 @@ void OrderManager::communicate() {
         executeHooks();
 //        highLevel.log("endexecute");
     }
-    if (!DEBUG) {
+    /*if (!DEBUG) {
 	    if (sendPos.check()) {
             if (motionControlSystem.isMoving()) {
                 float posToSend[3] = {motionControlSystem.getX(), motionControlSystem.getY(),
@@ -58,7 +58,7 @@ void OrderManager::communicate() {
                 motionControlSystem.setPreviousIsMoving(false);
             }
         }
-    }
+    }*/
 }
 
 void OrderManager::execute(const char* orderToExecute)

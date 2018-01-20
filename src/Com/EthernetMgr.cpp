@@ -69,6 +69,7 @@ bool EthernetMgr::read(char* order)
 			read_char(readChar);		//On �limine le \n terminal
 		}
 		lastMessage = millis();
+		Serial.println(order);
 		return (strcmp(order, ""));
 	}
 	else {
@@ -173,6 +174,7 @@ void EthernetMgr::print(const char* message, ...) {
 	vsnprintf(logToSend, 64, message, args);			//Ajoute dans logToSend de log, en formattant avec les arguments
 	
 	client.print(logToSend);
+	Serial.print(logToSend);	//TEST
 
 	va_end(args);
 }

@@ -9,6 +9,7 @@
 #include "Utils/pin_mapping.h"
 #include "MotionControl/MotionControlSystem.h"
 #include "Utils/pin_mapping.h"
+#include <i2c_t3.h>
 
 class SensorMgr : public Singleton<SensorMgr>
 {
