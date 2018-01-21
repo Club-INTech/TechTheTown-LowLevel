@@ -58,7 +58,7 @@ void OrderManager::communicate() {
                 motionControlSystem.setPreviousIsMoving(true);
             } else {
                 if (motionControlSystem.previousIsMoving()){
-                    highLevel.sendEvent("stopped moving");
+                    highLevel.sendEvent("stoppedMoving");
                 }
                 motionControlSystem.setPreviousIsMoving(false);
             }
