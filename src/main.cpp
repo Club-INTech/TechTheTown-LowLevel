@@ -1,5 +1,3 @@
-#ifndef UNIT_TEST
-
 /**
 *Initialisation et boucle principale du programme
 *
@@ -42,9 +40,7 @@ void motionControlInterrupt() {
 	motionControlSystem.manageStop();
 }
 
-
 //Boucle principale, gere entre autres la communication avec le HL
-
 void loop(){
 	for(int i=0;i<10;i++)
 	{
@@ -59,7 +55,6 @@ void loop(){
     motionControlInterruptTimer.priority(253);
     motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); //asservissements
 
-
     while (true) {
         //orderMgr.refreshUS();
         orderMgr.communicate();
@@ -72,7 +67,7 @@ void loop(){
 
 
 
-/* Ce bout de code permet de compiler avec std::vector, copi� honteusement de chez INTech-Senpai */
+/* Ce bout de code permet de compiler avec std::vector, copie honteusement de chez INTech-Senpai */
 namespace std {
 	void __throw_bad_alloc()
 	{
@@ -114,7 +109,6 @@ namespace std {
 	}
 }
 
-#endif //!UNIT_TEST
                    /*``.           `-:--.`                                                                                                 
                   `.-::::/.        .:::::::y                                                                                                
                  `::::::::o``````.-::::::/h-                                                                                                

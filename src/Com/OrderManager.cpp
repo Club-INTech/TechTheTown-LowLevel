@@ -18,47 +18,52 @@ OrderManager::OrderManager():	motionControlSystem(MotionControlSystem::Instance(
 }
 
 void OrderManager::communicate() {
+
 	if (highLevel.read(readMessage)) {
 		execute(readMessage);
 	}
+	
 	memset(readMessage, 0, RX_BUFFER_SIZE);
+
 	static Metro checkMovement = Metro(10);
-    Metro checkHooksTimer = Metro(20);
-    Metro sendPos = Metro(F_ENV_POS);
+    static Metro checkHooksTimer = Metro(20);
+
 
 	if (checkMovement.check())
 	{
 		if (!motionControlSystem.sentMoveAbnormal() && motionControlSystem.isMoveAbnormal()) {//Si on est bloqué et qu'on n'a pas encore prévenu
 			motionControlSystem.setMoveAbnormalSent(true);
-			highLevel.sendEvent("Ah");
+			highLevel.sendEvent("Ah!");
 		}
 		else if (motionControlSystem.sentMoveAbnormal() && !motionControlSystem.isMoveAbnormal()) {//Si on est plus bloqué et qu'on avait prévenu
 			motionControlSystem.setMoveAbnormalSent(false);
 		}
 	}
-    if (checkHooksTimer.check())
+
+
+    if (checkHooksTimer.check() && hooksEnabled)
     {
-//        highLevel.log("beforecheckhooks");
         checkHooks();
-//        highLevel.log("aftercheckhooks");
         executeHooks();
-//        highLevel.log("endexecute");
     }
-    /*if (!DEBUG) {
+
+
+	//Code de compilé seulement si on n'utilise pas l'ethernet
+    #if !DEBUG
+    static Metro sendPos = Metro(F_ENV_POS);
 	    if (sendPos.check()) {
             if (motionControlSystem.isMoving()) {
-                float posToSend[3] = {motionControlSystem.getX(), motionControlSystem.getY(),
-                                      motionControlSystem.getAngleRadian()};
+                float posToSend[3]{motionControlSystem.getX(), motionControlSystem.getY(), motionControlSystem.getAngleRadian()};
                 highLevel.sendPosition(posToSend);
                 motionControlSystem.setPreviousIsMoving(true);
             } else {
-                if (motionControlSystem.previousIsMoving()==true){
+                if (motionControlSystem.previousIsMoving()){
                     highLevel.sendEvent("stopped moving");
                 }
                 motionControlSystem.setPreviousIsMoving(false);
             }
-        }
-    }*/
+		}
+	#endif
 }
 
 void OrderManager::execute(const char* orderToExecute)
@@ -76,11 +81,11 @@ void OrderManager::execute(const char* orderToExecute)
 
 
 	if (n_param >= 0) {
-//		#ifdef DEBUG
+		//#ifdef DEBUG
 		strcpy(order, orderData.at(0));
-//        #else
-//        order = parseInt(orderData.at(0));
-//        #endif //DEBUG
+		//#else
+		//order = parseInt(orderData.at(0));
+		//#endif //DEBUG
 
 		/*			 __________________
 		* 		   *|                  |*
@@ -126,7 +131,7 @@ void OrderManager::execute(const char* orderToExecute)
 				float angle = motionControlSystem.getAngleRadian();
                 if(!strcmp(orderData.at(1),"pi"))
                 {
-                    angle = PI;
+                    angle = (float)PI;
                 }
                 else
                 {
@@ -314,12 +319,12 @@ void OrderManager::execute(const char* orderToExecute)
 			//highLevel.printfln("%d", (int)motionControlSystem.getRightMotorPWM());
 			//highLevel.printfln("%d", (int)motionControlSystem.getCodD());
 		}
-        else if (!strcmp(order, "rawpwm"))
+		else if (!strcmp(order, "rawpwm"))
         {
             uint8_t rawPWM = 255;
             if(n_param==1)
             {
-                rawPWM = parseInt(orderData.at(1));
+                rawPWM = (uint8_t)parseInt(orderData.at(1));
             }
             motionControlSystem.orderRawPwm(Side::LEFT,rawPWM);
             motionControlSystem.orderRawPwm(Side::RIGHT,rawPWM);
@@ -339,7 +344,7 @@ void OrderManager::execute(const char* orderToExecute)
 		else if (!strcmp(order, "rawspeed")) {
 			int32_t leftsetpoint, rightsetpoint;
 
-//			motionControlSystem.rawWheelSpeed(parseInt(orderData.at(1)), leftsetpoint, rightsetpoint);
+			//motionControlSystem.rawWheelSpeed(parseInt(orderData.at(1)), leftsetpoint, rightsetpoint);
 			highLevel.log("Speed set");
 			motionControlSystem.getSpeedSetpoints(leftsetpoint, rightsetpoint);
 			highLevel.log("speed setpoints: %ld - %ld", leftsetpoint, rightsetpoint);
@@ -361,12 +366,12 @@ void OrderManager::execute(const char* orderToExecute)
             Serial.print(motionControlSystem.getRightSpeed());
             Serial.print(",");
             Serial.println(rightsetpoint);
-//            int32_t right, left;
-//            motionControlSystem.getPWMS(left,right);
-//            Serial.println(right);
-//            float rotaProp, rotaDer, rotaInt;
-//            motionControlSystem.getRotationErrors(rotaProp, rotaInt, rotaDer);
-//            Serial.println(rotaInt);
+			//int32_t right, left;
+			//motionControlSystem.getPWMS(left,right);
+			//Serial.println(right);
+			//float rotaProp, rotaDer, rotaInt;
+			//motionControlSystem.getRotationErrors(rotaProp, rotaInt, rotaDer);
+			//Serial.println(rotaInt);
 		}
 
 		/*			 ___________________________
@@ -636,44 +641,44 @@ void OrderManager::execute(const char* orderToExecute)
 		*    	   *|_________________________________|*
 		*/
 
-        else if (!strcmp(order, "AXm"))
+		else if (!strcmp(order, "AXm"))
         {
             if (n_param == 2)
             {
-                actuatorsMgr.movAX12(parseInt(orderData.at(1)),parseInt(orderData.at(2)));
+                actuatorsMgr.movAX12(parseInt(orderData.at(1)),(uint16_t)parseInt(orderData.at(2)));
             }
             else
             {
                 highLevel.log("ERREUR::Paramètres incorrects");
             }
         }
-        else if (!strcmp(order, "AXGm"))
+		else if (!strcmp(order, "AXGm"))
         {
             if(n_param == 2)
             {
-                actuatorsMgr.movAX12G(parseInt(orderData.at(1)),parseInt(orderData.at(2)));
+                actuatorsMgr.movAX12G((unsigned int)parseInt(orderData.at(1)),(uint16_t)parseInt(orderData.at(2)));
             }
             else
             {
                 highLevel.log("ERREUR::Paramètres incorrects");
             }
         }
-        else if (!strcmp(order, "AXs"))
+		else if (!strcmp(order, "AXs"))
         {
             if(n_param == 2)
             {
-                actuatorsMgr.setAX12Speed(parseInt(orderData.at(1)),parseInt(orderData.at(2)));
+                actuatorsMgr.setAX12Speed(parseInt(orderData.at(1)),(uint16_t)parseInt(orderData.at(2)));
             }
             else
             {
                 highLevel.log("ERREUR::Paramètres incorrects");
             }
         }
-        else if (!strcmp(order, "AXGs"))
+		else if (!strcmp(order, "AXGs"))
         {
             if(n_param == 2)
             {
-                actuatorsMgr.setAX12GSpeed(parseInt(orderData.at(1)),parseInt(orderData.at(2)));
+                actuatorsMgr.setAX12GSpeed((unsigned int)parseInt(orderData.at(1)),(uint16_t)parseInt(orderData.at(2)));
             }
             else
             {
@@ -686,37 +691,37 @@ void OrderManager::execute(const char* orderToExecute)
         *    	   *|_________________________________|*
         */
 
-        else if (!strcmp(order, "alp"))
+		else if (!strcmp(order, "alp"))
         {
 			actuatorsMgr.setPumpState(true);
         }
-        else if (!strcmp(order, "dlp"))
+		else if (!strcmp(order, "dlp"))
         {
 			actuatorsMgr.setPumpState(false);
         }
-        else if (!strcmp(order, "blb"))
+		else if (!strcmp(order, "blb"))
         {
             actuatorsMgr.movAX12G(0,95);
         }
-        else if (!strcmp(order, "rlb"))
+		else if (!strcmp(order, "rlb"))
         {
             actuatorsMgr.movAX12G(0,177);
         }
-        else if (!strcmp(order, "albl"))
+		else if (!strcmp(order, "albl"))
         {
             actuatorsMgr.movAX12G(1,60);
             delay(1000);
             actuatorsMgr.movAX12G(1,240);
         }
-        else if (!strcmp(order, "flp"))
+		else if (!strcmp(order, "flp"))
         {
             actuatorsMgr.movAX12(3,10);
         }
-        else if (!strcmp(order, "olp"))
+		else if (!strcmp(order, "olp"))
         {
             actuatorsMgr.movAX12(3,100);
         }
-        else if (!strcmp(order, "tlp"))
+		else if (!strcmp(order, "tlp"))
         {
             actuatorsMgr.movAX12(3,18);
             delay(500);
@@ -740,10 +745,10 @@ void OrderManager::execute(const char* orderToExecute)
 			}
             if (n_param >=7)
 			{
-				id = parseInt(orderData.at(1));
-				x = parseInt(orderData.at(2));
-				y = parseInt(orderData.at(3));
-				r = parseInt(orderData.at(4));
+				id = (uint8_t)parseInt(orderData.at(1));
+				x = (uint32_t)parseInt(orderData.at(2));
+				y = (uint32_t)parseInt(orderData.at(3));
+				r = (uint32_t)parseInt(orderData.at(4));
                 angleHook = parseFloat(orderData.at(5));
                 angleTolerance = parseFloat(orderData.at(6));
 
@@ -767,7 +772,7 @@ void OrderManager::execute(const char* orderToExecute)
 
             if(hookList.hookWithId(hookId))
             {
-                hookList.enableHook(hookId); //Singe proof ?
+                hookList.enableHook((uint8_t)hookId); //Singe proof ?
             }
             else
             {
@@ -780,7 +785,7 @@ void OrderManager::execute(const char* orderToExecute)
 
             if(hookList.hookWithId(hookId))
             {
-                hookList.disableHook(hookId); //Singe proof ?
+                hookList.disableHook((uint8_t)hookId); //Singe proof ?
             }
             else
             {
@@ -788,17 +793,17 @@ void OrderManager::execute(const char* orderToExecute)
             }
 		}
 
-/*			 _________________________________
- * 		   *|                                 |*
- *		   *|			   RANDOM	          |*
- *    	   *|_________________________________|*
- */
+			/*			 _________________________________
+			 * 		   *|                                 |*
+			 *		   *|			   RANDOM	          |*
+			 *    	   *|_________________________________|*
+ 			 */
 
-        else if (!strcmp(order, "demo"))
+		else if (!strcmp(order, "demo"))
         {
             motionControlSystem.orderTranslation(400);
             delay(3000);
-            motionControlSystem.orderRotation(-1.6, MotionControlSystem::FREE);
+            motionControlSystem.orderRotation(-1.6f, MotionControlSystem::FREE);
             delay(2000);
             motionControlSystem.orderTranslation(200);
             delay(2000);
@@ -823,9 +828,7 @@ void OrderManager::execute(const char* orderToExecute)
 
 	}
 
-//    highLevel.log("beforecheckhooks");
     checkHooks();
-//    highLevel.log("aftercheckhooks");
 }
 
 void OrderManager::refreshUS()
@@ -874,19 +877,13 @@ float OrderManager::parseFloat(const char* s) {
 	return strtof(s, nullptr);
 }
 
-
 void OrderManager::checkHooks() {
-	if (hooksEnabled) {
 		hookList.check(motionControlSystem.getX(), motionControlSystem.getY(),motionControlSystem.getAngleRadian());
-        executeHooks();
-	}
 }
 
 void OrderManager::executeHooks() {
-	if (hooksEnabled) {
-		int l = hookList.getReadySize();
-		for (uint8_t i = 0; i < l; ++i) {
-			execute(hookList.getReadyHookOrder(i));
-		}
+	int l = hookList.getReadySize();
+	for (uint8_t i = 0; i < l; ++i) {
+		execute(hookList.getReadyHookOrder(i));
 	}
 }
