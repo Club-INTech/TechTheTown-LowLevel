@@ -1,6 +1,6 @@
 /**
 *
-*Classe g�rant la communication avec le Haut Niveau(messages arrivant, sortant)
+*Classe gerant la communication avec le Haut Niveau(messages arrivant, sortant)
 *
 *ASCII:13 = CR, 10 = LF
 */
@@ -11,22 +11,19 @@ EthernetMgr::EthernetMgr():server{ PORT }
 {
 	resetCard();
 
-	if (Ethernet.localIP() != ip) {
+	while(Ethernet.localIP() != ip) {
 		Serial.println("ERR\tIP CONFIGURATON FAILED");
-		connected = false;
+        resetCard();
 	}
-	else {
-		Serial.print("Ethernet Ready\nLocal ip: ");
-		Serial.println(Ethernet.localIP());
-		server.begin();
-		delay(1000);
-		client = server.available();
-		if (client.connected()) {
-			connected = true;
-			client.println("CONNECTED");
-		}
-	}
-	lastMessage = millis();
+
+    Serial.print("Ethernet Ready\nLocal ip: ");
+    Serial.println(Ethernet.localIP());
+    server.begin();
+    delay(1000);
+    client = server.available();
+    if (client.connected()) {
+        client.println("CONNECTED");
+    }
 }
 
 void EthernetMgr::resetCard() {
@@ -46,36 +43,30 @@ void EthernetMgr::resetCard() {
 
 	Ethernet.begin(mac, ip, dns, gateway, subnet);
 }
+
 bool inline EthernetMgr::read_char(char & buffer)
 {
-	buffer = client.read();
+	buffer = (char)client.read();
 	return (buffer != '\r' && buffer != '\n');
 }
 
-bool EthernetMgr::read(char* order)
+inline bool EthernetMgr::read(char* order)
 {
-	//manageClient();
 	EthernetClient newClient = server.available();
-
-	if (newClient) {							//Si on est connect�s et il ya des choses � lire
+	if (newClient) {							//Si on est connectes et il ya des choses a lire
 		client=newClient;
 		char readChar;
 		int i = 0;
 
-		while (read_char(readChar) && i < RX_BUFFER_SIZE) {	//Tant qu'on n'est pas � la fin d'un message(\r)
+		while (read_char(readChar) && i < RX_BUFFER_SIZE) {	//Tant qu'on n'est pas a la fin d'un message(\r)
 			order[i] = readChar;
-			i++;												//Au cas o� on ne re�oit jamais de terminaison, on limite le nombre de chars
+			i++;												//Au cas ou on ne recoit jamais de terminaison, on limite le nombre de chars
 		}
-        if(client.peek()=='\n'){
-            client.read();
-        }
-		lastMessage = millis();
 		return (strcmp(order, ""));
 	}
 	else {
 		return false;
 	}
-
 }
 
 bool EthernetMgr::read(int32_t & value)
@@ -121,26 +112,47 @@ bool EthernetMgr::read(float& value) {
 	return status;
 }
 
+
+void EthernetMgr::printf(const char *message, ...) {
+    va_list args;								//Variable contenant la liste des arguments apr�s log (...)
+    va_start(args, message);
+
+    client.printf(message,args);
+
+    va_end(args);
+}
+
+void EthernetMgr::printfln(const char* message, ...) {
+    va_list args;
+    va_start(args, message);
+
+    client.printf(message,args);
+    client.println();
+
+    va_end(args);
+}
+
 /**
-*	Envoie une chaine de caract�res commen�ant par 2 headers Ultrason, puis les valeurs s�par�es par des virgules
+*	Envoie une chaine de caracteres commencant par 2 headers Ultrason, puis les SENSOR_NB valeurs separees par des espaces
 */
 void EthernetMgr::sendUS(uint16_t values[])
 {
-    char valueString[HEADER_LENGTH + 64]= SENSOR_HEADER;
-	valueString[HEADER_LENGTH]='\0';
-    char currentValue[4] = "";	//Comment g�rer des values de tailles diff�rentes?
+    String valueString="";
+    char header[HEADER_LENGTH]=SENSOR_HEADER;
+    valueString.append(header[0]);
+    valueString.append(header[1]);
+    for(int i=0;i<SENSOR_NB;i++){
+        valueString.append(values[i]);
+        valueString.append(" ");
+    }
 
-	for (int i = 0; i < 3; ++i) {
-		itoa(values[i], currentValue, DEC);
-		strcat(valueString, currentValue);
-		strcat(valueString, ",");
-	}
-	itoa(values[3], currentValue, DEC);
-	strcat(valueString, currentValue);
-
-	printfln(valueString);
+	//printfln(valueString.c_str());
+	client.println(valueString);
 }
 
+/**
+*	Envoie une chaine de caracteres commencant par 2 headers event, puis le nom de l'event
+*/
 void EthernetMgr::sendEvent(const char* event)
 {
 	String valueString="";
@@ -151,6 +163,10 @@ void EthernetMgr::sendEvent(const char* event)
 	println(valueString);
 }
 
+
+/**
+*	Envoie une chaine de caracteres commencant par 2 headers position, puis les valeurs x, y, angle séparées par des espaces
+*/
 void EthernetMgr::sendPosition(const float* pos)
 {
 	String valueString="";
@@ -164,57 +180,21 @@ void EthernetMgr::sendPosition(const float* pos)
 	println(valueString);
 }
 
-void EthernetMgr::printf(const char *message, ...) {
-	char data[HEADER_LENGTH + 64] = DEBUG_HEADER;
-	data[HEADER_LENGTH] = '\0';
 
-	strcat(data, message);
-
-	va_list args;								//Variable contenant la liste des arguments apr�s log (...)
-	va_start(args, message);
-
-	char logToSend[HEADER_LENGTH + 64];
-	vsnprintf(logToSend, 64, data, args);			//Ajoute dans le buffer log, en formattant les
-	client.println(logToSend);
-	va_end(args);
-}
-
-
-void inline EthernetMgr::printfln(const char* message, ...) {
-	va_list args;
-	va_start(args, message);
-
-	char logToSend[64];
-
-	vsnprintf(logToSend, 64, message, args);			//Ajoute dans logToSend de log, en formattant avec les arguments
-
-	client.print(logToSend);
-	client.print("\r\n");
-	va_end(args);
-}
-
-
-template void EthernetMgr::print<int8_t>(int8_t value);
-template void EthernetMgr::println<int8_t>(int8_t value);
-template void EthernetMgr::print<float>(float value);
-template void EthernetMgr::println<float>(float value);
-template void EthernetMgr::print<uint32_t>(uint32_t value);
-template void EthernetMgr::println<uint32_t>(uint32_t value);
-template void EthernetMgr::print<int32_t>(int32_t value);
-template void EthernetMgr::println<int32_t>(int32_t value);
-
+/**
+*	Envoie une chaine de caracteres commencant par 2 headers debug, puis le message de log
+*/
 void EthernetMgr::log(const char* log, ...) {
 	char data[HEADER_LENGTH + 64] = DEBUG_HEADER;
 	data[HEADER_LENGTH] = '\0';
 
 	strcat(data, log);
 
-	va_list args;                                //Variable contenant la liste des arguments apr�s log (...)
+	va_list args;
 	va_start(args, log);
 
-	char logToSend[HEADER_LENGTH + 64];
-	vsnprintf(logToSend, 64, data, args);            //Ajoute dans le buffer log, en formattant les
-	client.println(logToSend);
+	client.printf(data,args);
+    client.println();
+
 	va_end(args);
-	client.flush();
 }

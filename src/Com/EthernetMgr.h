@@ -43,8 +43,6 @@ private:
 
 	bool read_char(char & buffer);
 
-	uint32_t lastMessage = 0;
-
 	/* Attributs Ethernet */
 
 	EthernetServer server;
@@ -52,8 +50,6 @@ private:
 
 public:
 	EthernetMgr();
-
-	bool connected;
 
 	/* RECEPTION */
 
@@ -67,18 +63,29 @@ public:
 	void sendUS(uint16_t[]);
 	void sendEvent(const char*);
 	void sendPosition(const float*);
-
-	template<typename T>
-	void print(T value) {
-		client.print(value);
-	}
-	template<typename T>
-	void println(T value) {
-		client.println(value);
-	}
+    void log(const char*, ...) __attribute__((format(printf, 2, 3)));
 
 	void printf(const char *, ...) __attribute__((format(printf, 2, 3)));
 	void printfln(const char*, ...) __attribute__((format(printf, 2, 3)));
-	void log(const char*, ...) __attribute__((format(printf, 2, 3)));
+
+    template<typename T>
+    inline void print(T value) {
+        client.print(value);
+    }
+    template<typename T>
+    inline void println(T value) {
+        client.println(value);
+    }
+
 };
+
+template void EthernetMgr::print<int8_t>(int8_t value);
+template void EthernetMgr::println<int8_t>(int8_t value);
+template void EthernetMgr::print<float>(float value);
+template void EthernetMgr::println<float>(float value);
+template void EthernetMgr::print<uint32_t>(uint32_t value);
+template void EthernetMgr::println<uint32_t>(uint32_t value);
+template void EthernetMgr::print<int32_t>(int32_t value);
+template void EthernetMgr::println<int32_t>(int32_t value);
+
 #endif

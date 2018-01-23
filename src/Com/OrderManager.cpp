@@ -7,7 +7,7 @@ OrderManager::OrderManager():	motionControlSystem(MotionControlSystem::Instance(
 								orderData(OrderData()),
 								#if DEBUG 
 									highLevel(SerialMgr::Instance())
-								#else 
+								#else
 									highLevel(EthernetMgr::Instance())
 								#endif
 {
@@ -68,7 +68,6 @@ void OrderManager::communicate() {
 
 void OrderManager::execute(const char* orderToExecute)
 {
-
 //	#ifdef DEBUG                    /*A LAISSER COMMENTÉ
 	char order[RX_BUFFER_SIZE];
 //    #else                          *TANT QU'ON RESTE EN ORDRES
@@ -80,9 +79,7 @@ void OrderManager::execute(const char* orderToExecute)
 
 	int8_t n_param = split(orderBuffer, orderData, SEPARATOR);		//Sépare l'ordre en plusieurs mots, n_param=nombre de paramètres
 
-
 	if (n_param >= 0) {
-
 		//#ifdef DEBUG
 		strcpy(order, orderData.at(0));
 		//#else
