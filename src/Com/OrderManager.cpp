@@ -33,7 +33,8 @@ void OrderManager::communicate() {
 	{
 		if (!motionControlSystem.sentMoveAbnormal() && motionControlSystem.isMoveAbnormal()) {//Si on est bloqué et qu'on n'a pas encore prévenu
 			motionControlSystem.setMoveAbnormalSent(true);
-			highLevel.sendEvent("Ah!");
+            //TODO prévoir le cas quand on ne peut pas bouger car on a détecté un obstable (envoyer "unableToMove o"
+			highLevel.sendEvent("unableToMove p");
 		}
 		else if (motionControlSystem.sentMoveAbnormal() && !motionControlSystem.isMoveAbnormal()) {//Si on est plus bloqué et qu'on avait prévenu
 			motionControlSystem.setMoveAbnormalSent(false);
