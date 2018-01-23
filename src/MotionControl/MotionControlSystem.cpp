@@ -333,10 +333,7 @@ void MotionControlSystem::resetPosition()
 
 void MotionControlSystem::orderTranslation(int32_t mmDistance) {
 
-	Serial.println(translationSetpoint);
 	translationSetpoint += (int32_t)mmDistance / TICK_TO_MM;
-	Serial.println(translationSetpoint);
-
 	if (!moving)
 	{
 		translationPID.resetErrors();

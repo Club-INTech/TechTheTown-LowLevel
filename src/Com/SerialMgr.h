@@ -43,5 +43,7 @@ public:
 private:
 	bool read_char(char &);
 	uint8_t available();
+
+    void sendPosition(const float *pos);
 };
 #endif

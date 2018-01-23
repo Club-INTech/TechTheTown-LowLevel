@@ -20,15 +20,15 @@
 #define HEADER_LENGTH   2
 
 #define DEBUG_HEADER    {0x02, 0x20}
-#define EVENT_HEADER    {0x13, 0x17}
-#define SENSOR_HEADER	{0x01, 0x10}
+#define EVENT_HEADER    {0x14, 0x17}
+#define SENSOR_HEADER	{0x01, 0x06}
 #define POSITION_HEADER	{0x07, 0x05}
 
 //Separateurs des mots d'ordres
 #define SEPARATOR " "
 
 //Frequence envoi position
-#define F_ENV_POS 25
+#define F_ENV_POS 100
 
 
 /**

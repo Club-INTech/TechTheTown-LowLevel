@@ -8,7 +8,6 @@
 #include "Com/OrderManager.h"
 
 //Initialisation de la Serie
-OrderManager& orderMgr = OrderManager::Instance();
 void setup() {
 	/*serie*/
 	Serial.begin(115200);
@@ -22,13 +21,6 @@ void setup() {
     /*Actuators*/
 		/*Pompe*/
 	pinMode(PIN_PWM_POMPE,OUTPUT);
-	orderMgr.execute("dlp");
-
-        /*AX12*/
-    orderMgr.execute("rlb");
-    delay(1000);
-    orderMgr.execute("flp");
-    delay(1000);
 }
 
 /* Interruptions1 d'asservissements */
@@ -42,7 +34,17 @@ void motionControlInterrupt() {
 
 //Boucle principale, gere entre autres la communication avec le HL
 void loop(){
-	for(int i=0;i<10;i++)
+    delay(1000);
+    OrderManager& orderMgr = OrderManager::Instance();
+    orderMgr.execute("dlp");
+
+    /*AX12*/
+    orderMgr.execute("rlb");
+    delay(1000);
+    orderMgr.execute("flp");
+    delay(1000);
+
+    for(int i=0;i<10;i++)
 	{
 		digitalWrite(30,HIGH);
 		delay(200);

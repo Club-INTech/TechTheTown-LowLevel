@@ -22,7 +22,7 @@ void OrderManager::communicate() {
 	if (highLevel.read(readMessage)) {
 		execute(readMessage);
 	}
-	
+
 	memset(readMessage, 0, RX_BUFFER_SIZE);
 
 	static Metro checkMovement = Metro(10);
@@ -49,12 +49,12 @@ void OrderManager::communicate() {
 
 
 	//Code de compilé seulement si on n'utilise pas l'ethernet
-    #if !DEBUG
-    static Metro sendPos = Metro(F_ENV_POS);
+
+    static Metro sendPos = Metro(50);
 	    if (sendPos.check()) {
-            if (motionControlSystem.isMoving()) {
-                float posToSend[3]{motionControlSystem.getX(), motionControlSystem.getY(), motionControlSystem.getAngleRadian()};
-                highLevel.sendPosition(posToSend);
+			if (motionControlSystem.isMoving()) {
+                float posToSend[3]={motionControlSystem.getX(), motionControlSystem.getY(), motionControlSystem.getAngleRadian()};
+				highLevel.sendPosition(posToSend);
                 motionControlSystem.setPreviousIsMoving(true);
             } else {
                 if (motionControlSystem.previousIsMoving()){
@@ -63,11 +63,11 @@ void OrderManager::communicate() {
                 motionControlSystem.setPreviousIsMoving(false);
             }
 		}
-	#endif
 }
 
 void OrderManager::execute(const char* orderToExecute)
 {
+
 //	#ifdef DEBUG                    /*A LAISSER COMMENTÉ
 	char order[RX_BUFFER_SIZE];
 //    #else                          *TANT QU'ON RESTE EN ORDRES
@@ -81,6 +81,7 @@ void OrderManager::execute(const char* orderToExecute)
 
 
 	if (n_param >= 0) {
+
 		//#ifdef DEBUG
 		strcpy(order, orderData.at(0));
 		//#else
@@ -182,7 +183,6 @@ void OrderManager::execute(const char* orderToExecute)
 			if (n_param == 1) {
 				float o = parseFloat(orderData.at(1));
 				motionControlSystem.setOriginalAngle(o);
-				Serial.println(motionControlSystem.getAngleRadian());
 			}
 			else {
 				highLevel.log("ERREUR::Paramètres incorrects");

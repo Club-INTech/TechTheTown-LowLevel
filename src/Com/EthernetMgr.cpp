@@ -55,9 +55,10 @@ bool inline EthernetMgr::read_char(char & buffer)
 bool EthernetMgr::read(char* order)
 {
 	//manageClient();
-	client = server.available();
+	EthernetClient newClient = server.available();
 
-	if (client) {							//Si on est connect�s et il ya des choses � lire
+	if (newClient) {							//Si on est connect�s et il ya des choses � lire
+		client=newClient;
 		char readChar;
 		int i = 0;
 
@@ -65,11 +66,10 @@ bool EthernetMgr::read(char* order)
 			order[i] = readChar;
 			i++;												//Au cas o� on ne re�oit jamais de terminaison, on limite le nombre de chars
 		}
-		if (client.peek() == 10) {
-			read_char(readChar);		//On �limine le \n terminal
-		}
+        if(client.peek()=='\n'){
+            client.read();
+        }
 		lastMessage = millis();
-		Serial.println(order);
 		return (strcmp(order, ""));
 	}
 	else {
@@ -126,8 +126,9 @@ bool EthernetMgr::read(float& value) {
 */
 void EthernetMgr::sendUS(uint16_t values[])
 {
-	char valueString[HEADER_LENGTH] = SENSOR_HEADER;
-	char currentValue[4] = "";	//Comment g�rer des values de tailles diff�rentes?
+    char valueString[HEADER_LENGTH + 64]= SENSOR_HEADER;
+	valueString[HEADER_LENGTH]='\0';
+    char currentValue[4] = "";	//Comment g�rer des values de tailles diff�rentes?
 
 	for (int i = 0; i < 3; ++i) {
 		itoa(values[i], currentValue, DEC);
@@ -142,42 +143,56 @@ void EthernetMgr::sendUS(uint16_t values[])
 
 void EthernetMgr::sendEvent(const char* event)
 {
-	String data = "";
-	char header[HEADER_LENGTH] = EVENT_HEADER;
-	for (int i = 0; i < HEADER_LENGTH; i++) {
-		data.append(header[i]);
-	}
-	data.append(event);
-	printfln(data.c_str());
+	String valueString="";
+	char header[HEADER_LENGTH]=EVENT_HEADER;
+	valueString.append(header[0]);
+	valueString.append(header[1]);
+	valueString.append(event);
+	println(valueString);
 }
 
 void EthernetMgr::sendPosition(const float* pos)
 {
-	String data = "";
-	char header[HEADER_LENGTH] = POSITION_HEADER;
-	for (int i = 0; i < HEADER_LENGTH; i++) {
-		data.append(header[i]);
+	String valueString="";
+	char header[HEADER_LENGTH]=POSITION_HEADER;
+	valueString.append(header[0]);
+	valueString.append(header[1]);
+	for(int i=0;i<3;i++){
+		valueString.append(pos[i]);
+		valueString.append(" ");
 	}
-	for (int i=0; i<3; i++){
-		data.append(pos[i]);
-		data.append(" ");
-	}
-	printfln(data.c_str());
+	println(valueString);
 }
 
-void EthernetMgr::print(const char* message, ...) {
-	va_list args;										//Variable contenant la liste des arguments apr�s log (...)
+void EthernetMgr::printf(const char *message, ...) {
+	char data[HEADER_LENGTH + 64] = DEBUG_HEADER;
+	data[HEADER_LENGTH] = '\0';
+
+	strcat(data, message);
+
+	va_list args;								//Variable contenant la liste des arguments apr�s log (...)
+	va_start(args, message);
+
+	char logToSend[HEADER_LENGTH + 64];
+	vsnprintf(logToSend, 64, data, args);			//Ajoute dans le buffer log, en formattant les
+	client.println(logToSend);
+	va_end(args);
+}
+
+
+void inline EthernetMgr::printfln(const char* message, ...) {
+	va_list args;
 	va_start(args, message);
 
 	char logToSend[64];
 
 	vsnprintf(logToSend, 64, message, args);			//Ajoute dans logToSend de log, en formattant avec les arguments
-	
-	client.print(logToSend);
-	Serial.print(logToSend);	//TEST
 
+	client.print(logToSend);
+	client.print("\r\n");
 	va_end(args);
 }
+
 
 template void EthernetMgr::print<int8_t>(int8_t value);
 template void EthernetMgr::println<int8_t>(int8_t value);
@@ -188,28 +203,18 @@ template void EthernetMgr::println<uint32_t>(uint32_t value);
 template void EthernetMgr::print<int32_t>(int32_t value);
 template void EthernetMgr::println<int32_t>(int32_t value);
 
-void inline EthernetMgr::printfln(const char* message, ...) {
-	va_list args;
-	va_start(args, message);
-
-	print(message, args);
-	client.print("\r\n");
-
-	va_end(args);
-}
-
 void EthernetMgr::log(const char* log, ...) {
 	char data[HEADER_LENGTH + 64] = DEBUG_HEADER;
 	data[HEADER_LENGTH] = '\0';
 
 	strcat(data, log);
 
-	va_list args;								//Variable contenant la liste des arguments apr�s log (...)
+	va_list args;                                //Variable contenant la liste des arguments apr�s log (...)
 	va_start(args, log);
 
 	char logToSend[HEADER_LENGTH + 64];
-	vsnprintf(logToSend, 64, data, args);			//Ajoute dans le buffer log, en formattant les 
+	vsnprintf(logToSend, 64, data, args);            //Ajoute dans le buffer log, en formattant les
 	client.println(logToSend);
-
 	va_end(args);
+	client.flush();
 }

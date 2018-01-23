@@ -77,7 +77,7 @@ public:
 		client.println(value);
 	}
 
-	void print(const char*, ...) __attribute__((format(printf, 2, 3)));
+	void printf(const char *, ...) __attribute__((format(printf, 2, 3)));
 	void printfln(const char*, ...) __attribute__((format(printf, 2, 3)));
 	void log(const char*, ...) __attribute__((format(printf, 2, 3)));
 };

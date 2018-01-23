@@ -1,6 +1,6 @@
 /**
 *
-*Classe gérant la communication avec le Haut Niveau(messages arrivant, sortant)
+*Classe gï¿½rant la communication avec le Haut Niveau(messages arrivant, sortant)
 *
 *ASCII:13 = CR, 10 = LF
 *
@@ -20,16 +20,16 @@ bool inline SerialMgr::read_char(char & buffer)
 
 bool SerialMgr::read(char* order)
 {
-	if (available() > 0) {					//Si il y a quelque chose à lire dans le port série
+	if (available() > 0) {					//Si il y a quelque chose ï¿½ lire dans le port sï¿½rie
 		char readChar;
 		int i = 0;
 
-		while (read_char(readChar) && i < RX_BUFFER_SIZE) {	//Tant qu'on n'est pas à la fin d'un message(\r)
+		while (read_char(readChar) && i < RX_BUFFER_SIZE) {	//Tant qu'on n'est pas ï¿½ la fin d'un message(\r)
 			order[i] = readChar;
-			i++;												//Au cas où on ne reçoit jamais de terminaison
+			i++;												//Au cas oï¿½ on ne reï¿½oit jamais de terminaison
 		}
 		if (Serial.peek()==10) {
-			read_char(readChar);								//On élimine le \n
+			read_char(readChar);								//On ï¿½limine le \n
 		}
 		return (strcmp(order, ""));
 	}
@@ -107,17 +107,20 @@ void SerialMgr::sendEvent(const char* event)
 	Serial.println(data);
 }
 
-template void SerialMgr::print<int8_t>(int8_t value);
-template void SerialMgr::println<int8_t>(int8_t value);
-template void SerialMgr::print<float>(float value);
-template void SerialMgr::println<float>(float value);
-template void SerialMgr::print<uint32_t>(uint32_t value);
-template void SerialMgr::println<uint32_t>(uint32_t value);
-template void SerialMgr::print<int32_t>(int32_t value);
-template void SerialMgr::println<int32_t>(int32_t value);
+void SerialMgr::sendPosition(const float* pos){
+	char header[HEADER_LENGTH]=POSITION_HEADER;
+	Serial.print(header);
+	Serial.print(pos[0]);
+	Serial.print(" ");
+	Serial.print(pos[1]);
+	Serial.print(" ");
+	Serial.print(pos[2]);
+	Serial.println();
+}
+
 
 void SerialMgr::printfln(const char* message, ...) {
-	va_list args;										//Variable contenant la liste des arguments après log (...)
+	va_list args;										//Variable contenant la liste des arguments aprï¿½s log (...)
 	va_start(args, message);
 
 	char logToSend[64];
@@ -128,13 +131,23 @@ void SerialMgr::printfln(const char* message, ...) {
 	va_end(args);
 }
 
+
+template void SerialMgr::print<int8_t>(int8_t value);
+template void SerialMgr::println<int8_t>(int8_t value);
+template void SerialMgr::print<float>(float value);
+template void SerialMgr::println<float>(float value);
+template void SerialMgr::print<uint32_t>(uint32_t value);
+template void SerialMgr::println<uint32_t>(uint32_t value);
+template void SerialMgr::print<int32_t>(int32_t value);
+template void SerialMgr::println<int32_t>(int32_t value);
+
 void SerialMgr::log(const char* log, ...) {
 	char data[HEADER_LENGTH + 64] = DEBUG_HEADER;
 	data[HEADER_LENGTH] = '\0';
 
 	strcat(data, log);
 
-	va_list args;								//Variable contenant la liste des arguments après log (...)
+	va_list args;								//Variable contenant la liste des arguments aprï¿½s log (...)
 	va_start(args, log);
 
 	char logToSend[HEADER_LENGTH+64];
