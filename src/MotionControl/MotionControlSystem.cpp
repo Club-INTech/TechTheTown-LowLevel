@@ -34,13 +34,10 @@ MotionControlSystem::MotionControlSystem() :
 	leftSpeedPID.setOutputLimits(-255, 255);
 	rightSpeedPID.setOutputLimits(-255, 255);
 
-//	maxSpeed = 3000 ; // Vitesse maximum, des moteurs (avec une marge au cas ou on s'amuse a faire forcer un peu la bestiole).
-//	maxSpeedTranslation = 2000;// Consigne max envoyee au PID
-//	maxSpeedRotation = 1400;
-//
-    maxSpeed = 5000; //5000;  Pour tests, à ne pas mettre pour les scripts
-    maxSpeedTranslation = 4000; //4000;
-    maxSpeedRotation = 2800; //2800;
+    maxSpeed = 5000;
+    maxSpeedTranslation = 4000;
+    maxSpeedRotation = 2800;
+
 
 	delayToStop = 100; // temps a l'arret avant de considerer un blocage
 	toleranceTranslation = 30;
@@ -56,16 +53,8 @@ MotionControlSystem::MotionControlSystem() :
 	leftSpeedPID.setTunings(0.11,0,0.005);
 	rightSpeedPID.setTunings(0.11,0,0.005);
 
-//  PIDs de test d'asserv'
-/*
-	translationPID.setTunings(5, 0, 50);
-	rotationPID.setTunings(17, 0, 100);
-	leftSpeedPID.setTunings(0.165,0.0002,0.5);
-	rightSpeedPID.setTunings(0.16,0.0002,0.5);*/
 
-
-
-	maxAcceleration = 10; //10; Pour les tests, ne pas prendre pour les scripts
+	maxAcceleration = 10;
 
 	leftMotor.init();
 	rightMotor.init();

@@ -33,7 +33,7 @@ void OrderManager::communicate() {
 	{
 		if (!motionControlSystem.sentMoveAbnormal() && motionControlSystem.isMoveAbnormal()) {//Si on est bloqué et qu'on n'a pas encore prévenu
 			motionControlSystem.setMoveAbnormalSent(true);
-            //TODO prévoir le cas quand on ne peut pas bouger car on a détecté un obstable (envoyer "unableToMove o"
+            //TODO prévoir le cas quand on ne peut pas bouger car on a détecté un obstable (envoyer "unableToMove o")
 			highLevel.sendEvent("unableToMove p");
 		}
 		else if (motionControlSystem.sentMoveAbnormal() && !motionControlSystem.isMoveAbnormal()) {//Si on est plus bloqué et qu'on avait prévenu
@@ -49,8 +49,8 @@ void OrderManager::communicate() {
     }
 
 
-	//Code de compilé seulement si on n'utilise pas l'ethernet
-
+	//Code de compilé seulement si on utilise l'ethernet
+	#if !DEBUG
     static Metro sendPos = Metro(50);
 	    if (sendPos.check()) {
 			if (motionControlSystem.isMoving()) {
@@ -64,6 +64,7 @@ void OrderManager::communicate() {
                 motionControlSystem.setPreviousIsMoving(false);
             }
 		}
+    #endif
 }
 
 void OrderManager::execute(const char* orderToExecute)
@@ -75,7 +76,7 @@ void OrderManager::execute(const char* orderToExecute)
 //    #endif                        \*m'voyez
     char orderBuffer[RX_BUFFER_SIZE];
 	strcpy(orderBuffer, orderToExecute);
-//	highLevel.log("Message recu: %s", order);
+	highLevel.log("Message recu: %s", order);
 
 	int8_t n_param = split(orderBuffer, orderData, SEPARATOR);		//Sépare l'ordre en plusieurs mots, n_param=nombre de paramètres
 

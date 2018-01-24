@@ -38,7 +38,7 @@ void loop(){
     OrderManager& orderMgr = OrderManager::Instance();
     orderMgr.execute("dlp");
 
-    /*AX12*/
+    /*AX12 initialisation*/
     orderMgr.execute("rlb");
     delay(1000);
     orderMgr.execute("flp");
