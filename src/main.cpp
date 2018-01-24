@@ -38,7 +38,7 @@ void loop(){
     OrderManager& orderMgr = OrderManager::Instance();
     orderMgr.execute("dlp");
 
-    /*AX12*/
+    /*AX12 initialisation*/
     orderMgr.execute("rlb");
     delay(1000);
     orderMgr.execute("flp");
@@ -57,7 +57,50 @@ void loop(){
     motionControlInterruptTimer.priority(253);
     motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); //asservissements
 
-    while (true) {
+	//    orderMgr.execute("kpt 15");
+//    orderMgr.execute("kit 0.00001");
+//    orderMgr.execute("kdt 500");
+//    orderMgr.execute("kpr 10");
+//    orderMgr.execute("kir 0");
+//    orderMgr.execute("kdr 0");
+//    orderMgr.execute("ct0");
+//    orderMgr.execute("cr0");
+//    orderMgr.execute("monthlery");
+//    orderMgr.execute("kpg 0.165");
+//    orderMgr.execute("kig 0.0002");
+//    orderMgr.execute("kdg 0.5");
+//    orderMgr.execute("kpd 0.16");
+//    orderMgr.execute("kid 0.0002");
+//    orderMgr.execute("kdd 0.5");
+//    orderMgr.execute("t pi");
+//    for(int i=0;i<300;i++)
+//    {
+//        if(i==20)
+//        {
+//            orderMgr.execute("d 1000");
+//            orderMgr.execute("t pi");
+//            orderMgr.execute("av");
+//            orderMgr.execute("rawpwm 150");
+//        }
+//        orderMgr.execute("rawposdata");
+//        delay(10);
+//    }
+//    orderMgr.execute("d -1000");
+//    orderMgr.execute("sstop");
+//    orderMgr.execute("rawpwm 0");
+//    for(int i=0;i<600/1;i++)
+//    {
+//        if(i==20)
+//        {
+//            orderMgr.execute("d -1000");
+//        }
+//        orderMgr.execute("rawposdata");
+//        delay(10);
+//    }
+//    Serial.println("DATAEND");
+
+
+	while (true) {
         //orderMgr.refreshUS();
         orderMgr.communicate();
         //orderMgr.sendUSData();
