@@ -123,6 +123,11 @@ void EthernetMgr::printf(const char *message, ...) {
 }
 
 void EthernetMgr::printfln(const char* message, ...) {
+	char data[HEADER_LENGTH + 64] = STD_HEADER;
+	data[HEADER_LENGTH] = '\0';
+
+	strcat(data, message);
+
     va_list args;
     va_start(args, message);
 
