@@ -39,9 +39,11 @@ void loop(){
     orderMgr.execute("dlp");
 
     /*AX12 initialisation*/
-    orderMgr.execute("rlb");
+    orderMgr.execute("rlbAv");
+	orderMgr.execute("rlbAr");
     delay(1000);
-    orderMgr.execute("flp");
+    orderMgr.execute("flpAv");
+	orderMgr.execute("flpAr");
     delay(1000);
 
     for(int i=0;i<10;i++)

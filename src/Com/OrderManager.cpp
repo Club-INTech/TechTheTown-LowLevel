@@ -76,7 +76,7 @@ void OrderManager::execute(const char* orderToExecute)
 //    #endif                        \*m'voyez
     char orderBuffer[RX_BUFFER_SIZE];
 	strcpy(orderBuffer, orderToExecute);
-	highLevel.log("Message recu: %s", order);
+	highLevel.log("Message recu: %s", orderBuffer);
 
 	int8_t n_param = split(orderBuffer, orderData, SEPARATOR);		//Sépare l'ordre en plusieurs mots, n_param=nombre de paramètres
 
@@ -708,11 +708,11 @@ void OrderManager::execute(const char* orderToExecute)
         }
         else if (!strcmp(order, "blbAr"))
         {
-
+            actuatorsMgr.movAX12G(1,95);
         }
         else if (!strcmp(order, "rlbAr"))
         {
-
+            actuatorsMgr.movAX12G(1,177);
         }
         else if (!strcmp(order, "albl"))
         {
@@ -733,11 +733,11 @@ void OrderManager::execute(const char* orderToExecute)
         }
         else if (!strcmp(order, "flpAr"))
         {
-
+            actuatorsMgr.movAX12(6,10);
         }
         else if (!strcmp(order, "olpAr"))
         {
-
+            actuatorsMgr.movAX12(6,100);
         }
         else if (!strcmp(order, "tlpAv"))
         {
@@ -747,7 +747,9 @@ void OrderManager::execute(const char* orderToExecute)
         }
         else if (!strcmp(order, "tlpAr"))
         {
-
+            actuatorsMgr.movAX12(6,18);
+            delay(500);
+            actuatorsMgr.movAX12(6,10);
         }
         /*
          * ELECTROVANNES
