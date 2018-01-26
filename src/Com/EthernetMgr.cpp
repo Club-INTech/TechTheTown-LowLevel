@@ -131,6 +131,7 @@ void EthernetMgr::printfln(const char* message, ...) {
     va_list args;
     va_start(args, message);
 
+    //Renvoie seulement le 1er argument après message
     client.printf(message,va_arg(args,String));
     client.println();
 
@@ -198,6 +199,8 @@ void EthernetMgr::log(const char* logs, ...) {
 	va_list args;
 	va_start(args, logs);
 
+
+    //Renvoie seulement le 1er argument après logs
 	client.printf(data,va_arg(args,String));
     client.println();
 
