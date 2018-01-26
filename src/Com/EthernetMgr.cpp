@@ -114,20 +114,12 @@ bool EthernetMgr::read(float& value) {
 
 
 void EthernetMgr::printf(const char *message, ...) {
-	char data[HEADER_LENGTH + 64] = STD_HEADER;
-	data[HEADER_LENGTH] = '\0';
+    va_list args;								//Variable contenant la liste des arguments apr�s log (...)
+    va_start(args, message);
 
-	strcat(data, message);
+    client.printf(message,args);
 
-	va_list args;
-	va_start(args, message);
-
-	char formattedMessage[HEADER_LENGTH+64];
-	vsnprintf(formattedMessage, HEADER_LENGTH+64, data, args);
-
-	client.print(formattedMessage);
-
-	va_end(args);
+    va_end(args);
 }
 
 void EthernetMgr::printfln(const char* message, ...) {
@@ -138,10 +130,10 @@ void EthernetMgr::printfln(const char* message, ...) {
 
     va_list args;
     va_start(args, message);
-	char formattedMessage[HEADER_LENGTH+64];
-	vsnprintf(formattedMessage, HEADER_LENGTH+64, data, args);
 
-	client.println(formattedMessage);
+    //Renvoie seulement le 1er argument après message
+    client.printf(message,va_arg(args,String));
+    client.println();
 
     va_end(args);
 }
@@ -194,21 +186,23 @@ void EthernetMgr::sendPosition(const float* pos)
 	println(valueString);
 }
 
+
 /**
 *	Envoie une chaine de caracteres commencant par 2 headers debug, puis le message de log
 */
-void EthernetMgr::log(const char* message, ...) {
+void EthernetMgr::log(const char* logs, ...) {
 	char data[HEADER_LENGTH + 64] = DEBUG_HEADER;
 	data[HEADER_LENGTH] = '\0';
 
-    char formattedData[HEADER_LENGTH+64];
-	strcat(data, message);
+	strcat(data, logs);
 
 	va_list args;
-	va_start(args, message);
+	va_start(args, logs);
 
-    vsnprintf(formattedData,HEADER_LENGTH+64,data, args);
-	client.println(formattedData);
+
+    //Renvoie seulement le 1er argument après logs
+	client.printf(data,va_arg(args,String));
+    client.println();
 
 	va_end(args);
 }
