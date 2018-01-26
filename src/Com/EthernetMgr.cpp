@@ -131,7 +131,7 @@ void EthernetMgr::printfln(const char* message, ...) {
     va_list args;
     va_start(args, message);
 
-    client.printf(message,args);
+    client.printf(message,va_arg(args,String));
     client.println();
 
     va_end(args);
@@ -189,16 +189,16 @@ void EthernetMgr::sendPosition(const float* pos)
 /**
 *	Envoie une chaine de caracteres commencant par 2 headers debug, puis le message de log
 */
-void EthernetMgr::log(const char* log, ...) {
+void EthernetMgr::log(const char* logs, ...) {
 	char data[HEADER_LENGTH + 64] = DEBUG_HEADER;
 	data[HEADER_LENGTH] = '\0';
 
-	strcat(data, log);
+	strcat(data, logs);
 
 	va_list args;
-	va_start(args, log);
+	va_start(args, logs);
 
-	client.printf(data,args);
+	client.printf(data,va_arg(args,String));
     client.println();
 
 	va_end(args);
