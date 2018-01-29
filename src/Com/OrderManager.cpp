@@ -744,11 +744,11 @@ void OrderManager::execute(const char* orderToExecute)
          */
         else if (!strcmp(order, "alp"))
         {
-            actuatorsMgr.setPumpState(true);
+            actuatorsMgr.togglePumpState(true);
         }
         else if (!strcmp(order, "dlp"))
         {
-            actuatorsMgr.setPumpState(false);
+            actuatorsMgr.togglePumpState(false);
         }
         /*
          * ELECTROVANNES

@@ -6,6 +6,9 @@
 
 ActuatorsMgr::ActuatorsMgr() : dynamixelMgr(DynamixelMgr::Instance())
 {
+    isPumpOn = false;
+    isElecVanneAVOpen = false;
+    isElecVanneAROpen = false;
 }
 
 ActuatorsMgr::~ActuatorsMgr()
@@ -32,15 +35,19 @@ void ActuatorsMgr::setAX12GSpeed(unsigned int groupId, uint16_t speed)
 	dynamixelMgr.setAX12GSpeed(groupId, speed);
 }
 
-void ActuatorsMgr::setPumpState(bool newState)
+bool ActuatorsMgr::togglePumpState(bool newState)
 {
-    if (newState)
+    if (newState && (isElecVanneAVOpen+isElecVanneAROpen))
     {
         digitalWrite(PIN_PWM_POMPE,HIGH);
+        isPumpOn = true;
+        return(true);
     }
     else
     {
         digitalWrite(PIN_PWM_POMPE,LOW);
+        isPumpOn = false;
+        return(isElecVanneAVOpen+isElecVanneAROpen);
     }
 }
 
@@ -49,10 +56,17 @@ void ActuatorsMgr::setElecVanneAV(bool newState)
     if (newState)
     {
         digitalWrite(PIN_ELECTROVANNE_AV,HIGH);
+        isElecVanneAVOpen = true;
     }
     else
     {
+        if(isPumpOn && !isElecVanneAROpen)
+        {
+            digitalWrite(PIN_PWM_POMPE,LOW);
+            isPumpOn = false;
+        }
         digitalWrite(PIN_ELECTROVANNE_AV,LOW);
+        isElecVanneAVOpen = false;
     }
 }
 void ActuatorsMgr::setElecVanneAR(bool newState)
@@ -60,9 +74,16 @@ void ActuatorsMgr::setElecVanneAR(bool newState)
     if (newState)
     {
         digitalWrite(PIN_ELECTROVANNE_AR,HIGH);
+        isElecVanneAROpen = true;
     }
     else
     {
+        if(isPumpOn && !isElecVanneAVOpen)
+        {
+            digitalWrite(PIN_PWM_POMPE,LOW);
+            isPumpOn = false;
+        }
         digitalWrite(PIN_ELECTROVANNE_AR,LOW);
+        isElecVanneAROpen = false;
     }
 }

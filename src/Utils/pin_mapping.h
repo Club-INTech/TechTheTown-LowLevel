@@ -18,8 +18,8 @@
 #define PIN_A_LEFT_ENCODER 22
 #define PIN_B_LEFT_ENCODER 23
 	//Droite
-#define PIN_A_RIGHT_ENCODER 6
-#define PIN_B_RIGHT_ENCODER 7
+#define PIN_A_RIGHT_ENCODER 20
+#define PIN_B_RIGHT_ENCODER 21
 
 /* Moteurs */
 	//Gauche
@@ -30,11 +30,11 @@
 #define PIN_PWM_RIGHT 5
 
 /* Electrovannes */
-#define PIN_ELECTROVANNE_AV 16
-#define PIN_ELECTROVANNE_AR 17
+#define PIN_ELECTROVANNE_AV 7
+#define PIN_ELECTROVANNE_AR 8
 
 /* Pompe a vide */
-#define PIN_PWM_POMPE 18
+#define PIN_PWM_POMPE 9
 
 /* CAPTEURS */
 
