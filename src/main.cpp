@@ -21,6 +21,13 @@ void setup() {
     /*Actuators*/
 		/*Pompe*/
 	pinMode(PIN_PWM_POMPE,OUTPUT);
+    digitalWrite(PIN_PWM_POMPE,LOW);
+
+        /*Electrovanne*/
+    pinMode(PIN_ELECTROVANNE_AV,OUTPUT);
+    digitalWrite(PIN_ELECTROVANNE_AV,LOW);
+    pinMode(PIN_ELECTROVANNE_AR,OUTPUT);
+    digitalWrite(PIN_ELECTROVANNE_AR,LOW);
 }
 
 /* Interruptions1 d'asservissements */

@@ -36,10 +36,33 @@ void ActuatorsMgr::setPumpState(bool newState)
 {
     if (newState)
     {
-        analogWrite(PIN_PWM_POMPE,255);
+        digitalWrite(PIN_PWM_POMPE,HIGH);
     }
     else
     {
-        analogWrite(PIN_PWM_POMPE,0);
+        digitalWrite(PIN_PWM_POMPE,LOW);
+    }
+}
+
+void ActuatorsMgr::setElecVanneAV(bool newState)
+{
+    if (newState)
+    {
+        digitalWrite(PIN_ELECTROVANNE_AV,HIGH);
+    }
+    else
+    {
+        digitalWrite(PIN_ELECTROVANNE_AV,LOW);
+    }
+}
+void ActuatorsMgr::setElecVanneAR(bool newState)
+{
+    if (newState)
+    {
+        digitalWrite(PIN_ELECTROVANNE_AR,HIGH);
+    }
+    else
+    {
+        digitalWrite(PIN_ELECTROVANNE_AR,LOW);
     }
 }

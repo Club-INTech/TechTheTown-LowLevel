@@ -29,8 +29,12 @@
 #define PIN_DIR_RIGHT 4
 #define PIN_PWM_RIGHT 5
 
+/* Electrovannes */
+#define PIN_ELECTROVANNE_AV 16
+#define PIN_ELECTROVANNE_AR 17
+
 /* Pompe a vide */
-#define PIN_PWM_POMPE 9
+#define PIN_PWM_POMPE 18
 
 /* CAPTEURS */
 

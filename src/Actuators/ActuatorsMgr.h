@@ -36,6 +36,11 @@ public:
 
 	void setPumpState(bool);
 
+    //Contrôle des électrovannes
+
+    void setElecVanneAV(bool);
+    void setElecVanneAR(bool);
+
 };
 
 #endif

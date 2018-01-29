@@ -683,18 +683,6 @@ void OrderManager::execute(const char* orderToExecute)
              *		   *|     Actionneurs spécifiques     |*
              *    	   *|_________________________________|*
              */
-
-        /*
-         * POMPE
-         */
-        else if (!strcmp(order, "alp"))
-        {
-            actuatorsMgr.setPumpState(true);
-        }
-        else if (!strcmp(order, "dlp"))
-        {
-            actuatorsMgr.setPumpState(false);
-        }
         /*
          * BRAS
          */
@@ -752,23 +740,34 @@ void OrderManager::execute(const char* orderToExecute)
             actuatorsMgr.movAX12(6,10);
         }
         /*
+         * POMPE
+         */
+        else if (!strcmp(order, "alp"))
+        {
+            actuatorsMgr.setPumpState(true);
+        }
+        else if (!strcmp(order, "dlp"))
+        {
+            actuatorsMgr.setPumpState(false);
+        }
+        /*
          * ELECTROVANNES
          */
         else if (!strcmp(order, "aeAv"))
         {
-
+            actuatorsMgr.setElecVanneAV(true);
         }
         else if (!strcmp(order, "deAv"))
         {
-
+            actuatorsMgr.setElecVanneAV(false);
         }
         else if (!strcmp(order, "aeAr"))
         {
-
+            actuatorsMgr.setElecVanneAR(true);
         }
         else if (!strcmp(order, "deAr"))
         {
-
+            actuatorsMgr.setElecVanneAR(false);
         }
 
             /*			 _________________________________
