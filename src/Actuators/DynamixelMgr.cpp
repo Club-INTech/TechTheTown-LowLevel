@@ -12,7 +12,7 @@ DynamixelMgr::DynamixelMgr() : serialAX(DynamixelInterface(Serial1))
 
     addAX12Group();
     populateAX12Group(0,1,120,BASE);
-    populateAX12Group(0,8,120,MIRROR);  //Bras et porte avant
+    populateAX12Group(0,2,120,MIRROR);  //Bras et porte avant
     addAX12(3,200);
     addAX12Group();
     populateAX12Group(1,4,120,BASE);

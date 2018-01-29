@@ -43,7 +43,6 @@ void motionControlInterrupt() {
 void loop(){
     delay(1000);
     OrderManager& orderMgr = OrderManager::Instance();
-    orderMgr.execute("dlp");
 
     /*AX12 initialisation*/
     orderMgr.execute("rlbAv");
