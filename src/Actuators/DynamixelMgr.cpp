@@ -12,7 +12,7 @@ DynamixelMgr::DynamixelMgr() : serialAX(DynamixelInterface(Serial1))
 
     addAX12Group();
     populateAX12Group(0,1,120,BASE);
-    populateAX12Group(0,8,120,MIRROR);
+    populateAX12Group(0,2,120,MIRROR);
     addAX12(3,200);
     addAX12Group();
 //    populateAX12Group(1,,BASE);       TODO Mettre l'ID de l'AX correspondant

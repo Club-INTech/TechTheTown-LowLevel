@@ -50,8 +50,8 @@ MotionControlSystem::MotionControlSystem() :
 
 	translationPID.setTunings(5, 0, 50);
 	rotationPID.setTunings(17, 0, 100);
-	leftSpeedPID.setTunings(0.165,0.0002,0.5);
-	rightSpeedPID.setTunings(0.16,0.0002,0.5);
+	leftSpeedPID.setTunings(0.175,0.0003,0.65);
+	rightSpeedPID.setTunings(0.18,0.0003,0.45);
 
 
 
