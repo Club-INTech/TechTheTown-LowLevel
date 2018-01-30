@@ -12,11 +12,12 @@ DynamixelMgr::DynamixelMgr() : serialAX(DynamixelInterface(Serial1))
 
     addAX12Group();
     populateAX12Group(0,1,120,BASE);
-    populateAX12Group(0,2,120,MIRROR);
+    populateAX12Group(0,2,120,MIRROR);  //Bras et porte avant
     addAX12(3,200);
     addAX12Group();
-//    populateAX12Group(1,,BASE);       TODO Mettre l'ID de l'AX correspondant
-//    populateAX12Group(1,,MIRROR);     TODO Tu me remets la même Roger
+    populateAX12Group(1,4,120,BASE);
+    populateAX12Group(1,5,120,MIRROR);  //Bras et porte arrière
+    addAX12(6,200);
 }
 
 DynamixelMgr::~DynamixelMgr()

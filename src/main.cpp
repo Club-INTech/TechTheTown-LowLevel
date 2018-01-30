@@ -39,9 +39,11 @@ void loop(){
     orderMgr.execute("dlp");
 
     /*AX12 initialisation*/
-    orderMgr.execute("rlb");
+    orderMgr.execute("rlbAv");
+    orderMgr.execute("rlbAr");
     delay(1000);
-    orderMgr.execute("flp");
+    orderMgr.execute("flpAv");
+    orderMgr.execute("flpAr");
     delay(1000);
 
     for(int i=0;i<10;i++)
@@ -57,36 +59,46 @@ void loop(){
     motionControlInterruptTimer.priority(253);
     motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); //asservissements
 
-	//    orderMgr.execute("kpt 15");
-//    orderMgr.execute("kit 0.00001");
-//    orderMgr.execute("kdt 500");
+    orderMgr.execute("kpt 10");
+    orderMgr.execute("kit 0");
+    orderMgr.execute("kdt 0");
 //    orderMgr.execute("kpr 10");
 //    orderMgr.execute("kir 0");
 //    orderMgr.execute("kdr 0");
 //    orderMgr.execute("ct0");
 //    orderMgr.execute("cr0");
 //    orderMgr.execute("monthlery");
-//    orderMgr.execute("kpg 0.165");
-//    orderMgr.execute("kig 0.0002");
-//    orderMgr.execute("kdg 0.5");
-//    orderMgr.execute("kpd 0.16");
-//    orderMgr.execute("kid 0.0002");
-//    orderMgr.execute("kdd 0.5");
+//    orderMgr.execute("kpg 0.175");
+//    orderMgr.execute("kig 0.0003");
+//    orderMgr.execute("kdg 0.65"); //0.65
+//    orderMgr.execute("kpd 0.18");
+//    orderMgr.execute("kid 0.0003");
+//    orderMgr.execute("kdd 0.45"); //0.45
 //    orderMgr.execute("t pi");
-//    for(int i=0;i<300;i++)
-//    {
-//        if(i==20)
-//        {
-//            orderMgr.execute("d 1000");
+    for(int i=0;i<300;i++)
+    {
+        if(i==20)
+        {
+            orderMgr.execute("d 1000");
 //            orderMgr.execute("t pi");
 //            orderMgr.execute("av");
 //            orderMgr.execute("rawpwm 150");
-//        }
-//        orderMgr.execute("rawposdata");
+        }
+        orderMgr.execute("rawposdata");
+        delay(10);
+    }
+    delay(1000);
+//    orderMgr.execute("sstop");
+//    for(int i = 0;i<20;i++)
+//    {
+//        orderMgr.execute("rawpostdata");
 //        delay(10);
 //    }
-//    orderMgr.execute("d -1000");
+//    delay(1000);
+//    orderMgr.execute("rc");
+//    delay(130*10);
 //    orderMgr.execute("sstop");
+    orderMgr.execute("d -1000");
 //    orderMgr.execute("rawpwm 0");
 //    for(int i=0;i<600/1;i++)
 //    {
@@ -97,7 +109,7 @@ void loop(){
 //        orderMgr.execute("rawposdata");
 //        delay(10);
 //    }
-//    Serial.println("DATAEND");
+    Serial.println("DATAEND");
 
 
 	while (true) {

@@ -689,44 +689,67 @@ void OrderManager::execute(const char* orderToExecute)
         *		   *|     Actionneurs spécifiques     |*
         *    	   *|_________________________________|*
         */
+		/*
+         * BRAS
+         */
+		else if (!strcmp(order, "blbAv"))
+		{
+			actuatorsMgr.movAX12G(0,95);
+		}
+		else if (!strcmp(order, "rlbAv"))
+		{
+			actuatorsMgr.movAX12G(0,177);
+		}
+		else if (!strcmp(order, "blbAr"))
+		{
+			actuatorsMgr.movAX12G(1,95);
+		}
+		else if (!strcmp(order, "rlbAr"))
+		{
+			actuatorsMgr.movAX12G(1,177);
+		}
+		else if (!strcmp(order, "albl"))
+		{
+			actuatorsMgr.movAX12G(1,60);
+			delay(1000);
+			actuatorsMgr.movAX12G(1,240);
+		}
+			/*
+             * PORTES
+             */
+		else if (!strcmp(order, "flpAv"))
+		{
+			actuatorsMgr.movAX12(3,10);
+		}
+		else if (!strcmp(order, "olpAv"))
+		{
+			actuatorsMgr.movAX12(3,100);
+		}
+		else if (!strcmp(order, "flpAr"))
+		{
+			actuatorsMgr.movAX12(6,10);
+		}
+		else if (!strcmp(order, "olpAr"))
+		{
+			actuatorsMgr.movAX12(6,100);
+		}
+		else if (!strcmp(order, "tlpAv"))
+		{
+			actuatorsMgr.movAX12(3,18);
+			delay(500);
+			actuatorsMgr.movAX12(3,10);
+		}
+		else if (!strcmp(order, "tlpAr"))
+		{
+			actuatorsMgr.movAX12(6,18);
+			delay(500);
+			actuatorsMgr.movAX12(6,10);
+		}
 
 		else if (!strcmp(order, "alp"))
         {
 			actuatorsMgr.setPumpState(true);
         }
-		else if (!strcmp(order, "dlp"))
-        {
-			actuatorsMgr.setPumpState(false);
-        }
-		else if (!strcmp(order, "blb"))
-        {
-            actuatorsMgr.movAX12G(0,95);
-        }
-		else if (!strcmp(order, "rlb"))
-        {
-            actuatorsMgr.movAX12G(0,177);
-        }
-		else if (!strcmp(order, "albl"))
-        {
-            actuatorsMgr.movAX12G(1,60);
-            delay(1000);
-            actuatorsMgr.movAX12G(1,240);
-        }
-		else if (!strcmp(order, "flp"))
-        {
-            actuatorsMgr.movAX12(3,10);
-        }
-		else if (!strcmp(order, "olp"))
-        {
-            actuatorsMgr.movAX12(3,100);
-        }
-		else if (!strcmp(order, "tlp"))
-        {
-            actuatorsMgr.movAX12(3,18);
-            delay(500);
-            actuatorsMgr.movAX12(3,10);
-        }
-
 		/*			 _________________________________
 		* 		   *|                                 |*
 		*		   *|			   HOOKS	          |*
