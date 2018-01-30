@@ -696,11 +696,11 @@ void OrderManager::execute(const char* orderToExecute)
         }
         else if (!strcmp(order, "blbAr"))
         {
-            actuatorsMgr.movAX12G(1,95);
+            actuatorsMgr.movAX12G(1,216);
         }
         else if (!strcmp(order, "rlbAr"))
         {
-            actuatorsMgr.movAX12G(1,177);
+            actuatorsMgr.movAX12G(1,130);
         }
         else if (!strcmp(order, "albl"))
         {
