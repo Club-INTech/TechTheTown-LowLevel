@@ -1,6 +1,8 @@
 #ifndef SINGLETON_HPP
 #define SINGLETON_HPP
 
+#include <Arduino.h>
+
 template<class T>
 class Singleton {
 public:

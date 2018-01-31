@@ -12,7 +12,7 @@ MOSI	11
 #define _ETHERNETMGR_h
 
 #include <Arduino.h>
-
+#include <vector>
 
 #include "Utils/Singleton.hpp"
 #include "Utils/stdarg.h"
@@ -38,6 +38,7 @@ private:
 	IPAddress dns{ 8,8,8,8 };
 	IPAddress gateway{ 192,168,0,2 };
 	IPAddress subnet{ 255,255,255,0 };
+	String valueString;
 
 	void resetCard();
 
@@ -60,7 +61,7 @@ public:
 	bool read(float&);
 
 	/* ENVOI */
-	void sendUS(uint16_t[]);
+	void sendUS(const std::vector<uint16_t>&);
 	void sendEvent(const char*);
 	void sendPosition(const float*);
     void log(const char*, ...) __attribute__((format(printf, 2, 3)));

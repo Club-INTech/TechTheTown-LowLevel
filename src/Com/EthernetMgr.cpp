@@ -114,7 +114,8 @@ bool EthernetMgr::read(float& value) {
 
 
 void EthernetMgr::printf(const char *message, ...) {
-	char data[HEADER_LENGTH + 64] = STD_HEADER;
+	char data[HEADER_LENGTH + 64];
+	memcpy(data,STD_HEADER,HEADER_LENGTH);
 	data[HEADER_LENGTH] = '\0';
 
 	strcat(data, message);
@@ -131,7 +132,8 @@ void EthernetMgr::printf(const char *message, ...) {
 }
 
 void EthernetMgr::printfln(const char* message, ...) {
-	char data[HEADER_LENGTH + 64] = STD_HEADER;
+	char data[HEADER_LENGTH + 64];
+	memcpy(data,STD_HEADER,HEADER_LENGTH);
 	data[HEADER_LENGTH] = '\0';
 
 	strcat(data, message);
@@ -149,14 +151,13 @@ void EthernetMgr::printfln(const char* message, ...) {
 /**
 *	Envoie une chaine de caracteres commencant par 2 headers Ultrason, puis les SENSOR_NB valeurs separees par des espaces
 */
-void EthernetMgr::sendUS(uint16_t values[])
+void EthernetMgr::sendUS(const std::vector<uint16_t>& distances)
 {
-    String valueString="";
-    char header[HEADER_LENGTH]=SENSOR_HEADER;
-    valueString.append(header[0]);
-    valueString.append(header[1]);
-    for(int i=0;i<SENSOR_NB;i++){
-        valueString.append(values[i]);
+    valueString="";
+    valueString.append(SENSOR_HEADER[0]);
+		valueString.append(SENSOR_HEADER[1]);
+    for(uint8_t i=0;i<distances.size();i++){
+        valueString.append(distances[i]);
         valueString.append(" ");
     }
 
@@ -169,10 +170,9 @@ void EthernetMgr::sendUS(uint16_t values[])
 */
 void EthernetMgr::sendEvent(const char* event)
 {
-	String valueString="";
-	char header[HEADER_LENGTH]=EVENT_HEADER;
-	valueString.append(header[0]);
-	valueString.append(header[1]);
+	valueString="";
+	valueString.append(EVENT_HEADER[0]);
+	valueString.append(EVENT_HEADER[1]);
 	valueString.append(event);
 	println(valueString);
 }
@@ -183,10 +183,9 @@ void EthernetMgr::sendEvent(const char* event)
 */
 void EthernetMgr::sendPosition(const float* pos)
 {
-	String valueString="";
-	char header[HEADER_LENGTH]=POSITION_HEADER;
-	valueString.append(header[0]);
-	valueString.append(header[1]);
+	valueString="";
+	valueString.append(POSITION_HEADER[0]);
+	valueString.append(POSITION_HEADER[1]);
 	for(int i=0;i<3;i++){
 		valueString.append(pos[i]);
 		valueString.append(" ");
@@ -198,7 +197,8 @@ void EthernetMgr::sendPosition(const float* pos)
 *	Envoie une chaine de caracteres commencant par 2 headers debug, puis le message de log
 */
 void EthernetMgr::log(const char* message, ...) {
-	char data[HEADER_LENGTH + 64] = DEBUG_HEADER;
+	char data[HEADER_LENGTH + 64];
+	memcpy(data,DEBUG_HEADER,HEADER_LENGTH);
 	data[HEADER_LENGTH] = '\0';
 
     char formattedData[HEADER_LENGTH+64];

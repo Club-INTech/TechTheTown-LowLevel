@@ -16,7 +16,7 @@ class MotionControlSystem : public Singleton<MotionControlSystem>
 {
 public:
 	enum RotationWay {
-		FREE, //Sens correspondant au chemin le plus court 
+		FREE, //Sens correspondant au chemin le plus court
 		TRIGO,//Sens Trigo(vers la gauche
 		ANTITRIGO// Bah c'est dans l'autre sens
 	};
@@ -91,7 +91,7 @@ private:
 	//Moyennes de la d�riv�e des erreurs (pour detecter blocages)
 	Average<int32_t, AVERAGE_DERIVATIVE_SIZE> averageLeftDerivativeError;
 	Average<int32_t, AVERAGE_DERIVATIVE_SIZE> averageRightDerivativeError;
-	
+
 
 
 	/*

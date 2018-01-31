@@ -1,11 +1,11 @@
 ﻿#include "OrderManager.h"
 
-OrderManager::OrderManager():	motionControlSystem(MotionControlSystem::Instance()), 
-								sensorMgr(SensorMgr::Instance()), 
+OrderManager::OrderManager():	motionControlSystem(MotionControlSystem::Instance()),
+								sensorMgr(SensorMgr::Instance()),
 								actuatorsMgr(ActuatorsMgr::Instance()),
 								hookList(HookList()),
 								orderData(OrderData()),
-								#if DEBUG 
+								#if DEBUG
 									highLevel(SerialMgr::Instance())
 								#else
 									highLevel(EthernetMgr::Instance())
@@ -881,16 +881,7 @@ void OrderManager::execute(const char* orderToExecute)
 
 void OrderManager::refreshUS()
 {
-	sensorMgr.refresh(motionControlSystem.getMovingDirection());
-}
-
-void OrderManager::sendUSData() {
-	static uint32_t lastSent = 0;
-	if (isSendingUS && millis() - lastSent > 100) 
-	{
-		//highLevel.sendUS(sensorMgr.getUsTest());
-		lastSent = millis();
-	}
+	sensorMgr.refresh();
 }
 
 

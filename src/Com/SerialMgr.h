@@ -2,7 +2,8 @@
 #define _SERIALHL_h
 
 #include <Arduino.h>
-
+#include <vector>
+#include <string>
 
 #include "Utils/Singleton.hpp"
 #include "Utils/stdarg.h"
@@ -16,15 +17,15 @@ public:
 	SerialMgr();
 
 	/* RECEPTION */
-	
+
 	bool read(char*);
 	bool read(int32_t&);
 	bool read(int16_t&);
 	bool read(volatile int8_t &);
 	bool read(float&);
-	
+
 	/* ENVOI */
-	void sendUS(uint16_t);
+	void sendUS(const std::vector<uint16_t>&);
 	void sendEvent(const char*);
 
 	template<typename T>
@@ -42,6 +43,7 @@ public:
 
 private:
 	bool read_char(char &);
+	String data;
 	uint8_t available();
 
     void sendPosition(const float *pos);

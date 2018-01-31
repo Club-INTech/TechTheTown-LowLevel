@@ -76,7 +76,7 @@ bool SerialMgr::read(float& value) {
 	bool status = read(readValue);
 
 	value = strtof(readValue, nullptr);
-	
+
 	return status;
 }
 
@@ -85,31 +85,31 @@ uint8_t inline SerialMgr::available()
 	return Serial.available();
 }
 
-void SerialMgr::sendUS(uint16_t value)
+void SerialMgr::sendUS(const std::vector<uint16_t>& distances)
 {
-	String data = "";
-	char header[HEADER_LENGTH] = SENSOR_HEADER;
-	for (int i = 0; i < HEADER_LENGTH;i++) {
-		data.append(header[i]);
+	data="";
+	data.append(SENSOR_HEADER[0]);
+	data.append(SENSOR_HEADER[1]);
+	for( uint8_t i=0;i<distances.size();i++)
+	{
+		data.append(distances[i]);
+		data.append(" ");
 	}
-	data.append(value);
 	Serial.println(data);
 }
 
-void SerialMgr::sendEvent(const char* event) 
+void SerialMgr::sendEvent(const char* event)
 {
-	String data = "";
-	char header[HEADER_LENGTH] = EVENT_HEADER;
-	for (int i = 0; i < HEADER_LENGTH; i++) {
-		data.append(header[i]);
-	}
+	data = "";
+	data.append(EVENT_HEADER[0]);
+	data.append(EVENT_HEADER[1]);
 	data.append(event);
 	Serial.println(data);
 }
 
 void SerialMgr::sendPosition(const float* pos){
-	char header[HEADER_LENGTH]=POSITION_HEADER;
-	Serial.print(header);
+	Serial.print(POSITION_HEADER[0]);
+	Serial.print(POSITION_HEADER[1]);
 	Serial.print(pos[0]);
 	Serial.print(" ");
 	Serial.print(pos[1]);
@@ -142,7 +142,8 @@ template void SerialMgr::print<int32_t>(int32_t value);
 template void SerialMgr::println<int32_t>(int32_t value);
 
 void SerialMgr::log(const char* log, ...) {
-	char data[HEADER_LENGTH + 64] = DEBUG_HEADER;
+	char data[HEADER_LENGTH + 64];
+	memcpy(data,DEBUG_HEADER,HEADER_LENGTH);
 	data[HEADER_LENGTH] = '\0';
 
 	strcat(data, log);
@@ -151,7 +152,7 @@ void SerialMgr::log(const char* log, ...) {
 	va_start(args, log);
 
 	char logToSend[HEADER_LENGTH+64];
-	vsnprintf(logToSend, 64, data, args);			//Ajoute dans le buffer log, en formattant les 
+	vsnprintf(logToSend, 64, data, args);			//Ajoute dans le buffer log, en formattant les
 	Serial.println(logToSend);
 
 	va_end(args);

@@ -21,11 +21,11 @@
 
 #define SENSOR_NB       4       //Nombre de valeurs de capteurs envoyées automatiquement
 
-#define STD_HEADER      {0x40, 0x40}
-#define DEBUG_HEADER    {0x02, 0x20}
-#define EVENT_HEADER    {0x14, 0x17}
-#define SENSOR_HEADER	{0x01, 0x06}
-#define POSITION_HEADER	{0x07, 0x05}
+constexpr char STD_HEADER[2] = {0x40,0x40};
+constexpr char DEBUG_HEADER[2] = {0x02,0x20};
+constexpr char EVENT_HEADER[2] = {0x14,0x17};
+constexpr char SENSOR_HEADER[2] = {0x01,0x06};
+constexpr char POSITION_HEADER[2] = {0x07,0x05};
 
 //Separateurs des mots d'ordres
 #define SEPARATOR " "

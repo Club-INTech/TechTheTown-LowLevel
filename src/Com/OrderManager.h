@@ -54,7 +54,7 @@ public:
 	}
 };
 
-class HookList 
+class HookList
 {
 private:
 	std::map<uint8_t, Hook> hooks;
@@ -144,12 +144,11 @@ public:
 	#endif
 
 	 OrderManager();
-	 
+
 	 //Com&exec
 	 void refreshUS();
 	 void communicate();
 	 void execute(const char*);	//public pour pouvoir executer des scripts de hook
-	 void sendUSData();
 
 
 	 //Utilitaire
@@ -167,4 +166,3 @@ public:
 };
 
 #endif //_ORDERMGR_h
-

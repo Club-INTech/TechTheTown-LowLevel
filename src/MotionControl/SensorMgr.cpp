@@ -2,29 +2,36 @@
 
 SensorMgr::SensorMgr()
 {
-	delayToRefresh = 25;
-	lastRefresh = millis();
+	Wire.begin();
+	distances.reserve(NbrOfUSCaptor);
+	for(uint8_t i=0;i<NbrOfUSCaptor;i++)
+	{
+		US[i] = new SRF10(i,255,SRF10::GAIN::G100);
+		distances.push_back(0xFFFF);
+	}
+
 }
 
-void SensorMgr::refresh(MOVING_DIRECTION dir)
+void SensorMgr::refresh()
 {
-	if (millis() - lastRefresh > delayToRefresh) {
-		/*if (dir == MOVING_DIRECTION::FORWARD) {
-			usAVG.refresh();
-			usAVD.refresh();
+		if(!isMeasuring)
+		{
+			US[currentMeasuringUS]->request();
+			isMeasuring=true;
 		}
-		else if (dir == MOVING_DIRECTION::BACKWARD) {
-			usARG.refresh();
-			usARD.refresh();
+		if(US[currentMeasuringUS]->update())
+		{
+			distances[currentMeasuringUS] = US[currentMeasuringUS]->getDistance();
+			isMeasuring=false;
+			if(currentMeasuringUS<NbrOfUSCaptor-1)
+				++currentMeasuringUS;
+			else
+			{
+				highLevel.sendUS(distances);
+				currentMeasuringUS=0;
+			}
 		}
-		else if (dir == MOVING_DIRECTION::NONE) {
-			usAVG.refresh();
-			usAVD.refresh();
-			usARG.refresh();
-			usARD.refresh();
-		}*/
-		lastRefresh = millis();
-	}
+		return;
 }
 
 uint16_t SensorMgr::getUsTest()
