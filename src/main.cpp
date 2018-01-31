@@ -58,12 +58,12 @@ void loop(){
     motionControlInterruptTimer.priority(253);
     motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); //asservissements
 
-    orderMgr.execute("kpt 5.5");
-    orderMgr.execute("kit 0");
-    orderMgr.execute("kdt 0");
-//    orderMgr.execute("kpr 10");
-//    orderMgr.execute("kir 0");
-//    orderMgr.execute("kdr 0");
+//    orderMgr.execute("kpt 5.5");
+//    orderMgr.execute("kit 0");
+//    orderMgr.execute("kdt 0");
+    orderMgr.execute("kpr 3");
+    orderMgr.execute("kir 0");
+    orderMgr.execute("kdr 0");
 //    orderMgr.execute("ct0");
 //    orderMgr.execute("cr0");
 //    orderMgr.execute("monthlery");
@@ -78,8 +78,8 @@ void loop(){
     {
         if(i==20)
         {
-            orderMgr.execute("d 1000");
-//            orderMgr.execute("t pi");
+//            orderMgr.execute("d 1000");
+            orderMgr.execute("t pi");
 //            orderMgr.execute("av");
 //            orderMgr.execute("rawpwm 150");
         }
@@ -97,7 +97,8 @@ void loop(){
 //    orderMgr.execute("rc");
 //    delay(130*10);
 //    orderMgr.execute("sstop");
-    orderMgr.execute("d -1000");
+//    orderMgr.execute("d -1000");
+    orderMgr.execute("t 0");
 //    orderMgr.execute("rawpwm 0");
 //    for(int i=0;i<600/1;i++)
 //    {

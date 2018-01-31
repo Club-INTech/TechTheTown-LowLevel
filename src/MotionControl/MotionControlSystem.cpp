@@ -40,7 +40,7 @@ MotionControlSystem::MotionControlSystem() :
 
 	delayToStop = 100; // temps a l'arret avant de considerer un blocage
 	toleranceTranslation = 30;
-	toleranceRotation = 50;
+	toleranceRotation = 3;
 	toleranceSpeed = 40;
 	toleranceSpeedEstablished = 50; // Doit etre la plus petite possible, sans bloquer les trajectoires courbes 50
 	delayToEstablish = 100;
@@ -49,7 +49,7 @@ MotionControlSystem::MotionControlSystem() :
 //  PIDs de test d'asserv'
 
 	translationPID.setTunings(5.5, 0, 0);
-	rotationPID.setTunings(17, 0, 100);
+	rotationPID.setTunings(3, 0, 0);
 	leftSpeedPID.setTunings(0.175,0.0003,0.65);
 	rightSpeedPID.setTunings(0.18,0.0003,0.45);
 
@@ -474,7 +474,7 @@ void MotionControlSystem::setRawNullSpeed() {
 
 float MotionControlSystem::getAngleRadian() const
 {
-	return (float)(currentAngle * TICK_TO_RADIAN + originalAngle);
+	return (currentAngle * TICK_TO_RADIAN + originalAngle);
 }
 
 void MotionControlSystem::setOriginalAngle(float newAngle)
