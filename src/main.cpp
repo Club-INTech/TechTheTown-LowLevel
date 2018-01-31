@@ -36,15 +36,14 @@ void motionControlInterrupt() {
 void loop(){
     delay(1000);
     OrderManager& orderMgr = OrderManager::Instance();
-    orderMgr.execute("dlp");
 
     /*AX12 initialisation*/
     orderMgr.execute("rlbAv");
     orderMgr.execute("rlbAr");
     delay(1000);
-    orderMgr.execute("flpAv");
-    orderMgr.execute("flpAr");
-    delay(1000);
+//    orderMgr.execute("flpAv");
+//    orderMgr.execute("flpAr");
+//    delay(1000);
 
     for(int i=0;i<10;i++)
 	{
@@ -59,7 +58,7 @@ void loop(){
     motionControlInterruptTimer.priority(253);
     motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); //asservissements
 
-    orderMgr.execute("kpt 10");
+    orderMgr.execute("kpt 5.5");
     orderMgr.execute("kit 0");
     orderMgr.execute("kdt 0");
 //    orderMgr.execute("kpr 10");

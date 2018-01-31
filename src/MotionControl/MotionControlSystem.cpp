@@ -27,7 +27,7 @@ MotionControlSystem::MotionControlSystem() :
 	moving = false;
 	moveAbnormal = false;
 	moveAbnormalSent = false;
-	forcedMovement = false;
+	forcedMovement = true;
 	translation = true;
 	direction = NONE;
 
@@ -36,7 +36,7 @@ MotionControlSystem::MotionControlSystem() :
 
     maxSpeed = 10000; //5000;
     maxSpeedTranslation = 10000; //4000;
-    maxSpeedRotation = 2800; //2800;
+    maxSpeedRotation = 10000; //2800;
 
 	delayToStop = 100; // temps a l'arret avant de considerer un blocage
 	toleranceTranslation = 30;
@@ -48,7 +48,7 @@ MotionControlSystem::MotionControlSystem() :
 
 //  PIDs de test d'asserv'
 
-	translationPID.setTunings(5, 0, 50);
+	translationPID.setTunings(5.5, 0, 0);
 	rotationPID.setTunings(17, 0, 100);
 	leftSpeedPID.setTunings(0.175,0.0003,0.65);
 	rightSpeedPID.setTunings(0.18,0.0003,0.45);
