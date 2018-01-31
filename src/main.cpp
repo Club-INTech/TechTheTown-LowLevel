@@ -48,9 +48,22 @@ void loop(){
     orderMgr.execute("rlbAv");
 	orderMgr.execute("rlbAr");
     delay(1000);
-    orderMgr.execute("flpAv");
+//    orderMgr.execute("flpAv");
 	orderMgr.execute("flpAr");
     delay(1000);
+
+    orderMgr.execute("kpt 5.5");
+    orderMgr.execute("kit 0");
+    orderMgr.execute("kdt 0");
+    orderMgr.execute("kpr 3");
+    orderMgr.execute("kir 0");
+    orderMgr.execute("kdr 0");
+    orderMgr.execute("kpg 0.175");
+    orderMgr.execute("kig 0.0003");
+    orderMgr.execute("kdg 0.65");
+    orderMgr.execute("kpd 0.18");
+    orderMgr.execute("kid 0.0003");
+    orderMgr.execute("kdd 0.45");
 
     for(int i=0;i<10;i++)
 	{
