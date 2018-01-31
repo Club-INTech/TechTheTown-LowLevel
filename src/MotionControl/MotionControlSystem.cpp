@@ -35,11 +35,11 @@ MotionControlSystem::MotionControlSystem() :
 	rightSpeedPID.setOutputLimits(-255, 255);
 
     maxSpeed = 10000; //5000;
-    maxSpeedTranslation = 10000; //4000;
-    maxSpeedRotation = 10000; //2800;
+    maxSpeedTranslation = 5000; //4000;
+    maxSpeedRotation = 5000; //2800;
 
 	delayToStop = 100; // temps a l'arret avant de considerer un blocage
-	toleranceTranslation = 30;
+	toleranceTranslation = 3;
 	toleranceRotation = 3;
 	toleranceSpeed = 40;
 	toleranceSpeedEstablished = 50; // Doit etre la plus petite possible, sans bloquer les trajectoires courbes 50
