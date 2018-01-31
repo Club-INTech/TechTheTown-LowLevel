@@ -48,7 +48,8 @@ bool DynamixelMgr::addAX12(int id, uint16_t speed)	//Initialise l'AX avec une vi
 
 void DynamixelMgr::addAX12Group()
 {
-    axGroupsList.emplace_back();
+    DynamixelGroup tempo;
+    axGroupsList.push_back(tempo);
 }
 
 bool DynamixelMgr::populateAX12Group(int groupId, int motorId, DynSym symmetry)
