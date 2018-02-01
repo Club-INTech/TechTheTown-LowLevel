@@ -48,7 +48,7 @@ MotionControlSystem::MotionControlSystem() :
 
 //  PIDs de test d'asserv'
 
-	translationPID.setTunings(5.5, 0, 0);
+	translationPID.setTunings(2.8, 0, 0);
 	rotationPID.setTunings(3, 0, 0);
 	leftSpeedPID.setTunings(0.175,0.0003,0.65);
 	rightSpeedPID.setTunings(0.18,0.0003,0.45);
