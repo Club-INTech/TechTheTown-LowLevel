@@ -52,9 +52,9 @@ void loop(){
 	orderMgr.execute("flpAr");
     delay(1000);
 
-    orderMgr.execute("kpt 5.5");
+    orderMgr.execute("kpt 2.8");
     orderMgr.execute("kit 0");
-    orderMgr.execute("kdt 0");
+    orderMgr.execute("kdt 0"); 
     orderMgr.execute("kpr 3");
     orderMgr.execute("kir 0");
     orderMgr.execute("kdr 0");
