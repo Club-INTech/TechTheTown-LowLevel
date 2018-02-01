@@ -323,6 +323,19 @@ void MotionControlSystem::resetPosition()
 
 void MotionControlSystem::orderTranslation(int32_t mmDistance) {
 
+    if(mmDistance<300)
+    {
+        translationPID.setTunings(2.8,0,0);
+    }
+    else if(mmDistance<600)
+    {
+        translationPID.setTunings(0.4,0,0);
+    }
+    else
+    {
+        translationPID.setTunings(5.5,0,0);
+    }
+    
 	translationSetpoint += (int32_t)mmDistance / TICK_TO_MM;
 	if (!moving)
 	{
