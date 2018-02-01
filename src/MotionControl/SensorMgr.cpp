@@ -14,6 +14,8 @@ SensorMgr::SensorMgr()
 
 void SensorMgr::refresh()
 {
+	if(NbrOfUSCaptor)
+	{
 		if(!isMeasuring)
 		{
 			US[currentMeasuringUS]->request();
@@ -31,7 +33,8 @@ void SensorMgr::refresh()
 				currentMeasuringUS=0;
 			}
 		}
-		return;
+	}
+	return;
 }
 
 uint16_t SensorMgr::getUsTest()

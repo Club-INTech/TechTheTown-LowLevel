@@ -16,7 +16,7 @@
 #include "SRF10.h"
 #include "AbstractSensorUS.h"
 
-constexpr uint8_t NbrOfUSCaptor = 0;
+constexpr uint8_t NbrOfUSCaptor = 1;
 
 class SensorMgr : public Singleton<SensorMgr>
 {

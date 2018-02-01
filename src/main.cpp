@@ -54,7 +54,7 @@ void loop(){
 
     orderMgr.execute("kpt 2.8");
     orderMgr.execute("kit 0");
-    orderMgr.execute("kdt 0"); 
+    orderMgr.execute("kdt 0");
     orderMgr.execute("kpr 3");
     orderMgr.execute("kir 0");
     orderMgr.execute("kdr 0");
@@ -79,7 +79,7 @@ void loop(){
     motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); //asservissements
 
     while (true) {
-//        orderMgr.refreshUS();
+        orderMgr.refreshUS();
         orderMgr.communicate();
         //orderMgr.sendUSData();
     }
