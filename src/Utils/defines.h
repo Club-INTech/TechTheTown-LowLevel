@@ -10,16 +10,16 @@
 */
 
 //Utilise la s�rie si true, l'ethernet si false
-#define DEBUG true
+#define DEBUG false
 
 //Nombre d'octets acceptables depuis le HL
 #define RX_BUFFER_SIZE	64		//Taille max des messages
 #define RX_WORD_COUNT	10		//Nombre de mots max par ordre
 
+constexpr uint8_t NbrOfUSCaptor = 1;
+
 //Divers headers
 #define HEADER_LENGTH   2
-
-#define SENSOR_NB       4       //Nombre de valeurs de capteurs envoyées automatiquement
 
 constexpr char STD_HEADER[2] = {0x40,0x40};
 constexpr char DEBUG_HEADER[2] = {0x02,0x20};
