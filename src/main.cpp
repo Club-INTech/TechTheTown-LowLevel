@@ -79,7 +79,7 @@ void loop(){
     motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); //asservissements
 
     while (true) {
-        orderMgr.refreshUS();
+//        orderMgr.refreshUS();
         orderMgr.communicate();
         //orderMgr.sendUSData();
     }
