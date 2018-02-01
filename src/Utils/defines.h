@@ -16,7 +16,7 @@
 #define RX_BUFFER_SIZE	64		//Taille max des messages
 #define RX_WORD_COUNT	10		//Nombre de mots max par ordre
 
-constexpr uint8_t NbrOfUSCaptor = 1;
+constexpr uint8_t NBR_OF_US_CAPTOR = 1;
 
 //Divers headers
 #define HEADER_LENGTH   2

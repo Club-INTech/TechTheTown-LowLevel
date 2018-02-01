@@ -28,7 +28,7 @@ private:
 	 EthernetMgr &highLevel = EthernetMgr::Instance();
 	#endif
 
-	AbstractSensorUS* US[NbrOfUSCaptor];
+	AbstractSensorUS* US[NBR_OF_US_CAPTOR];
 	std::vector<uint16_t> distances;
 	uint8_t currentMeasuringUS = 0;
 	bool isMeasuring = false;

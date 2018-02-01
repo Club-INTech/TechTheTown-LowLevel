@@ -3,18 +3,18 @@
 SensorMgr::SensorMgr()
 {
 	Wire.begin();
-	distances.reserve(NbrOfUSCaptor);
-	for(uint8_t i=0;i<NbrOfUSCaptor;i++)
-	{
-		US[i] = new SRF10(i,255,SRF10::GAIN::G100);
-		distances.push_back(0xFFFF);
-	}
+	distances.reserve(NBR_OF_US_CAPTOR);
+	US[0] = new SRF10(0,255,SRF10::GAIN::G100);
+	distances.push_back(0x0000);
+	distances.push_back(0x0000);
+	distances.push_back(0x0000);
+	distances.push_back(0x0000);
 
 }
 
 void SensorMgr::refresh()
 {
-	if(NbrOfUSCaptor)
+	if(NBR_OF_US_CAPTOR)
 	{
 		if(!isMeasuring)
 		{
@@ -25,7 +25,7 @@ void SensorMgr::refresh()
 		{
 			distances[currentMeasuringUS] = US[currentMeasuringUS]->getDistance();
 			isMeasuring=false;
-			if(currentMeasuringUS<NbrOfUSCaptor-1)
+			if(currentMeasuringUS<NBR_OF_US_CAPTOR-1)
 				++currentMeasuringUS;
 			else
 			{
