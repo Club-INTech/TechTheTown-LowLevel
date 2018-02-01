@@ -48,7 +48,7 @@ void loop(){
     orderMgr.execute("rlbAv");
 	orderMgr.execute("rlbAr");
     delay(1000);
-//    orderMgr.execute("flpAv");
+    orderMgr.execute("flpAv");
 	orderMgr.execute("flpAr");
     delay(1000);
 

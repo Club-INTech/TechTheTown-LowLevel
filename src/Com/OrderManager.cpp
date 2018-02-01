@@ -713,11 +713,11 @@ void OrderManager::execute(const char* orderToExecute)
          */
         else if (!strcmp(order, "flpAv"))
         {
-            actuatorsMgr.movAX12(3,10);
+            actuatorsMgr.movAX12(3,240);
         }
         else if (!strcmp(order, "olpAv"))
         {
-            actuatorsMgr.movAX12(3,100);
+            actuatorsMgr.movAX12(3,150);
         }
         else if (!strcmp(order, "flpAr"))
         {
@@ -729,15 +729,15 @@ void OrderManager::execute(const char* orderToExecute)
         }
         else if (!strcmp(order, "tlpAv"))
         {
-            actuatorsMgr.movAX12(3,18);
+            actuatorsMgr.movAX12(3,235);
             delay(500);
-            actuatorsMgr.movAX12(3,10);
+            actuatorsMgr.movAX12(3,240);
         }
         else if (!strcmp(order, "tlpAr"))
         {
-            actuatorsMgr.movAX12(6,18);
+            actuatorsMgr.movAX12(6,235);
             delay(500);
-            actuatorsMgr.movAX12(6,10);
+            actuatorsMgr.movAX12(6,240);
         }
         /*
          * POMPE
