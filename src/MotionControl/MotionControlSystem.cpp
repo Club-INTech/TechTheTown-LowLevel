@@ -28,6 +28,7 @@ MotionControlSystem::MotionControlSystem() :
 	moveAbnormal = false;
 	moveAbnormalSent = false;
 	forcedMovement = true;
+    pointToPointMovement = false;
 	translation = true;
 	direction = NONE;
 
@@ -401,6 +402,10 @@ void MotionControlSystem::orderRotation(float targetAngleRadian, RotationWay rot
 	}
 	direction = NONE;
 	moveAbnormal = false;
+}
+
+void MotionControlSystem::orderPoint(float targetX, float targetY) {
+
 }
 
 

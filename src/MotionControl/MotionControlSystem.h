@@ -122,6 +122,7 @@ private:
 	volatile bool rightSpeedControlled;
 
 	volatile bool forcedMovement; // Si true, alors pas de gestion de l'arret : ON FORCE MODAFUCKA !!!
+	volatile bool pointToPointMovement;
 
 								  // Variables de r�glage de la d�tection de blocage physique
 	unsigned int delayToStop;  //En ms
@@ -205,6 +206,7 @@ public:
 	/* Ordres */
 	void orderTranslation(int32_t);
 	void orderRotation(float, RotationWay);
+	void orderPoint(float targetX, float targetY);
 	void orderRawPwm(Side, int16_t);
 
 	/* Autres */
