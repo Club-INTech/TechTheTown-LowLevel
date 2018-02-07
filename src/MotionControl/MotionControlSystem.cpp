@@ -39,7 +39,7 @@ MotionControlSystem::MotionControlSystem() :
     maxSpeedRotation = 5000; //2800;
 
 	delayToStop = 100; // temps a l'arret avant de considerer un blocage
-	toleranceTranslation = 3;
+	toleranceTranslation = 15;
 	toleranceRotation = 3;
 	toleranceSpeed = 40;
 	toleranceSpeedEstablished = 50; // Doit etre la plus petite possible, sans bloquer les trajectoires courbes 50
@@ -55,7 +55,7 @@ MotionControlSystem::MotionControlSystem() :
 
 
 
-	maxAcceleration = 30; //10;
+	maxAcceleration = 10; //10;
 
 	leftMotor.init();
 	rightMotor.init();
@@ -78,6 +78,7 @@ void MotionControlSystem::updateTicks(){
 }
 void MotionControlSystem::control() {
 	if (controlled) {
+
 		// Pour le calcul de la vitesse instantanee :
 		static int32_t previousLeftTicks = 0;
 		static int32_t previousRightTicks = 0;

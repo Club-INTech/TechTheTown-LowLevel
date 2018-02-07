@@ -719,11 +719,11 @@ void OrderManager::execute(const char* orderToExecute)
              */
         else if (!strcmp(order, "flpAv"))
         {
-            actuatorsMgr.movAX12(3,240);
+            actuatorsMgr.movAX12(3,150);
         }
         else if (!strcmp(order, "olpAv"))
         {
-            actuatorsMgr.movAX12(3,150);
+            actuatorsMgr.movAX12(3,240);
         }
         else if (!strcmp(order, "flpAr"))
         {
