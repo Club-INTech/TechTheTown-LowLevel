@@ -10,7 +10,7 @@
 #include "Utils/defines.h"
 #include "MotionControl/Encoder.h"
 
-volatile enum MOVING_DIRECTION { FORWARD, BACKWARD, NONE };
+enum MOVING_DIRECTION { FORWARD, BACKWARD, NONE };
 
 class MotionControlSystem : public Singleton<MotionControlSystem>
 {
