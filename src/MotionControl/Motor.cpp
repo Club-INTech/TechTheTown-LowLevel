@@ -52,11 +52,11 @@ void Motor::run(int16_t newpwm)
 	pwm = newpwm;
 	if (pwm >= 0) {
 		setDirection(Direction::FORWARD);
-		pwm = MIN(pwm, 255);
+		pwm = (int16_t)MIN(pwm, 255);
 	}
 	else if (pwm < 0) {
 		setDirection(Direction::BACKWARD);
-		pwm = MIN(-pwm, 255);
+		pwm = (int16_t)MIN(-pwm, 255);
 	}
 	analogWrite(pin_pwm, pwm);
 }

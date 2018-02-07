@@ -7,9 +7,9 @@
 
 #include "Com/OrderManager.h"
 
-//Initialisation de la Serie
+
 void setup() {
-	/*serie*/
+	/* Série */
 	Serial.begin(115200);
     Serial.flush();
 	Serial.println("Série OK");
@@ -18,19 +18,20 @@ void setup() {
 	pinMode(30, OUTPUT);
     digitalWrite(30, HIGH);
 
-    /*Actuators*/
-		/*Pompe*/
+    /* Actuators */
+    // Par sécurité on met tout les actuators à LOW quand on les initialise
+		/* Pompe */
 	pinMode(PIN_PWM_POMPE,OUTPUT);
     digitalWrite(PIN_PWM_POMPE,LOW);
 
-        /*Electrovanne*/
+        /* Electrovanne */
     pinMode(PIN_ELECTROVANNE_AV,OUTPUT);
     digitalWrite(PIN_ELECTROVANNE_AV,LOW);
     pinMode(PIN_ELECTROVANNE_AR,OUTPUT);
     digitalWrite(PIN_ELECTROVANNE_AR,LOW);
 }
 
-/* Interruptions1 d'asservissements */
+/* Interruptions d'asservissements */
 void motionControlInterrupt() {
 	static MotionControlSystem &motionControlSystem = MotionControlSystem::Instance();
 	motionControlSystem.updateTicks();
@@ -39,12 +40,17 @@ void motionControlInterrupt() {
 	motionControlSystem.manageStop();
 }
 
-//Boucle principale, gere entre autres la communication avec le HL
+/**
+ * Boucle principale, y est géré:
+ * La communication HL
+ * Les capteurs
+ * Divers initialisations et instanciations
+ */
 void loop(){
     delay(1000);
     OrderManager& orderMgr = OrderManager::Instance();
 
-    /*AX12 initialisation*/
+    /* AX12 initialisation */
     orderMgr.execute("rlbAv");
 	orderMgr.execute("rlbAr");
     delay(1000);
@@ -76,7 +82,7 @@ void loop(){
     /* MotionControlSystem */
     IntervalTimer motionControlInterruptTimer;
     motionControlInterruptTimer.priority(253);
-    motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); //asservissements
+    motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); // Setup de l'interruption d'asservissement
 
     while (true) {
         orderMgr.refreshUS();

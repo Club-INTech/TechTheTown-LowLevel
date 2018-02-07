@@ -36,33 +36,42 @@ void ActuatorsMgr::setAX12GSpeed(unsigned int groupId, uint16_t speed)
 }
 
 bool ActuatorsMgr::togglePumpState(bool newState)
+/**
+ * Change le mode de la pompe, sous condition
+ * @param newState : État désiré de la pompe
+ * @return : Faux si la pompe ne peut pas être allumée
+ */
 {
-    if (newState && (isElecVanneAVOpen+isElecVanneAROpen))
+    if (newState && (isElecVanneAVOpen+isElecVanneAROpen))  // Si on veut allumer la pompe avec des électrovannes ouvertes
     {
         digitalWrite(PIN_PWM_POMPE,HIGH);
         isPumpOn = true;
-        return(true);
+        return(true);                                       // On allume la pompe
     }
     else
     {
         digitalWrite(PIN_PWM_POMPE,LOW);
-        isPumpOn = false;
-        return(isElecVanneAVOpen+isElecVanneAROpen);
+        isPumpOn = false;                                   // Sinon on l'éteint
+        return(isElecVanneAVOpen+isElecVanneAROpen);        // Et on retourne vrai si les électrovannes étaient ouvetes
     }
 }
 
 void ActuatorsMgr::setElecVanneAV(bool newState)
+/**
+ * On change l'état de  l'électrovanne avant, en coupant la pompe si besoin
+ * @param newState : Nouvel état
+ */
 {
-    if (newState)
+    if (newState)                                   // Si on veut l'allumer, pas de vérifications
     {
         digitalWrite(PIN_ELECTROVANNE_AV,HIGH);
         isElecVanneAVOpen = true;
     }
     else
     {
-        if(isPumpOn && !isElecVanneAROpen)
+        if(isPumpOn && !isElecVanneAROpen)          // Si on veut l'éteindre, on vérifie que ce n'est pas la dernière
         {
-            digitalWrite(PIN_PWM_POMPE,LOW);
+            digitalWrite(PIN_PWM_POMPE,LOW);        // Si oui, on éteint la pompe
             isPumpOn = false;
         }
         digitalWrite(PIN_ELECTROVANNE_AV,LOW);
@@ -70,17 +79,21 @@ void ActuatorsMgr::setElecVanneAV(bool newState)
     }
 }
 void ActuatorsMgr::setElecVanneAR(bool newState)
+/**
+ * On change l'état de l'électrovanne arrière, en coupant la pompe si besoin
+ * @param newState : Nouvel état
+ */
 {
-    if (newState)
+    if (newState)                                   // Si on veut l'allumer, pas de vérifications
     {
         digitalWrite(PIN_ELECTROVANNE_AR,HIGH);
         isElecVanneAROpen = true;
     }
     else
     {
-        if(isPumpOn && !isElecVanneAVOpen)
+        if(isPumpOn && !isElecVanneAVOpen)          // Si on veut l'éteindre, on vérifie que ce n'est pas la dernière
         {
-            digitalWrite(PIN_PWM_POMPE,LOW);
+            digitalWrite(PIN_PWM_POMPE,LOW);        // Si oui, on éteint la pompe
             isPumpOn = false;
         }
         digitalWrite(PIN_ELECTROVANNE_AR,LOW);

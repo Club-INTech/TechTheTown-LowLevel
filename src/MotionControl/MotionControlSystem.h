@@ -10,15 +10,15 @@
 #include "Utils/defines.h"
 #include "MotionControl/Encoder.h"
 
-enum MOVING_DIRECTION { FORWARD, BACKWARD, NONE };
+volatile enum MOVING_DIRECTION { FORWARD, BACKWARD, NONE };
 
 class MotionControlSystem : public Singleton<MotionControlSystem>
 {
 public:
 	enum RotationWay {
-		FREE, //Sens correspondant au chemin le plus court
-		TRIGO,//Sens Trigo(vers la gauche
-		ANTITRIGO// Bah c'est dans l'autre sens
+		FREE,               //Sens correspondant au chemin le plus court
+		TRIGO,              //Sens Trigo (vers la gauche)
+		ANTITRIGO           //Bah c'est dans l'autre sens
 	};
 
 	volatile bool translation;
@@ -43,7 +43,7 @@ private:
 	* 			Pour les distances		: ticks
 	* 			Pour les vitesses		: ticks/seconde
 	* 			Pour les accélérations	: ticks/seconde^2
-	* 			Ces unités seront vraies pour une fréquence d'asservissement de 2kHz,
+	* 			Ces unités seront vraies pour une fréquence d'asservissement de 1kHz,
 	* 			si l'on souhaite changer la fréquence d'asservissement il faut adapter le calcul de la vitesse
 	* 			autrement les unités ci-dessus ne seront plus valables.
 	*/
@@ -70,74 +70,73 @@ private:
 
 											  //	Asservissement en position : rotation
 	PID rotationPID;
-	volatile int32_t rotationSetpoint;        // angle absolu vis� (en ticks)
+	volatile int32_t rotationSetpoint;        // angle absolu visé (en ticks)
 	volatile int32_t currentAngle;            // ticks
 	volatile int32_t rotationSpeed;            // ticks/seconde
 
 											   //	Limitation de vitesses
 	volatile int32_t maxSpeed;                // definit la vitesse maximal des moteurs du robot
-	volatile int32_t maxSpeedTranslation;    // definit la consigne max de vitesse de translation envoi�e au PID (trap�ze)
-	volatile int32_t maxSpeedRotation;        // definit la consigne max de vitesse de rotation envoi�e au PID (trap�ze)
+	volatile int32_t maxSpeedTranslation;    // definit la consigne max de vitesse de translation envoiée au PID (trapèze)
+	volatile int32_t maxSpeedRotation;        // definit la consigne max de vitesse de rotation envoiée au PID (trapèze)
 
-											  //	Limitation d'acc�l�ration
+											  //	Limitation d'accélération
 	volatile int8_t maxAcceleration;
 	volatile int8_t maxDeceleration;
 
 
-	//	Pour faire de jolies courbes de r�ponse du syst�me, la vitesse moyenne c'est mieux !
+	//	Pour faire de jolies courbes de réponse du système, la vitesse moyenne c'est mieux !
 	Average<int32_t, AVERAGE_SPEED_SIZE> averageLeftSpeed;
 	Average<int32_t, AVERAGE_SPEED_SIZE> averageRightSpeed;
 
-	//Moyennes de la d�riv�e des erreurs (pour detecter blocages)
+	//Moyennes de la dérivée des erreurs (pour detecter blocages)
 	Average<int32_t, AVERAGE_DERIVATIVE_SIZE> averageLeftDerivativeError;
 	Average<int32_t, AVERAGE_DERIVATIVE_SIZE> averageRightDerivativeError;
 
 
 
 	/*
-	* 	Variables de positionnement haut niveau (exprimm�es en unit�s pratiques ^^)
+	* 	Variables de positionnement haut niveau (exprimmées en unités pratiques ^^)
 	*
 	*	Pingu <3
 	*
-	* 	Toutes ces variables sont initialis�es � 0. Elles doivent donc �tre r�gl�es ensuite
-	* 	par le haut niveau pour correspondre � son syst�me de coordonn�es.
-	* 	Le bas niveau met � jour la valeur de ces variables et les
+	* 	Toutes ces variables sont initialisées à 0. Elles doivent donc être réglées ensuite
+	* 	par le haut niveau pour correspondre à son système de coordonnées.
+	* 	Le bas niveau met à jour la valeur de ces variables et les
 	*/
 	volatile float x;                // Positionnement 'x' (mm)
 	volatile float y;                // Positionnement 'y' (mm)
 	volatile float originalAngle;    // Angle d'origine	  (radians)
-									 // 'originalAngle' repr�sente un offset ajout� � l'angle courant pour que nos angles en radians co�ncident avec la repr�sentation haut niveau des angles.
-
-									 // Variables d'�tat du mouvement
+									 // 'originalAngle' représente un offset ajouté à l'angle courant pour que nos angles en radians coïncident avec la représentation haut niveau des angles.
+    // Variables d'état du mouvement
 	volatile bool moving;
 	volatile bool wasMoving;
 	volatile MOVING_DIRECTION direction;
 	volatile bool moveAbnormal;
 	volatile bool moveAbnormalSent;
 
-	// Variables d'activation des diff�rents PID
+	// Variables d'activation des différents PID
 	volatile bool translationControlled;
 	volatile bool rotationControlled;
 	volatile bool leftSpeedControlled;
 	volatile bool rightSpeedControlled;
 
-	volatile bool forcedMovement; // Si true, alors pas de gestion de l'arret : ON FORCE MODAFUCKA !!!
+	volatile bool forcedMovement;   // Si true, alors pas de gestion de l'arret : ON FORCE MODAFUCKA !!!
 
-								  // Variables de r�glage de la d�tection de blocage physique
-	unsigned int delayToStop;  //En ms
+                                    // Variables de réglage de la détection de blocage physique
+	unsigned int delayToStop;       //En ms
 
-	//Nombre de ticks de tol�rance pour consid�rer qu'on est arriv� � destination
+	//Nombre de ticks de tolérance pour considérer qu'on est arrivé à destination
 	int toleranceTranslation;
 	int toleranceRotation;
 
-	int toleranceSpeed; // Tol�rance avant de consid�rer le mouvement anormal (�cart entre la consigne de vitesse et la vitesse r�elle)
-	int toleranceSpeedEstablished; // Tol�rance autour de la vitesse �tablie avant de capter un blocage
+	int toleranceSpeed;             // Tolérance avant de considérer le mouvement anormal (écart entre la consigne de vitesse et la vitesse réelle)
+	int toleranceSpeedEstablished;  // Tolérance autour de la vitesse établie avant de capter un blocage
 
 	int toleranceDifferentielle;
 
-	int delayToEstablish; // Temps � attendre avant de consid�rer la vitesse stable
+	int delayToEstablish;           // Temps à attendre avant de considérer la vitesse stable
 
-	bool isPhysicallyStopped();//Indique si le robot est immobile.
+	bool isPhysicallyStopped();     //Indique si le robot est immobile.
 	bool isLeftWheelSpeedAbnormal();
 	bool isRightWheelSpeedAbnormal();
 
@@ -152,16 +151,16 @@ public:
     void updateTicks();
 
 	/* Asservissement */
-		//LA fonction d'asservissement
+    //LA fonction d'asservissement
 	void control();
 	bool controlled;
-		//Vitesse
 
+    /* Vitesse */
 	void setLeftSpeedTunings(float, float, float);
 	void setRightSpeedTunings(float, float, float);
-	void getPWMS(uint16_t & left, uint16_t & right);
+	void getPWMS(int32_t & left, int32_t & right);
 	void getSpeedErrors(float & leftProp, float & leftIntegral, float & leftDerivative, float & rightProp, float & rightIntegral, float & rightDerivative);
-	void rawWheelSpeed(uint16_t speed, uint16_t& leftsetpoint, uint16_t& rightsetpoint);
+	void rawWheelSpeed(uint16_t speed, int32_t& leftsetpoint, int32_t& rightsetpoint);
 	void getSpeedSetpoints(int32_t & left, int32_t & right);
 	void printValues();
 	void getTranslationTunings(float &, float &, float &) const;
@@ -169,9 +168,7 @@ public:
 	void getRotationTunings(float &, float &, float &) const;
     void getRotationErrors(float& rotaProp, float& rotaIntegral, float& rotaDerivative);
 
-		//Position & orientation
-
-
+    /* Position & orientation */
 	void setTranslationTunings(float, float, float);
 	void setRotationTunings(float, float, float);
 	void getLeftSpeedTunings(float &, float &, float &) const;

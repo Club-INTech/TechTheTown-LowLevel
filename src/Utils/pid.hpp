@@ -138,9 +138,9 @@ private:
 	float ki;
 	float kd;
 
-	volatile int32_t* input; //Valeur du codeur
-	volatile int32_t* output; //Output : pwm
-	volatile int32_t* setPoint; //Valeur � atteindre
+	volatile int32_t* input; 	//Valeur du codeur
+	volatile int32_t* output; 	//Output : pwm
+	volatile int32_t* setPoint; //Valeur à atteindre
 
 	int32_t epsilon;
 	int32_t outMin, outMax;
