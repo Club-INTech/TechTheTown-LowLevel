@@ -72,36 +72,36 @@ void loop(){
     motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); // Setup de l'interruption d'asservissement
 
 
-    orderMgr.execute("kpt 2.8"); //5.5 sur 1m;4 sur 0.4m;2.8 sur 0.1m
-    orderMgr.execute("kit 0");
-    orderMgr.execute("kdt 0");
+//    orderMgr.execute("kpt 2.8"); //5.5 sur 1m;4 sur 0.4m;2.8 sur 0.1m
+//    orderMgr.execute("kit 0");
+//    orderMgr.execute("kdt 0");
 //    orderMgr.execute("kpr 3");
 //    orderMgr.execute("kir 0");
 //    orderMgr.execute("kdr 0");
-//    orderMgr.execute("ct0");
-//    orderMgr.execute("cr0");
-//    orderMgr.execute("monthlery");
-//    orderMgr.execute("kpg 0.175");
-//    orderMgr.execute("kig 0.0003");
-//    orderMgr.execute("kdg 0.65"); //0.65
-//    orderMgr.execute("kpd 0.18");
-//    orderMgr.execute("kid 0.0003");
-//    orderMgr.execute("kdd 0.45"); //0.45
+    orderMgr.execute("ct0");
+    orderMgr.execute("cr0");
+    orderMgr.execute("monthlery");
+    orderMgr.execute("kpg 0.175");
+    orderMgr.execute("kig 0.0003");
+    orderMgr.execute("kdg 1"); //0.65
+    orderMgr.execute("kpd 0.18");
+    orderMgr.execute("kid 0.0003");
+    orderMgr.execute("kdd 0.8"); //0.45
 //    orderMgr.execute("t pi");
     for(int i=0;i<500;i++)
     {
         if(i==20)
         {
-            orderMgr.execute("d 1000");
+//            orderMgr.execute("d 1000");
 //            orderMgr.execute("t pi");
-//            orderMgr.execute("av");
+            orderMgr.execute("av");
 //            orderMgr.execute("rawpwm 150");
         }
         orderMgr.execute("rawposdata");
         delay(10);
     }
+    orderMgr.execute("sstop");
     delay(1000);
-//    orderMgr.execute("sstop");
 //    for(int i = 0;i<20;i++)
 //    {
 //        orderMgr.execute("rawpostdata");
@@ -111,7 +111,7 @@ void loop(){
 //    orderMgr.execute("rc");
 //    delay(130*10);
 //    orderMgr.execute("sstop");
-    orderMgr.execute("d -1000");
+//    orderMgr.execute("d -1000");
 //    orderMgr.execute("t 0");
 //    orderMgr.execute("rawpwm 0");
 //    for(int i=0;i<600/1;i++)
