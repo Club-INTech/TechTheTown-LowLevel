@@ -1,9 +1,9 @@
 #include "utils.h"
 
 /*
- * La fonction '%' du langage C ne renvoie pas le modulo au sens mathématique du terme.
- * En réalité pour (a % b) il fait ( ABS(a) % b)*SIGNE(a)
- * Voici donc pour votre plus grand plaisir, la fonction modulo mathématiquement CORRECTE.
+ * La fonction '%' du langage C ne renvoie pas le modulo au sens mathÃ©matique du terme.
+ * En rÃ©alitÃ© pour (a % b) il fait ( ABS(a) % b)*SIGNE(a)
+ * Voici donc pour votre plus grand plaisir, la fonction modulo mathÃ©matiquement CORRECTE.
  *
  * De rien, c'est gratuit.
  *

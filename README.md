@@ -72,16 +72,23 @@ Au boulot les 1As !
 |    AXGm   |             Envoi un groupe à un α en °            |
 |    AXs    |            Modifie la vitesse d'un AX12            |
 |    AXGs   |           Modifie la vitesse d'un groupe           |
+|    albl   |              Active les bras latéraux              |
 |    alp    |                  Active la pompe                   |
 |    dlp    |                 Désactive la pompe                 |
-|    blb    |                   Baisse le bras                   |
-|    rlb    |                   Relève le bras                   |
-|    albl   |              Active les bras latéraux              |
-|    flp    |                   Ferme la porte                   |
-|    olp    |                   Ouvre la porte                   |
-|    tlp    |                   Tilt la porte                    |
-
-
+|   blbAv   |                Baisse le bras avant                |
+|   rlbAv    |                Relève le bras avant                |
+|   flpAv   |                Ferme la porte avant                |
+|   olpAv   |                Ouvre la porte avant                |
+|   tlpAv   |                Tilt la porte avant                 |
+|    aeAv   |            Active l'électrovanne avant             |
+|    deAv   |           Désactive l'électrovanne avant           |
+|   blbAr   |               Baisse le bras arrière               |
+|   rlbAr   |               Relève le bras arrière               |
+|   flpAr   |               Ferme la porte arrière               |
+|   olpAr   |               Ouvre la porte arrière               |
+|   tlpAr   |               Tilt la porte arrière                |
+|    aeAr   |           Active l'électrovanne arrière            |
+|    deAr   |          Désactive l'électrovanne arrière          |
 
 
 ### ORDRES SPECIFIQUES LL

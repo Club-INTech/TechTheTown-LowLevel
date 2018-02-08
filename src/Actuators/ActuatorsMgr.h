@@ -34,7 +34,14 @@ public:
 
 	//Contrôle de la pompe
 
-	void setPumpState(bool);
+    bool isPumpOn;
+	bool togglePumpState(bool);
+
+    //Contrôle des électrovannes
+    bool isElecVanneAVOpen;
+    bool isElecVanneAROpen;
+    void setElecVanneAV(bool);
+    void setElecVanneAR(bool);
 
 };
 

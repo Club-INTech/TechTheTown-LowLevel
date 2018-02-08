@@ -18,6 +18,10 @@
 #include "DynamixelInterface.h"
 #include "DynamixelMotor.h"
 
+/**
+ * Classe de gestion des AX12
+ * Les garde en mémoire et permet de les contrôler
+ */
 
 class DynamixelMgr : public Singleton<DynamixelMgr>
 {
@@ -50,8 +54,8 @@ class DynamixelMgr : public Singleton<DynamixelMgr>
     bool checkIfAX(int);
 
     void addAX12Group();
-    bool populateAX12Group(int, int, DynSym);
-    bool populateAX12Group(int, int, uint16_t, DynSym);
+    bool populateAX12Group(unsigned int, int, DynSym);
+    bool populateAX12Group(unsigned int, int, uint16_t, DynSym);
 
 };
 

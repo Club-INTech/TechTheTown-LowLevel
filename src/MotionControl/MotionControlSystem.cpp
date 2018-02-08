@@ -35,28 +35,28 @@ MotionControlSystem::MotionControlSystem() :
 	leftSpeedPID.setOutputLimits(-255, 255);
 	rightSpeedPID.setOutputLimits(-255, 255);
 
-    maxSpeed = 10000; //5000;
-    maxSpeedTranslation = 5000; //4000;
-    maxSpeedRotation = 5000; //2800;
 
-	delayToStop = 100; // temps a l'arret avant de considerer un blocage
+    maxSpeed = 10000;				// Limite globale de la vitesse (Rotation + Translation)
+    maxSpeedTranslation = 5000;
+    maxSpeedRotation = 5000;
+
+
+	delayToStop = 100;              // Temps a l'arret avant de considérer un blocage
 	toleranceTranslation = 15;
 	toleranceRotation = 3;
 	toleranceSpeed = 40;
-	toleranceSpeedEstablished = 50; // Doit etre la plus petite possible, sans bloquer les trajectoires courbes 50
+	toleranceSpeedEstablished = 50; // Doit être la plus petite possible, sans bloquer les trajectoires courbes 50
 	delayToEstablish = 100;
-	toleranceDifferentielle = 500; // Pour les trajectoires "normales", verifie que les roues ne font pas nawak chacunes de leur cote.
-
-//  PIDs de test d'asserv'
-
-	translationPID.setTunings(2.8, 0, 0);
-	rotationPID.setTunings(3, 0, 0);
-	leftSpeedPID.setTunings(0.175,0.0003,0.65);
-	rightSpeedPID.setTunings(0.18,0.0003,0.45);
+	toleranceDifferentielle = 500;  // Pour les trajectoires "normales", verifie que les roues ne font pas nawak chacunes de leur cote.
 
 
+	translationPID.setTunings(10,0,50);
+	rotationPID.setTunings(17,0,100);
+	leftSpeedPID.setTunings(0.11,0,0.005);
+	rightSpeedPID.setTunings(0.11,0,0.005);
 
-	maxAcceleration = 10; //10;
+
+	maxAcceleration = 10;
 
 	leftMotor.init();
 	rightMotor.init();
@@ -77,7 +77,14 @@ void MotionControlSystem::updateTicks(){
     leftTicks = leftEncoder.read();
     rightTicks = rightEncoder.read();
 }
-void MotionControlSystem::control() {
+
+void MotionControlSystem::control()
+/**
+ * LA fonction de l'asservissement
+ * Contrôle les dépassements par rapport aux limites imposées (Vitesse, accélération)
+ * Met à jour la position et l'angle
+ */
+{
 	if (controlled) {
 
 		// Pour le calcul de la vitesse instantanee :
@@ -102,8 +109,8 @@ void MotionControlSystem::control() {
 		averageLeftDerivativeError.add(ABS(leftSpeedPID.getDerivativeError()));		// Mise à jour des moyennes de dérivées de l'erreur (pour les blocages)
 		averageRightDerivativeError.add(ABS(rightSpeedPID.getDerivativeError()));
 
-		currentLeftSpeed = averageLeftSpeed.value(); // On utilise pour l'asserv la valeur moyenne des dernieres current Speed
-		currentRightSpeed = averageRightSpeed.value(); // sinon le robot il fait nawak.
+		currentLeftSpeed = averageLeftSpeed.value();                                // On utilise pour l'asserv la valeur moyenne des dernieres current Speed
+		currentRightSpeed = averageRightSpeed.value();                              // Sinon le robot il fait nawak.
 
 		currentDistance = (leftTicks + rightTicks) / 2;
 		currentAngle = ((rightTicks - currentDistance)*DISTANCE_COD_GAUCHE_CENTRE / DISTANCE_COD_DROITE_CENTRE - (leftTicks - currentDistance)) / 2;
@@ -323,7 +330,8 @@ void MotionControlSystem::resetPosition()
 */
 
 
-void MotionControlSystem::orderTranslation(int32_t mmDistance) {
+void MotionControlSystem::orderTranslation(int32_t mmDistance)
+{
 
     if(mmDistance<300)
     {
@@ -351,7 +359,13 @@ void MotionControlSystem::orderTranslation(int32_t mmDistance) {
 }
 
 
-void MotionControlSystem::orderRotation(float targetAngleRadian, RotationWay rotationWay) {
+void MotionControlSystem::orderRotation(float targetAngleRadian, RotationWay rotationWay)
+/**
+ * Ordre de rotation
+ * @param targetAngleRadian : Angle cible
+ * @param rotationWay : Stratégie de rotation (FREE, TRIGO, ANTITRIGO)
+ */
+{
 
 	static int32_t deuxPiTick = (int32_t)(2 * PI / TICK_TO_RADIAN);
 	static int32_t piTick = (int32_t)(PI / TICK_TO_RADIAN);
@@ -429,6 +443,7 @@ void MotionControlSystem::stop() {
 	//Arrete les moteurs
 	leftMotor.run(0);
 	rightMotor.run(0);
+
 	//Remet à zéro les erreurs
 	translationPID.resetErrors();
 	rotationPID.resetErrors();
@@ -493,7 +508,7 @@ void MotionControlSystem::setRawNullSpeed() {
 
 float MotionControlSystem::getAngleRadian() const
 {
-	return (currentAngle * TICK_TO_RADIAN + originalAngle);
+	return(currentAngle * TICK_TO_RADIAN + originalAngle);
 }
 
 void MotionControlSystem::setOriginalAngle(float newAngle)
@@ -547,6 +562,7 @@ void MotionControlSystem::setRotationSpeed(float raw_speed)
 	}
 }
 
+/* Getter des réglages du PID en translation */
 void MotionControlSystem::getTranslationTunings(float &kp, float &ki, float &kd) const {
 	kp = translationPID.getKp();
 	ki = translationPID.getKi();
@@ -557,6 +573,8 @@ void MotionControlSystem::getTranslationErrors(float& translationProp, float& tr
     translationIntegral = translationPID.getIntegralErrol()*TICK_TO_MM;
     translationDerivative = translationPID.getDerivativeError()*TICK_TO_MM;
 }
+
+/* Getter des réglages de PID en rotation */
 void MotionControlSystem::getRotationTunings(float &kp, float &ki, float &kd) const {
 	kp = rotationPID.getKp();
 	ki = rotationPID.getKi();
@@ -567,6 +585,8 @@ void MotionControlSystem::getRotationErrors(float& rotaProp, float& rotaIntegral
     rotaIntegral = rotationPID.getIntegralErrol()*TICK_TO_RADIAN;
     rotaDerivative = rotationPID.getDerivativeError()*TICK_TO_RADIAN;
 }
+
+/* Getters des réglages de PID de vitesse */
 void MotionControlSystem::getLeftSpeedTunings(float &kp, float &ki, float &kd) const {
 	kp = leftSpeedPID.getKp();
 	ki = leftSpeedPID.getKi();
@@ -577,12 +597,16 @@ void MotionControlSystem::getRightSpeedTunings(float &kp, float &ki, float &kd) 
 	ki = rightSpeedPID.getKi();
 	kd = rightSpeedPID.getKd();
 }
+
+/* Getters de vitesse */
 float MotionControlSystem::getLeftSpeed() {
     return(currentLeftSpeed*TICK_TO_MM);
 }
 float MotionControlSystem::getRightSpeed() {
     return(currentRightSpeed*TICK_TO_MM);
 }
+
+/* Setters des réglages de PID */
 void MotionControlSystem::setTranslationTunings(float kp, float ki, float kd) {
 	translationPID.setTunings(kp, ki, kd);
 }
@@ -596,7 +620,7 @@ void MotionControlSystem::setRightSpeedTunings(float kp, float ki, float kd) {
 	rightSpeedPID.setTunings(kp, ki, kd);
 }
 
-void MotionControlSystem::getPWMS(uint16_t& left, uint16_t& right) {
+void MotionControlSystem::getPWMS(int32_t& left, int32_t& right) {
 	left = leftPWM;
 	right = rightPWM;
 }
@@ -611,7 +635,14 @@ void MotionControlSystem::getSpeedErrors(float& leftProp, float& leftIntegral, f
 	rightDerivative = rightSpeedPID.getDerivativeError();
 }
 
-void MotionControlSystem::rawWheelSpeed(uint16_t speed, uint16_t& leftOut,uint16_t& rightOut) {
+void MotionControlSystem::rawWheelSpeed(uint16_t speed, int32_t& leftOut,int32_t& rightOut)
+/**
+ * Envoie une vitesse brute aux moteurs
+ * @param speed : Vitesse cible
+ * @param leftOut : Variable pour récupérer la vitesse actuelle (Gauche)
+ * @param rightOut : Variable pour récupérer la vitesse actuelle (Droite)
+ */
+{
 	controlled = false;
 	translationControlled = false;
 	rotationControlled = false;
@@ -631,7 +662,7 @@ void MotionControlSystem::rawWheelSpeed(uint16_t speed, uint16_t& leftOut,uint16
 		currentLeftSpeed = (leftTicks - previousLeftTicks) * MC_FREQUENCY;
 		currentRightSpeed = (rightTicks - previousRightTicks) * MC_FREQUENCY;
 
-		averageLeftSpeed.add(currentLeftSpeed);										//Mise à jour des moyennes des vitesses
+		averageLeftSpeed.add(currentLeftSpeed);										// Mise à jour des moyennes des vitesses
 		averageRightSpeed.add(currentRightSpeed);
 
 		previousLeftTicks = leftTicks;
@@ -640,8 +671,8 @@ void MotionControlSystem::rawWheelSpeed(uint16_t speed, uint16_t& leftOut,uint16
 		averageLeftDerivativeError.add(ABS(leftSpeedPID.getDerivativeError()));		// Mise à jour des moyennes de dérivées de l'erreur (pour les blocages)
 		averageRightDerivativeError.add(ABS(rightSpeedPID.getDerivativeError()));
 
-		currentLeftSpeed = averageLeftSpeed.value(); // On utilise pour l'asserv la valeur moyenne des dernieres current Speed
-		currentRightSpeed = averageRightSpeed.value(); // sinon le robot il fait nawak.
+		currentLeftSpeed = averageLeftSpeed.value();                                // On utilise pour l'asserv la valeur moyenne des dernieres current Speed
+		currentRightSpeed = averageRightSpeed.value();                              // Sinon le robot il fait nawak.
 
 
 		leftSpeedPID.compute();

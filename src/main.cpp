@@ -7,9 +7,9 @@
 
 #include "Com/OrderManager.h"
 
-//Initialisation de la Serie
+
 void setup() {
-	/*serie*/
+	/* Série */
 	Serial.begin(115200);
     Serial.flush();
 	Serial.println("Série OK");
@@ -18,12 +18,20 @@ void setup() {
 	pinMode(30, OUTPUT);
     digitalWrite(30, HIGH);
 
-    /*Actuators*/
-		/*Pompe*/
+    /* Actuators */
+    // Par sécurité on met tout les actuators à LOW quand on les initialise
+		/* Pompe */
 	pinMode(PIN_PWM_POMPE,OUTPUT);
+    digitalWrite(PIN_PWM_POMPE,LOW);
+
+        /* Electrovanne */
+    pinMode(PIN_ELECTROVANNE_AV,OUTPUT);
+    digitalWrite(PIN_ELECTROVANNE_AV,LOW);
+    pinMode(PIN_ELECTROVANNE_AR,OUTPUT);
+    digitalWrite(PIN_ELECTROVANNE_AR,LOW);
 }
 
-/* Interruptions1 d'asservissements */
+/* Interruptions d'asservissements */
 void motionControlInterrupt() {
 	static MotionControlSystem &motionControlSystem = MotionControlSystem::Instance();
 	motionControlSystem.updateTicks();
@@ -32,12 +40,17 @@ void motionControlInterrupt() {
 	motionControlSystem.manageStop();
 }
 
-//Boucle principale, gere entre autres la communication avec le HL
+/**
+ * Boucle principale, y est géré:
+ * La communication HL
+ * Les capteurs
+ * Divers initialisations et instanciations
+ */
 void loop(){
     delay(1000);
     OrderManager& orderMgr = OrderManager::Instance();
 
-    /*AX12 initialisation*/
+    /* AX12 initialisation */
     orderMgr.execute("rlbAv");
     orderMgr.execute("rlbAr");
     delay(1000);
@@ -52,11 +65,12 @@ void loop(){
 		digitalWrite(30,LOW);
 		delay(200);
 	}
-	
+
     /* MotionControlSystem */
     IntervalTimer motionControlInterruptTimer;
     motionControlInterruptTimer.priority(253);
-    motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); //asservissements
+    motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); // Setup de l'interruption d'asservissement
+
 
     orderMgr.execute("kpt 2.8"); //5.5 sur 1m;4 sur 0.4m;2.8 sur 0.1m
     orderMgr.execute("kit 0");
@@ -112,8 +126,8 @@ void loop(){
     Serial.println("DATAEND");
 
 
-	while (true) {
-        //orderMgr.refreshUS();
+    while (true) {
+        orderMgr.refreshUS();
         orderMgr.communicate();
         //orderMgr.sendUSData();
     }
@@ -166,29 +180,29 @@ namespace std {
 	}
 }
 
-                   /*``.           `-:--.`                                                                                                 
-                  `.-::::/.        .:::::::y                                                                                                
-                 `::::::::o``````.-::::::/h-                                                                                                
-                 `::::::::::::::::::::::/h.                                                                                                 
-                  -::::::://++++//::::::::.                                                                                                 
-               `-::::/oso+/:-....--://:::::-.``.---:`                                                                                       
-      ````   .-:::/so/-      ``````  `.:::::::::::::+ ``````````````````````````````````````````````````````````````````````                
-    `-:::::--:::os+.       `/sssssss`   ./syyyyyys+/y+sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssy- `-:::://      
-   `-:::::::::+y/`        .shhhhhdd:   `/hhhhhhhhhdo:/dddddddddddddddddhhhhhhhdddddddddddddddddddddddddddddddddddddddddddddo`.:////sy.      
-   ::::::::::so`         :yhhhhhmy`   .ohhhhhhhhhhd  `//oooooo+//////+hhhhhhdd+///////+++++++/////////////////+++++++/////-`-////+h+` `     
+                   /*``.           `-:--.`
+                  `.-::::/.        .:::::::y
+                 `::::::::o``````.-::::::/h-
+                 `::::::::::::::::::::::/h.
+                  -::::::://++++//::::::::.
+               `-::::/oso+/:-....--://:::::-.``.---:`
+      ````   .-:::/so/-      ``````  `.:::::::::::::+ ``````````````````````````````````````````````````````````````````````
+    `-:::::--:::os+.       `/sssssss`   ./syyyyyys+/y+sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssy- `-:::://
+   `-:::::::::+y/`        .shhhhhdd:   `/hhhhhhhhhdo:/dddddddddddddddddhhhhhhhdddddddddddddddddddddddddddddddddddddddddddddo`.:////sy.
+   ::::::::::so`         :yhhhhhmy`   .ohhhhhhhhhhd  `//oooooo+//////+hhhhhhdd+///////+++++++/////////////////+++++++/////-`-////+h+` `
    `://:::::y/         `+hhhhhdm+    -yhhhhhdhhhhhm`  `oyyyyyhs     .shhhhhdh-  ``.-:::////:::-.       ``.-::::////::://  `://///o+:::::::-.
       `::::y/         .shhhhhdh-   `+hhhhhdd+shhhhd- -yhhhhhmo`    /yhhhhhms` .-://+ssso+++/////o   `.:://+ossoo+++o+oy- -/////+ssoo+//////h
       .:::/y         :yhhhhhms`   .shhhhhdy::hhhhhho+hhhhhdd:    `ohhhhhdd/ .:///oyo::-----////oy `-:///oyo:.`      `-``:////oy+-` `:////+h:
-      -:::o:       `+hhhhhdm/    :yhhhhddo:::+hhhhhhhhhhhms.    -yhhhhhdh. -////yo.`ooooooooooss``:////yo.            -/////yo`   .:////ys. 
-   ``.::::+-      .shhhhhdh-   `+hhhhhdd/::::/hhhhhhhhhdd/     /hhhhhhmo` `/////s```..----:+:..  -/////o``````..:.  `:////oh:   `-////+h/   
-`.-::::::::+     :yhhhhhms`   .shhhhhmy:::::::hhhhhhhhdh.    `ohhhhhdd:    :++////:::///+oys`    `/++/////://++yo` .:////ys`   .:////ys.    
--::::::::::/-    /oooooo/     -sssyyyo:+o/++//hyssssss+`     .sssssss.      `-/++oooo++//:.        .:/+oooo++/:-   /ooooo:     :ooooo/      
-.:::::/o:::::-`               `.--:::os+```.---                                                                                             
- :+ooo/.`::::::-..`````````.--::::+ss:`                                                                                                     
-  ``     `-/::::::::::::::::::::::s.                                                                                                        
-          `:::::::::::://+::::::::o-                                                                                                        
-         `:::::::/h////::.-:::::::y-                                                                                                        
-         :::::::ss`        -:/+sso:                                                                                                         
+      -:::o:       `+hhhhhdm/    :yhhhhddo:::+hhhhhhhhhhhms.    -yhhhhhdh. -////yo.`ooooooooooss``:////yo.            -/////yo`   .:////ys.
+   ``.::::+-      .shhhhhdh-   `+hhhhhdd/::::/hhhhhhhhhdd/     /hhhhhhmo` `/////s```..----:+:..  -/////o``````..:.  `:////oh:   `-////+h/
+`.-::::::::+     :yhhhhhms`   .shhhhhmy:::::::hhhhhhhhdh.    `ohhhhhdd:    :++////:::///+oys`    `/++/////://++yo` .:////ys`   .:////ys.
+-::::::::::/-    /oooooo/     -sssyyyo:+o/++//hyssssss+`     .sssssss.      `-/++oooo++//:.        .:/+oooo++/:-   /ooooo:     :ooooo/
+.:::::/o:::::-`               `.--:::os+```.---
+ :+ooo/.`::::::-..`````````.--::::+ss:`
+  ``     `-/::::::::::::::::::::::s.
+          `:::::::::::://+::::::::o-
+         `:::::::/h////::.-:::::::y-
+         :::::::ss`        -:/+sso:
          .:/++sy:          `//*/
 
 
@@ -216,4 +230,3 @@ namespace std {
 	 	~;_  >- . . -<  _i~
 	 	  `'         `'
 */
-
