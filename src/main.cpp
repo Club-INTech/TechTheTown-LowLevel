@@ -47,8 +47,8 @@ void motionControlInterrupt() {
  * Divers initialisations et instanciations
  */
 void loop(){
-    delay(1000);
     OrderManager& orderMgr = OrderManager::Instance();
+    digitalWrite(30,LOW);
 
     /* AX12 initialisation */
     orderMgr.execute("rlbAv");
@@ -74,9 +74,9 @@ void loop(){
     for(int i=0;i<10;i++)
 	{
 		digitalWrite(30,HIGH);
-		delay(200);
+		delay(150);
 		digitalWrite(30,LOW);
-		delay(200);
+		delay(150);
 	}
 
     /* MotionControlSystem */
