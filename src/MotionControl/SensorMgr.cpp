@@ -37,7 +37,6 @@ void SensorMgr::refresh()
 			}
 		}
 	}
-	return;
 }
 
 uint16_t SensorMgr::getUsTest()

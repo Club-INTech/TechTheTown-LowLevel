@@ -133,7 +133,7 @@ private:
 	OrderData orderData;
 	char readMessage[RX_BUFFER_SIZE];
 
-	//Variables booleennes pour envoi de donn�es au HL
+	//Variables booleennes pour envoi de données au HL
 	bool isSendingUS;
 
 public:

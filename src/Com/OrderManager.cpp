@@ -892,7 +892,10 @@ void OrderManager::execute(const char* orderToExecute)
 
 void OrderManager::refreshUS()
 {
-	sensorMgr.refresh();
+	if(isSendingUS)
+    {
+        sensorMgr.refresh();
+    }
 }
 
 
