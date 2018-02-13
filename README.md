@@ -7,7 +7,7 @@ Au boulot les 1As !
 - [x] Ordres Des Actionneurs
 - [ ] Asservissement
 - [x] Capteurs
-- [ ] Hooks
+- [x] Hooks
 - [x] Canal de Position (établir la fréquence d'envoie et le header associé avec le HL) & détection de fin de mouvement
 - [x] Détection des blocages physiques et transmission sur le canal Event
 - [ ] Mise en place de la basic Detection (arrêt si obstacle trop proche)
