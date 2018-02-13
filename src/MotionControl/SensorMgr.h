@@ -36,8 +36,6 @@ private:
 	bool firstMeasure = true;
 	MOVING_DIRECTION measure_direction;
 
-	void reset_measure(uint8_t new_current_measuring_us );
-
 public:
 
 	SensorMgr();
