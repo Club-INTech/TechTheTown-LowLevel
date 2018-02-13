@@ -4,7 +4,7 @@ SensorMgr::SensorMgr()
 {
 	Wire.begin();
 	distances.reserve(NBR_OF_US_CAPTOR);
-	US[0] = new SRF10(0,255,SRF10::GAIN::G100);
+//	US[0] = new SRF10(0,255,SRF10::GAIN::G100);
 	/*US[1] = new SRF10(0,255,SRF10::GAIN::G100);
 	US[2] = new SRF10(0,255,SRF10::GAIN::G100);
 	US[3] = new SRF10(0,255,SRF10::GAIN::G100);*/
@@ -12,7 +12,6 @@ SensorMgr::SensorMgr()
 	distances.push_back(0x0000);
 	distances.push_back(0x0000);
 	distances.push_back(0x0000);
-
 }
 
 void SensorMgr::refresh(MOVING_DIRECTION dir)
@@ -56,12 +55,6 @@ void SensorMgr::refresh(MOVING_DIRECTION dir)
 			}
 		}
 	}
-}
-
-uint16_t SensorMgr::getUsTest()
-{
-	//return usTEST.value();
-	return 0;
 }
 
 //Contacteurs et Jumper

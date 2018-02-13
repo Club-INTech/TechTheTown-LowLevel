@@ -41,7 +41,6 @@ public:
 	SensorMgr();
 	void refresh(MOVING_DIRECTION dir);
 
-	uint16_t getUsTest();
 	bool isJumpEngaged();
 	bool isCont1Engaged();
 };
