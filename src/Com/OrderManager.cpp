@@ -26,7 +26,7 @@ void OrderManager::communicate() {
 	memset(readMessage, 0, RX_BUFFER_SIZE);
 
 	static Metro checkMovement = Metro(10);
-    static Metro checkHooksTimer = Metro(20);
+    static Metro checkHooksTimer = Metro(1000);
 
 
 	if (checkMovement.check())
@@ -49,7 +49,7 @@ void OrderManager::communicate() {
     }
 
 
-	//Code de compilé seulement si on utilise l'ethernet
+	//Code compilé seulement si on utilise l'ethernet
 	#if !DEBUG
     static Metro sendPos = Metro(50);
 	    if (sendPos.check()) {
@@ -787,6 +787,7 @@ void OrderManager::execute(const char* orderToExecute)
             }
             if (n_param >=7)
             {
+
                 id = (uint8_t)parseInt(orderData.at(1));
                 x = (uint32_t)parseInt(orderData.at(2));
                 y = (uint32_t)parseInt(orderData.at(3));
@@ -803,6 +804,9 @@ void OrderManager::execute(const char* orderToExecute)
                 hookOrder[RX_BUFFER_SIZE - 1] = '\0';
 
                 hookList.addHook(id, x, y, r, angleHook, angleTolerance, hookOrder);
+
+                Serial.print("Ordre du hook: ");
+                Serial.println(hookOrder);
 
                 //TEST:
                 Serial.println(hookList.getHook(id).getOrder());
@@ -921,8 +925,10 @@ void OrderManager::checkHooks() {
 }
 
 void OrderManager::executeHooks() {
-	int l = hookList.getReadySize();
-	for (uint8_t i = 0; i < l; ++i) {
-		execute(hookList.getReadyHookOrder(i));
+	std::vector<String> orders = hookList.executeHooks();
+
+    for(String &order : orders)
+    {
+        execute(order.c_str());
 	}
 }

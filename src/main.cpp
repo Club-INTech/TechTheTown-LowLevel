@@ -29,6 +29,8 @@ void setup() {
     digitalWrite(PIN_ELECTROVANNE_AV,LOW);
     pinMode(PIN_ELECTROVANNE_AR,OUTPUT);
     digitalWrite(PIN_ELECTROVANNE_AR,LOW);
+
+    Serial.println("Fin du setup");
 }
 
 /* Interruptions d'asservissements */
@@ -47,6 +49,7 @@ void motionControlInterrupt() {
  * Divers initialisations et instanciations
  */
 void loop(){
+    Serial.println("Loop start");
     OrderManager& orderMgr = OrderManager::Instance();
     digitalWrite(30,LOW);
 
@@ -71,6 +74,8 @@ void loop(){
     orderMgr.execute("kid 0.0003");
     orderMgr.execute("kdd 0.45");
 
+    orderMgr.execute("nh 2 0 0 5 1.6 1.5 ?");
+
     for(int i=0;i<10;i++)
 	{
 		digitalWrite(30,HIGH);
@@ -91,8 +96,12 @@ void loop(){
     }
 }
 
-
-
+/*
+extern "C"
+{
+    void _kill(){}
+    void _getpid(){}
+}*/
 
 
 
