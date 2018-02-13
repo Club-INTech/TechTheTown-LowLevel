@@ -15,24 +15,16 @@ SensorMgr::SensorMgr()
 
 }
 
-void SensorMgr::reset_measure(uint8_t new_current_measuring_us)
-{
-	currentMeasuringUS = new_current_measuring_us;
-	firstMeasure = true;
-	highLevel.sendUS(distances);
-	std::fill(distances.begin(),distances.end(),0x00);
-}
-
 void SensorMgr::refresh(MOVING_DIRECTION dir)
 {
 	if(NBR_OF_US_CAPTOR)
 	{
 		if(!isMeasuring)
 		{
-			US[currentMeasuringUS]->request();
-			isMeasuring=true;
 			if( firstMeasure )
 			{
+				highLevel.sendUS(distances);
+				std::fill(distances.begin(),distances.end(),0x00);
 				if( dir == MOVING_DIRECTION::FORWARD || dir == MOVING_DIRECTION::NONE )
 					currentMeasuringUS=0;
 				else
@@ -40,6 +32,8 @@ void SensorMgr::refresh(MOVING_DIRECTION dir)
 				measure_direction = dir;
 				firstMeasure=false;
 			}
+			US[currentMeasuringUS]->request();
+			isMeasuring=true;
 		}
 		if( isMeasuring && US[currentMeasuringUS]->update())
 		{
@@ -50,22 +44,15 @@ void SensorMgr::refresh(MOVING_DIRECTION dir)
 				if( currentMeasuringUS < NBR_OF_US_CAPTOR/2-1 )
 					++currentMeasuringUS;
 				else
-					reset_measure(0);
+					firstMeasure = true;
 
 			}
-			else if( measure_direction == MOVING_DIRECTION::BACKWARD )
+			else
 			{
 				if( currentMeasuringUS < NBR_OF_US_CAPTOR-1 )
 					++currentMeasuringUS;
 				else
-					reset_measure(NBR_OF_US_CAPTOR/2);
-			}
-			else
-			{
-				if( currentMeasuringUS < NBR_OF_US_CAPTOR-1)
-					++currentMeasuringUS;
-				else
-					reset_measure(0);
+					firstMeasure = true;
 			}
 		}
 	}
