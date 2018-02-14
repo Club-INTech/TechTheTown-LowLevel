@@ -107,6 +107,7 @@ public:
         while ( start != end )
         {
             orders.push_back(getReadyHookOrder(*start));
+            hooks.at(*start).setActive(true);
             ++start;
         }
         readyIds.clear();
