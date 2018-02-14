@@ -26,7 +26,7 @@ void OrderManager::communicate() {
 	memset(readMessage, 0, RX_BUFFER_SIZE);
 
 	static Metro checkMovement = Metro(10);
-    static Metro checkHooksTimer = Metro(1000);
+    static Metro checkHooksTimer = Metro(20);
 
 
 	if (checkMovement.check())

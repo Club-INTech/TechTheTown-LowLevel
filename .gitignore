@@ -380,7 +380,6 @@ Supprimerait platformio.ini
 /.travis.yml
 /CMakeLists.txt
 /platformio.ini
-*.gitignore
 .idea
 .clang_complete
 .gcc-flags.json
@@ -389,3 +388,6 @@ Supprimerait platformio.ini
 .vscode/settings.json
 .vscode/tasks.json
 lib/readme.txt
+*define_debug.h
+/*/*.gitignore
+/*/*/*.gitignore
