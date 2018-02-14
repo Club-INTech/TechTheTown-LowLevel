@@ -388,6 +388,3 @@ Supprimerait platformio.ini
 .vscode/settings.json
 .vscode/tasks.json
 lib/readme.txt
-*define_debug.h
-/*/*.gitignore
-/*/*/*.gitignore
