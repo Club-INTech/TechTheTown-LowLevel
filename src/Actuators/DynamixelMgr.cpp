@@ -4,7 +4,7 @@
 
 #include "DynamixelMgr.h"
 
-DynamixelMgr::DynamixelMgr() : serialAX(DynamixelInterface(Serial1)) //Utilise la série intialisée dans la bibliothèque Dynamixel
+DynamixelMgr::DynamixelMgr() : serialAX(DynamixelInterface(Serial4)) //Utilise la série intialisée dans la bibliothèque Dynamixel
 {
     serialAX.begin(9600);               // Démarre la série
 
