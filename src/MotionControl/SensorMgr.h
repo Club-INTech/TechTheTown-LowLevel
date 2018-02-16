@@ -5,6 +5,7 @@
 
 #include <Arduino.h>
 #include <vector>
+#include <array>
 #include <algorithm>
 #include <i2c_t3.h>
 
