@@ -15,9 +15,6 @@ void setup() {
 	Serial.println("Série OK");
 	delay(250);
 
-	pinMode(30, OUTPUT);
-    digitalWrite(30, HIGH);
-
     /* Actuators */
     // Par sécurité on met tout les actuators à LOW quand on les initialise
 		/* Pompe */
@@ -51,7 +48,6 @@ void motionControlInterrupt() {
 void loop(){
     Serial.println("Loop start");
     OrderManager& orderMgr = OrderManager::Instance();
-    digitalWrite(30,LOW);
 
     /* AX12 initialisation */
     orderMgr.execute("rlbAv");
@@ -73,16 +69,6 @@ void loop(){
     orderMgr.execute("kpd 0.18");
     orderMgr.execute("kid 0.0003");
     orderMgr.execute("kdd 0.45");
-
-    orderMgr.execute("nh 2 0 0 5 1.6 1.5 ?");
-
-    for(int i=0;i<10;i++)
-	{
-		digitalWrite(30,HIGH);
-		delay(150);
-		digitalWrite(30,LOW);
-		delay(150);
-	}
 
     /* MotionControlSystem */
     IntervalTimer motionControlInterruptTimer;
