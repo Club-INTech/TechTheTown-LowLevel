@@ -25,6 +25,7 @@ constexpr char EVENT_HEADER[2] = {0x14,0x17};
 constexpr char SENSOR_HEADER[2] = {0x01,0x06};
 constexpr char POSITION_HEADER[2] = {0x07,0x05};
 
+
 // Séparateurs des mots d'ordres
 #define SEPARATOR  " "
 

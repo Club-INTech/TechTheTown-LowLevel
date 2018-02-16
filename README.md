@@ -75,8 +75,9 @@ Au boulot les 1As !
 |    albl   |              Active les bras latéraux              |
 |    alp    |                  Active la pompe                   |
 |    dlp    |                 Désactive la pompe                 |
+|  blbAbei  |         Baisse le bras avant pour abeille          |
 |   blbAv   |                Baisse le bras avant                |
-|   rlbAv    |                Relève le bras avant                |
+|   rlbAv   |                Relève le bras avant                |
 |   flpAv   |                Ferme la porte avant                |
 |   olpAv   |                Ouvre la porte avant                |
 |   tlpAv   |                Tilt la porte avant                 |

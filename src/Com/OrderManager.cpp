@@ -686,6 +686,10 @@ void OrderManager::execute(const char* orderToExecute)
         /*
          * BRAS
          */
+		 else if(!strcmp(order, "blbAbei"))
+		 {
+			 actuatorsMgr.movAX12G(0,140);
+		 }
         else if (!strcmp(order, "blbAv"))
         {
             actuatorsMgr.movAX12G(0,95);
