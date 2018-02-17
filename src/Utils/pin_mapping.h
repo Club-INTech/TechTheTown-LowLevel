@@ -1,6 +1,6 @@
 #ifndef _PIN_MAPPING_h
 #define _PIN_MAPPING_h
- 
+
 //TODO:pin mapping
 
 /* Ethernet */
@@ -15,8 +15,8 @@
 
 /* Codeuses */
 	//Gauche
-#define PIN_A_LEFT_ENCODER 18
-#define PIN_B_LEFT_ENCODER 19
+#define PIN_A_LEFT_ENCODER 19
+#define PIN_B_LEFT_ENCODER 18
 	//Droite
 #define PIN_A_RIGHT_ENCODER 21
 #define PIN_B_RIGHT_ENCODER 20
