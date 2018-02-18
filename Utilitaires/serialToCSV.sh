@@ -1,10 +1,12 @@
 #! /bin/bash
 
-function pythonGraph {
-	echo "DATAEND" >> "$3"
-	python3 /home/trotfunky/Programmation/Git/Python/extraction_asserv.py "$2" "$1"
+pythonGraph () {
+	echo "DATAEND" >> "serialOutput/$3"
+	python3 extraction_asserv.py "$2" "$1"
 	exit
 }
+
+echo > /dev/ttyACM0
 
 trap "pythonGraph $1 $outFile $fileName" INT
 trap "pythonGraph $1 $outFile $fileName" TERM
@@ -34,4 +36,4 @@ while true; do
 	esac
 done
 
-python3 /home/trotfunky/Programmation/Git/Python/extraction_asserv.py "$outFile" "$1"
+python3 extraction_asserv.py "$outFile" "$1"

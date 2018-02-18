@@ -6,6 +6,6 @@
 #define LL_DEFINE_DEBUG_H
 
 //Use serial if true, use ethernet otherwise
-#define DEBUG true
+#define DEBUG false
 
 #endif //LL_DEFINE_DEBUG_H

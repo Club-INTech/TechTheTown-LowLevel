@@ -10,7 +10,7 @@
 
 void setup() {
 	/* Série */
-	Serial.begin(9600);
+	Serial.begin(115200);
     Serial.flush();
 	Serial.println("Série OK");
 	delay(250);
@@ -48,26 +48,25 @@ void motionControlInterrupt() {
 void loop(){
     OrderManager& orderMgr = OrderManager::Instance();
 
-    /* AX12 initialisation */
-    /*orderMgr.execute("rlbAv");
-	orderMgr.execute("rlbAr");
-    delay(1000);
-    orderMgr.execute("flpAv");
-	orderMgr.execute("flpAr");
-    delay(1000);
 
-    orderMgr.execute("kpt 2.8");
-    orderMgr.execute("kit 0");
-    orderMgr.execute("kdt 0");
-    orderMgr.execute("kpr 3");
-    orderMgr.execute("kir 0");
-    orderMgr.execute("kdr 0");
-    orderMgr.execute("kpg 0.175");
-    orderMgr.execute("kig 0.0003");
-    orderMgr.execute("kdg 0.65");
-    orderMgr.execute("kpd 0.18");
-    orderMgr.execute("kid 0.0003");
-    orderMgr.execute("kdd 0.45");*/
+	orderMgr.execute("kpg 0.2");
+ 	orderMgr.execute("kig 0.0001");
+ 	orderMgr.execute("kdg 0.2"); //0.65
+ 	orderMgr.execute("kpd 0.2");
+ 	orderMgr.execute("kid 0.0001");
+	orderMgr.execute("kdd 0.2"); //0.45
+/*
+	orderMgr.execute("ct0");
+	orderMgr.execute("cr0");
+	orderMgr.execute("monthlery");
+*/
+	orderMgr.execute("kpt 2.05");
+	orderMgr.execute("kit 0.0");
+	orderMgr.execute("kdt 0.0");
+
+	orderMgr.execute("kpr 3.0"); //4
+	orderMgr.execute("kir 0.0");
+	orderMgr.execute("kdr 0.0");
 
     /* MotionControlSystem */
     IntervalTimer motionControlInterruptTimer;
@@ -75,11 +74,7 @@ void loop(){
     motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); // Setup de l'interruption d'asservissement
 
     while (true) {
-        //orderMgr.refreshUS();
-        orderMgr.communicate();
-		orderMgr.execute("cod");
-		delay(50);
-        //orderMgr.sendUSData();
+		 orderMgr.communicate();
     }
 }
 

@@ -15,11 +15,11 @@
 
 /* Codeuses */
 	//Gauche
-#define PIN_A_LEFT_ENCODER 19
-#define PIN_B_LEFT_ENCODER 18
+#define PIN_A_LEFT_ENCODER 20
+#define PIN_B_LEFT_ENCODER 21
 	//Droite
-#define PIN_A_RIGHT_ENCODER 21
-#define PIN_B_RIGHT_ENCODER 20
+#define PIN_A_RIGHT_ENCODER 18
+#define PIN_B_RIGHT_ENCODER 19
 
 /* Moteurs */
 	//Gauche

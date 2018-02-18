@@ -77,7 +77,7 @@ void OrderManager::execute(const char* orderToExecute)
 //    #endif                        \*m'voyez
     char orderBuffer[RX_BUFFER_SIZE];
 	strcpy(orderBuffer, orderToExecute);
-	highLevel.log("Message recu: %s", orderBuffer);
+	//highLevel.log("Message recu: %s", orderBuffer);
 
 	int8_t n_param = split(orderBuffer, orderData, SEPARATOR);		//Sépare l'ordre en plusieurs mots, n_param=nombre de paramètres
 

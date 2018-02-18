@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-sortieScript='/home/trotfunky/Programmation/Git/Scripts/Perso/serialOutput/'
+sortieScript='serialOutput/'
 
 from sys import *
 from matplotlib.pyplot import *
@@ -9,7 +9,7 @@ from math import pi
 
 Tmesures = 0.01 #en secondes   
 consigneAngle = 1.0
-consignePos = 500.0 
+consignePos = 2000.0
 
 file = sys.argv[1]
 
@@ -23,8 +23,7 @@ fileStream.readline()
 fileStream.readline()
 fileStream.readline()
 ligne = fileStream.readline()
-positionsX = []
-vitessesX = []
+positions = []
 positionsY = []
 vitessesY = []
 
@@ -48,17 +47,16 @@ speedOver = [False,False]
 while(ligne!="DATAEND" and ligne):
     ligne = ligne.split(",")
     if(len(ligne)==7):    
-        positionsX.append(float(ligne[0]))
-        positionsY.append(float(ligne[1]))
+        positions.append((float(ligne[0])**2+float(ligne[1])**2)**0.5)
         angles.append(float(ligne[2])/pi)
         for i in [0,1]:
             speeds[i].append(float(ligne[3+2*i]))
-            speedSetpoints[i].append(float(ligne[4+2*i])*3.14*65.3/(2400*112))
+            speedSetpoints[i].append(float(ligne[4+2*i]))
     
-        if(positionsX[-1] > consignePos and (mode == "" or mode == "pos") and not posOver):
+        if(positions[-1] > consignePos and (mode == "" or mode == "pos") and not posOver):
             print("DEPASSEMENT POS ", i*Tmesures)
             posOver = True
-        elif(positionsX[-1] < consignePos and (mode == "" or mode == "pose") and posOver):
+        elif(positions[-1] < consignePos and (mode == "" or mode == "pos") and posOver):
             posOver = False
         if(angles[-1] > consigneAngle and (mode == "" or mode == "angle") and not angleOver):
             print("DEPASSEMENT ANGLE ",i*Tmesures)
@@ -77,36 +75,38 @@ while(ligne!="DATAEND" and ligne):
                 speedOver[i] = False
 
     
-        abscisses = [i*Tmesures for i in range(len(positionsX))]
+        abscisses = [i*Tmesures for i in range(len(positions))]
         i+=1
     
     ligne = fileStream.readline()
     
 if(mode == "pos" or mode == ""):
-    Img = figure()
+    Img = figure(figsize=(14,14))
     ax1 = subplot(211)
     ax2 = subplot(212)
-    ax1.plot(abscisses,positionsX)
-    ax1.plot(abscisses,positionsY)
-    ax2.plot(abscisses[1:-1],[(float(positionsX[i+1])-float(positionsX[i-1]))/0.002 for i in range(1,len(positionsX)-1)])
-    Img.savefig("/home/trotfunky/Programmation/Git/Scripts/Perso/serialOutput/"+file+".png")
+    ax1.plot(abscisses,positions)
+    ax1.plot(abscisses,[consignePos]*len(abscisses))
+    ax1.plot(abscisses,[0]*len(abscisses))
+    ax2.plot(abscisses[1:-1],[(float(positions[i+1])-float(positions[i-1]))/0.002 for i in range(1,len(positions)-1)])
+    Img.savefig("serialOutput/"+file+".png")
     clf()
 
     subplot(211)
-    plot(abscisses,positionsX)
-    plot(abscisses,positionsY)
+    plot(abscisses,positions)
+    plot(abscisses,[consignePos]*len(abscisses))
+    plot(abscisses,[0]*len(abscisses))
     subplot(212)
-    plot(abscisses[1:-1],[(float(positionsX[i+1])-float(positionsX[i-1]))/0.002 for i in range(1,len(positionsX)-1)])
+    plot(abscisses[1:-1],[(float(positions[i+1])-float(positions[i-1]))/0.002 for i in range(1,len(positions)-1)])
     # plot(abscisses[1:-1],[9000*0.09]*(len(positionsY)-2))
 
 if(mode == "angle" or mode == ""):
-    Img = figure()
+    Img = figure(figsize=(14,14))
     ax1 = subplot(211)
     ax2 = subplot(212)
     ax1.plot(abscisses,angles)
     ax1.plot(abscisses,[consigneAngle]*len(abscisses))
     ax2.plot(abscisses[1:-1],[(float(angles[i+1])-float(angles[i-1]))/0.002 for i in range(1,len(angles)-1)])
-    Img.savefig("/home/trotfunky/Programmation/Git/Scripts/Perso/serialOutput/"+file+"- angles.png")
+    Img.savefig("serialOutput/"+file+"- angles.png")
     clf()
 
     subplot(211)
@@ -117,12 +117,12 @@ if(mode == "angle" or mode == ""):
     plot(abscisses,[0]*len(abscisses))
     
 if(mode == "speed" or mode == ""):
-    Img = figure(figsize=(7,7))
+    Img = figure(figsize=(14,14))
     speedSubs = (subplot(211),subplot(212))
     for i in [0,1]:
         speedSubs[i].plot(abscisses,speeds[i])
         speedSubs[i].plot(abscisses,speedSetpoints[i])
-    Img.savefig("/home/trotfunky/Programmation/Git/Scripts/Perso/serialOutput/"+file+"- speeds.png")
+    Img.savefig("serialOutput/"+file+"- speeds.png")
     clf()
 
     for i in [0,1]:
