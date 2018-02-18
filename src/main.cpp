@@ -84,10 +84,11 @@ void loop(){
     motionControlInterruptTimer.priority(253);
     motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); // Setup de l'interruption d'asservissement
 
+#if DEBUG
 	IntervalTimer blinkTim;
 	blinkTim.priority(255);
 	blinkTim.begin(blink,500000);
-
+#endif
     while (true) {
 		 orderMgr.communicate();
 		 orderMgr.refreshUS();
