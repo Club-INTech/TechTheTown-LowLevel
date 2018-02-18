@@ -292,8 +292,6 @@ void MotionControlSystem::manageStop()
 		}
 	}
 
-
-
 	else
 	{
 		time = 0;

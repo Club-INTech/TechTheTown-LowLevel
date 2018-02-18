@@ -5,8 +5,8 @@
 
 /* Ethernet */
 //Ne pas oublier: PIN13 (LED) utilisée par l'ethernet
-#define PWD 15
-#define RST 14
+#define PWD 24
+#define RST 9
 
 /* Serial RXTX */
 	//AX

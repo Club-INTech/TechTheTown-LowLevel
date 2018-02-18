@@ -39,6 +39,14 @@ void motionControlInterrupt() {
 	motionControlSystem.manageStop();
 }
 
+
+void blink(){
+	static int32_t t=0;
+	if(millis()-t>500){
+		t=millis();
+		digitalWrite(LED_BUILTIN,!digitalRead(LED_BUILTIN));
+	}
+}
 /**
  * Boucle principale, y est géré:
  * La communication HL
@@ -46,7 +54,7 @@ void motionControlInterrupt() {
  * Divers initialisations et instanciations
  */
 void loop(){
-    OrderManager& orderMgr = OrderManager::Instance();
+	OrderManager& orderMgr = OrderManager::Instance();
 
     /* AX12 initialisation */
     orderMgr.execute("rlbAv");
@@ -76,8 +84,13 @@ void loop(){
     motionControlInterruptTimer.priority(253);
     motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); // Setup de l'interruption d'asservissement
 
+	IntervalTimer blinkTim;
+	blinkTim.priority(255);
+	blinkTim.begin(blink,500000);
+
     while (true) {
 		 orderMgr.communicate();
+		 orderMgr.refreshUS();
     }
 }
 
