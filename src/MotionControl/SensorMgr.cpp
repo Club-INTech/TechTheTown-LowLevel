@@ -3,7 +3,7 @@
 SensorMgr::SensorMgr()
 {
 
-	 Wire.begin(I2C_MASTER,0x00,16,17);
+//	Wire.begin(I2C_MASTER,0x00,16,17);
 	distances.reserve(NBR_OF_US_CAPTOR);
 //	US[0] = new SRF10(0,255,SRF10::GAIN::G100);
 	/*US[1] = new SRF10(0,255,SRF10::GAIN::G100);

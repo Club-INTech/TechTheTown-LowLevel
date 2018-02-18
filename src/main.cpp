@@ -48,23 +48,26 @@ void motionControlInterrupt() {
 void loop(){
     OrderManager& orderMgr = OrderManager::Instance();
 
+    /* AX12 initialisation */
+    orderMgr.execute("rlbAv");
+	orderMgr.execute("rlbAr");
+    delay(1000);
+    orderMgr.execute("flpAv");
+	orderMgr.execute("flpAr");
+    delay(1000);
 
 	orderMgr.execute("kpg 0.2");
  	orderMgr.execute("kig 0.0001");
- 	orderMgr.execute("kdg 0.2"); //0.65
+ 	orderMgr.execute("kdg 0.2");
  	orderMgr.execute("kpd 0.2");
  	orderMgr.execute("kid 0.0001");
-	orderMgr.execute("kdd 0.2"); //0.45
-/*
-	orderMgr.execute("ct0");
-	orderMgr.execute("cr0");
-	orderMgr.execute("monthlery");
-*/
+	orderMgr.execute("kdd 0.2");
+
 	orderMgr.execute("kpt 2.05");
 	orderMgr.execute("kit 0.0");
 	orderMgr.execute("kdt 0.0");
 
-	orderMgr.execute("kpr 3.0"); //4
+	orderMgr.execute("kpr 3.0");
 	orderMgr.execute("kir 0.0");
 	orderMgr.execute("kdr 0.0");
 

@@ -134,8 +134,8 @@ public:
 class OrderManager : public Singleton<OrderManager>
 {
 private:
-		SensorMgr &sensorMgr;
 	MotionControlSystem& motionControlSystem;
+	SensorMgr &sensorMgr;
 	ActuatorsMgr &actuatorsMgr;
 	HookList hookList;
 	OrderData orderData;

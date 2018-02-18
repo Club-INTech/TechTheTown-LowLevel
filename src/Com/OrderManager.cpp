@@ -1,8 +1,8 @@
 ﻿#include "OrderManager.h"
 
 OrderManager::OrderManager():
-								sensorMgr(SensorMgr::Instance()),
-								motionControlSystem(MotionControlSystem::Instance()),
+                                motionControlSystem(MotionControlSystem::Instance()),
+                                sensorMgr(SensorMgr::Instance()),
 								actuatorsMgr(ActuatorsMgr::Instance()),
 								hookList(HookList()),
 								orderData(OrderData()),
