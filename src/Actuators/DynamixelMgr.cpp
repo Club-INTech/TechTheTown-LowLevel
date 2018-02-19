@@ -3,24 +3,25 @@
 //
 
 #include "DynamixelMgr.h"
+#include "ActuatorValues.h"
 
-DynamixelMgr::DynamixelMgr() : serialAX(DynamixelInterface(Serial4)) //Utilise la série intialisée dans la bibliothèque Dynamixel
-{
+DynamixelMgr::DynamixelMgr() : serialAX(DynamixelInterface(Serial4)) // Utilise la série intialisée dans la bibliothèque Dynamixel
+{                                                                    // SerialY correspond aux pins RXY/TXY
     serialAX.begin(9600);               // Démarre la série
 
     // Ajouter les actionneurs ici
 
     // FRONT
-    addAX12Group();                     // Groupe du bras
-    populateAX12Group(0,1,120,BASE);
-    populateAX12Group(0,2,120,MIRROR);
-    addAX12(3,200);                     // Porte
+    addAX12Group();                                                             // Groupe du bras
+    populateAX12Group(frontArmGroup_ID,frontLeftAX12_ID,armBaseSpeed,BASE);
+    populateAX12Group(frontArmGroup_ID,frontRightAX12_ID,armBaseSpeed,MIRROR);
+    addAX12(frontDoor_ID,doorBaseSpeed);                                        // Porte
 
     // BACK
-    addAX12Group();                     // Groupe du bras
-    populateAX12Group(1,4,120,BASE);
-    populateAX12Group(1,5,120,MIRROR);
-    addAX12(6,200);                     // Porte
+    addAX12Group();                                                             // Groupe du bras
+    populateAX12Group(backArmGroup_ID,backLeftAX12_ID,armBaseSpeed,BASE);
+    populateAX12Group(backArmGroup_ID,backRightAX12_ID,armBaseSpeed,MIRROR);
+    addAX12(backDoor_ID,doorBaseSpeed);                                         // Porte
 }
 
 DynamixelMgr::~DynamixelMgr()
