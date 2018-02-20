@@ -36,9 +36,9 @@ MotionControlSystem::MotionControlSystem() :
 	rightSpeedPID.setOutputLimits(-255, 255);
 
 
-    maxSpeed = 10000;				// Limite globale de la vitesse (Rotation + Translation)
-    maxSpeedTranslation = 5000;
-    maxSpeedRotation = 5000;
+	maxSpeed = 12000;				// Limite globale de la vitesse (Rotation + Translation)
+	maxSpeedTranslation = 9000;
+	maxSpeedRotation = 6000;
 
 
 	delayToStop = 100;              // Temps a l'arret avant de considérer un blocage
