@@ -13,19 +13,28 @@ Hook::Hook(uint8_t id, uint32_t x, uint32_t y, uint32_t r, float alpha, float to
 
 bool Hook::check(uint32_t currentX, uint32_t currentY, float currentAngle)
 {
+#if DEBUG
 	Serial.println("On fait un check des hooks avec les positions suivantes");
 	Serial.print("Angle actuel: ");
 	Serial.println(currentAngle);
 	Serial.print("Angle cible: ");
 	Serial.println(angleTarget);
+	Serial.print("Delta: ");
 	Serial.println(ABS(currentAngle-angleTarget));
+	Serial.print("Tolérance: ");
 	Serial.println(angleTolerance);
-	Serial.println("==================");
+    Serial.print("Ordre à executer: ");
+    Serial.println(order);
+	Serial.print("======");
+    Serial.print((zoneX-currentX)*(zoneX-currentX) + (zoneY - currentY)*(zoneY - currentY) <= zoneR*zoneR
+                   && (ABS(currentAngle-angleTarget) <= angleTolerance));
+	Serial.println("=====");
+#endif
 	return ((zoneX-currentX)*(zoneX-currentX) + (zoneY - currentY)*(zoneY - currentY) <= zoneR*zoneR
 			&& (ABS(currentAngle-angleTarget) <= angleTolerance));
 }
 
-const char* Hook::getOrder()
+const String Hook::getOrder()
 {
 	return order;
 }

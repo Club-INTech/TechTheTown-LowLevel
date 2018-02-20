@@ -1,9 +1,9 @@
 ﻿#include "MotionControlSystem.h"
 
 MotionControlSystem::MotionControlSystem() :
-											leftEncoder(PIN_B_LEFT_ENCODER, PIN_A_LEFT_ENCODER ),
+											leftEncoder(Encoder(PIN_A_LEFT_ENCODER, PIN_B_LEFT_ENCODER)),
 											rightEncoder(PIN_A_RIGHT_ENCODER, PIN_B_RIGHT_ENCODER),
-											leftMotor(Side::LEFT), rightMotor(Side::RIGHT), 
+											leftMotor(Side::LEFT), rightMotor(Side::RIGHT),
 											rightSpeedPID(&currentRightSpeed, &rightPWM, &rightSpeedSetpoint),
 											leftSpeedPID(&currentLeftSpeed, &leftPWM, &leftSpeedSetpoint),
 											translationPID(&currentDistance, &translationSpeed, &translationSetpoint),
@@ -36,14 +36,14 @@ MotionControlSystem::MotionControlSystem() :
 	rightSpeedPID.setOutputLimits(-255, 255);
 
 
-	maxSpeed = 12000;				// Limite globale de la vitesse (Rotation + Translation)
-	maxSpeedTranslation = 9000;
-	maxSpeedRotation = 6000;
+    maxSpeed = 12000;				// Limite globale de la vitesse (Rotation + Translation)
+    maxSpeedTranslation = 9000;
+    maxSpeedRotation = 6000;
 
 
 	delayToStop = 100;              // Temps a l'arret avant de considérer un blocage
 	toleranceTranslation = 15;
-	toleranceRotation = 3;
+	toleranceRotation = 15;
 	toleranceSpeed = 40;
 	toleranceSpeedEstablished = 50; // Doit être la plus petite possible, sans bloquer les trajectoires courbes 50
 	delayToEstablish = 100;
@@ -295,8 +295,6 @@ void MotionControlSystem::manageStop()
 		}
 	}
 
-
-
 	else
 	{
 		time = 0;
@@ -472,7 +470,7 @@ bool MotionControlSystem::isMoveAbnormal() const
 	return moveAbnormal;
 }
 
-bool MotionControlSystem::sentMoveAbnormal() const 
+bool MotionControlSystem::sentMoveAbnormal() const
 {
 	return moveAbnormalSent;
 }
@@ -620,7 +618,7 @@ void MotionControlSystem::setRightSpeedTunings(float kp, float ki, float kd) {
 	rightSpeedPID.setTunings(kp, ki, kd);
 }
 
-void MotionControlSystem::getPWMS(int32_t& left, int32_t& right) {
+void MotionControlSystem::getPWMS(uint32_t& left, uint32_t& right) {
 	left = leftPWM;
 	right = rightPWM;
 }

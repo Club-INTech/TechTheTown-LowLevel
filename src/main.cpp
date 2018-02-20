@@ -15,9 +15,6 @@ void setup() {
 	Serial.println("Série OK");
 	delay(250);
 
-	pinMode(30, OUTPUT);
-    digitalWrite(30, HIGH);
-
     /* Actuators */
     // Par sécurité on met tout les actuators à LOW quand on les initialise
 		/* Pompe */
@@ -29,6 +26,8 @@ void setup() {
     digitalWrite(PIN_ELECTROVANNE_AV,LOW);
     pinMode(PIN_ELECTROVANNE_AR,OUTPUT);
     digitalWrite(PIN_ELECTROVANNE_AR,LOW);
+
+    Serial.println("Fin du setup");
 }
 
 /* Interruptions d'asservissements */
@@ -40,6 +39,14 @@ void motionControlInterrupt() {
 	motionControlSystem.manageStop();
 }
 
+
+void blink(){
+	static int32_t t=0;
+	if(millis()-t>500){
+		t=millis();
+		digitalWrite(LED_BUILTIN,!digitalRead(LED_BUILTIN));
+	}
+}
 /**
  * Boucle principale, y est géré:
  * La communication HL
@@ -47,8 +54,7 @@ void motionControlInterrupt() {
  * Divers initialisations et instanciations
  */
 void loop(){
-    delay(1000);
-    OrderManager& orderMgr = OrderManager::Instance();
+	OrderManager& orderMgr = OrderManager::Instance();
 
     /* AX12 initialisation */
     orderMgr.execute("rlbAv");
@@ -58,18 +64,11 @@ void loop(){
     orderMgr.execute("flpAr");
     delay(1000);
 
-    for(int i=0;i<10;i++)
-	{
-		digitalWrite(30,HIGH);
-		delay(200);
-		digitalWrite(30,LOW);
-		delay(200);
-	}
-
     /* MotionControlSystem */
     IntervalTimer motionControlInterruptTimer;
     motionControlInterruptTimer.priority(253);
     motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); // Setup de l'interruption d'asservissement
+
 
     orderMgr.execute("ct0");
     orderMgr.execute("cr0");
@@ -128,14 +127,17 @@ void loop(){
 
 
     while (true) {
-        orderMgr.refreshUS();
-        orderMgr.communicate();
-        //orderMgr.sendUSData();
+		 orderMgr.communicate();
+//		 orderMgr.refreshUS();
     }
 }
 
-
-
+/*
+extern "C"
+{
+    void _kill(){}
+    void _getpid(){}
+}*/
 
 
 

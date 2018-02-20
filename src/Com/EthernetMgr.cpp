@@ -12,6 +12,10 @@ EthernetMgr::EthernetMgr():server{ PORT }
 	resetCard();
 
 	while(Ethernet.localIP() != ip) {
+        digitalWrite(30,HIGH);
+		pinMode(LED_BUILTIN,OUTPUT);
+		digitalWrite(LED_BUILTIN,!digitalRead(LED_BUILTIN)); //La led de la teensy clignote si il y a erreur
+		delay(200);
 		Serial.println("ERR\tIP CONFIGURATON FAILED");
         resetCard();
 	}
@@ -42,6 +46,8 @@ void EthernetMgr::resetCard() {
 	delay(150);
 
 	Ethernet.begin(mac, ip, dns, gateway, subnet);
+    Ethernet.init(PIN_SPI_SS);
+    digitalWrite(30,LOW);
 }
 
 bool inline EthernetMgr::read_char(char & buffer)

@@ -1,19 +1,19 @@
-/**
-SS		10
-INT		/
-RST		14
-PWDN	15
-MISO	12
-MOSI	11
-*/
+/**		new/old
 
+SS		10/10
+INT		///
+RST		9/14   /!\ PIN 24 strap sur PIN9 -> 24 en INPUT
+PWDN	24/15
+MISO	12/12
+MOSI	11/11
+
+*/
 
 #ifndef _ETHERNETMGR_h
 #define _ETHERNETMGR_h
 
 #include <Arduino.h>
 #include <vector>
-
 #include "Utils/Singleton.hpp"
 #include "Utils/stdarg.h"
 #include <WString.h>
@@ -22,10 +22,6 @@ MOSI	11
 #include <Ethernet.h>
 #include "MotionControl/MotionControlSystem.h"
 #include "Utils/pin_mapping.h"
-
-
-
-#define CONNECTION_TIMEOUT	1000
 
 #define PORT 23500
 
@@ -38,6 +34,7 @@ private:
 	IPAddress dns{ 8,8,8,8 };
 	IPAddress gateway{ 192,168,0,2 };
 	IPAddress subnet{ 255,255,255,0 };
+
 	String valueString;
 
 	void resetCard();

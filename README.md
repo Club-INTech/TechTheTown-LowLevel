@@ -6,8 +6,8 @@ Au boulot les 1As !
 - [x] Communication Ethernet de base
 - [x] Ordres Des Actionneurs
 - [ ] Asservissement
-- [ ] Capteurs
-- [ ] Hooks
+- [x] Capteurs
+- [x] Hooks
 - [x] Canal de Position (établir la fréquence d'envoie et le header associé avec le HL) & détection de fin de mouvement
 - [x] Détection des blocages physiques et transmission sur le canal Event
 - [ ] Mise en place de la basic Detection (arrêt si obstacle trop proche)
@@ -15,6 +15,7 @@ Au boulot les 1As !
 - [ ] Gérer les ordres grâce à une classe pour que ce soit propre
 - [ ] Mise en place de cas d'erreur explicites et plus nombreux pour le HL
 - [ ] MotionControl point à point(avec réorientation progressive)
+- [ ] Ordre propre pour la récupération de données d'asservissement + scripts en conséquence
 
 
 ## TABLE DES ORDRES
@@ -72,11 +73,11 @@ Au boulot les 1As !
 |    AXGm   |             Envoi un groupe à un α en °            |
 |    AXs    |            Modifie la vitesse d'un AX12            |
 |    AXGs   |           Modifie la vitesse d'un groupe           |
-|    albl   |              Active les bras latéraux              |
 |    alp    |                  Active la pompe                   |
 |    dlp    |                 Désactive la pompe                 |
+|  blbAbei  |         Baisse le bras avant pour abeille          |
 |   blbAv   |                Baisse le bras avant                |
-|   rlbAv    |                Relève le bras avant                |
+|   rlbAv   |                Relève le bras avant                |
 |   flpAv   |                Ferme la porte avant                |
 |   olpAv   |                Ouvre la porte avant                |
 |   tlpAv   |                Tilt la porte avant                 |

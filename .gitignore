@@ -380,7 +380,6 @@ Supprimerait platformio.ini
 /.travis.yml
 /CMakeLists.txt
 /platformio.ini
-*.gitignore
 .idea
 .clang_complete
 .gcc-flags.json

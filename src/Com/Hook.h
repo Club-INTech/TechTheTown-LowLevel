@@ -18,12 +18,13 @@ private:
 
 	bool active;
 	bool ready;
-	const char* order;
+	const String order;
 
 public:
 	Hook(uint8_t, uint32_t, uint32_t, uint32_t, float, float, const char*);
 	bool check(uint32_t, uint32_t, float);
-	const char* getOrder();
+
+	const String getOrder();
 	void setActive(bool);
 	void setReady();
 	bool isReady();

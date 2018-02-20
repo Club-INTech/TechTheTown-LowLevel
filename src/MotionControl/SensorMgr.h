@@ -5,6 +5,8 @@
 
 #include <Arduino.h>
 #include <vector>
+#include <array>
+#include <algorithm>
 #include <i2c_t3.h>
 
 #include "Utils/Singleton.hpp"
@@ -32,13 +34,14 @@ private:
 	std::vector<uint16_t> distances;
 	uint8_t currentMeasuringUS = 0;
 	bool isMeasuring = false;
+	bool firstMeasure = true;
+	MOVING_DIRECTION measure_direction;
 
 public:
 
 	SensorMgr();
-	void refresh();
+	void refresh(MOVING_DIRECTION dir);
 
-	uint16_t getUsTest();
 	bool isJumpEngaged();
 	bool isCont1Engaged();
 };
