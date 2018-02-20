@@ -1,5 +1,4 @@
 ﻿#include "OrderManager.h"
-#include "./Actuators/ActuatorValues.h"
 
 OrderManager::OrderManager():
                                 motionControlSystem(MotionControlSystem::Instance()),
@@ -691,56 +690,62 @@ void OrderManager::execute(const char* orderToExecute)
         /*
          * BRAS
          */
-        else if(!strcmp(order, "blbAbei"))
-        {
-            actuatorsMgr.movAX12G(frontArmGroup_ID,frontLowBee);
-        }
+		 else if(!strcmp(order, "blbAbei"))
+		 {
+			 actuatorsMgr.movAX12G(0,140);
+		 }
         else if (!strcmp(order, "blbAv"))
         {
-            actuatorsMgr.movAX12G(frontArmGroup_ID,frontLowCubes);
+            actuatorsMgr.movAX12G(0,95);
         }
         else if (!strcmp(order, "rlbAv"))
         {
-            actuatorsMgr.movAX12G(frontArmGroup_ID,frontFolded);
+            actuatorsMgr.movAX12G(0,185);
         }
         else if (!strcmp(order, "blbAr"))
         {
-            actuatorsMgr.movAX12G(backArmGroup_ID,backLowCubes);
+            actuatorsMgr.movAX12G(1,202);
         }
         else if (!strcmp(order, "rlbAr"))
         {
-            actuatorsMgr.movAX12G(backArmGroup_ID,backFolded);
+            actuatorsMgr.movAX12G(1,120);
+        }
+        else if (!strcmp(order, "albl"))
+        {
+            actuatorsMgr.movAX12G(1,60);
+            delay(1000);
+            actuatorsMgr.movAX12G(1,240);
         }
         /*
          * PORTES
          */
         else if (!strcmp(order, "flpAv"))
         {
-            actuatorsMgr.movAX12(frontDoor_ID,frontDoorClosed);
+            actuatorsMgr.movAX12(3,155);
         }
         else if (!strcmp(order, "olpAv"))
         {
-            actuatorsMgr.movAX12(frontDoor_ID,frontDoorOpen);
+            actuatorsMgr.movAX12(3,240);
         }
         else if (!strcmp(order, "flpAr"))
         {
-            actuatorsMgr.movAX12(backDoor_ID,backDoorClosed);
+            actuatorsMgr.movAX12(6,245);
         }
         else if (!strcmp(order, "olpAr"))
         {
-            actuatorsMgr.movAX12(backDoor_ID,backDoorOpen);
+            actuatorsMgr.movAX12(6,150);
         }
         else if (!strcmp(order, "tlpAv"))
         {
-            actuatorsMgr.movAX12(frontDoor_ID,frontDoorClosed+5);
+            actuatorsMgr.movAX12(3,235);
             delay(500);
-            actuatorsMgr.movAX12(frontDoor_ID,frontDoorClosed);
+            actuatorsMgr.movAX12(3,240);
         }
         else if (!strcmp(order, "tlpAr"))
         {
-            actuatorsMgr.movAX12(backDoor_ID,backDoorClosed-5);
+            actuatorsMgr.movAX12(6,235);
             delay(500);
-            actuatorsMgr.movAX12(backDoor_ID,backDoorClosed);
+            actuatorsMgr.movAX12(6,240);
         }
         /*
          * POMPE

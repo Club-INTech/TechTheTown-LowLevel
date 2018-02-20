@@ -4,7 +4,7 @@ SensorMgr::SensorMgr()
 {
 
 	Wire.begin(I2C_MASTER,0x00,16,17);
-	distances.reserve(NBR_OF_US_CAPTOR);
+	distances.reserve(NBR_OF_US_SENSOR);
 	//US[0] = new SRF10(0,255,SRF10::GAIN::G100);
 	/*US[1] = new SRF10(0,255,SRF10::GAIN::G100);
 	US[2] = new SRF10(0,255,SRF10::GAIN::G100);
@@ -17,7 +17,7 @@ SensorMgr::SensorMgr()
 
 void SensorMgr::refresh(MOVING_DIRECTION dir)
 {
-	if(NBR_OF_US_CAPTOR)
+	if(NBR_OF_US_SENSOR)
 	{
 		if(!isMeasuring)
 		{
@@ -28,7 +28,7 @@ void SensorMgr::refresh(MOVING_DIRECTION dir)
 				if( dir == MOVING_DIRECTION::FORWARD || dir == MOVING_DIRECTION::NONE )
 					currentMeasuringUS=0;
 				else
-					currentMeasuringUS=NBR_OF_US_CAPTOR/2;
+					currentMeasuringUS=NBR_OF_US_SENSOR/2;
 				measure_direction = dir;
 				firstMeasure=false;
 			}
@@ -41,7 +41,7 @@ void SensorMgr::refresh(MOVING_DIRECTION dir)
 			isMeasuring=false;
 			if( measure_direction == MOVING_DIRECTION::FORWARD )
 			{
-				if( currentMeasuringUS < NBR_OF_US_CAPTOR/2-1 )
+				if( currentMeasuringUS < NBR_OF_US_SENSOR/2-1 )
 					++currentMeasuringUS;
 				else
 					firstMeasure = true;
@@ -49,7 +49,7 @@ void SensorMgr::refresh(MOVING_DIRECTION dir)
 			}
 			else
 			{
-				if( currentMeasuringUS < NBR_OF_US_CAPTOR-1 )
+				if( currentMeasuringUS < NBR_OF_US_SENSOR-1 )
 					++currentMeasuringUS;
 				else
 					firstMeasure = true;
