@@ -80,8 +80,8 @@ private:
 	volatile int32_t maxSpeedRotation;        // definit la consigne max de vitesse de rotation envoiée au PID (trapèze)
 
 											  //	Limitation d'accélération
-	volatile int8_t maxAcceleration;
-	volatile int8_t maxDeceleration;
+	volatile int32_t maxAcceleration;
+	volatile int32_t maxDeceleration;
 
 
 	//	Pour faire de jolies courbes de réponse du système, la vitesse moyenne c'est mieux !

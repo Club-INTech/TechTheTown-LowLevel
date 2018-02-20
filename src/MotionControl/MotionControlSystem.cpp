@@ -153,19 +153,19 @@ void MotionControlSystem::control()
 		}
 
 		//Limiteurs d'accélération et décélération
-		if (leftSpeedSetpoint - previousLeftSpeedSetpoint > maxAcceleration)
+		if ((leftSpeedSetpoint - previousLeftSpeedSetpoint)  > maxAcceleration)
 		{
-			leftSpeedSetpoint = (int32_t)(previousLeftSpeedSetpoint + maxAcceleration);
+			leftSpeedSetpoint = (previousLeftSpeedSetpoint + maxAcceleration);
 		}
-		else if (previousLeftSpeedSetpoint - leftSpeedSetpoint > maxAcceleration)
+		else if ((previousLeftSpeedSetpoint - leftSpeedSetpoint)  > maxAcceleration)
 		{
-			leftSpeedSetpoint = (int32_t)(previousLeftSpeedSetpoint - maxAcceleration);
+			leftSpeedSetpoint = (previousLeftSpeedSetpoint - maxAcceleration);
 		}
-		if (rightSpeedSetpoint - previousRightSpeedSetpoint > maxAcceleration)
+		if ((rightSpeedSetpoint - previousRightSpeedSetpoint)  > maxAcceleration)
 		{
 			rightSpeedSetpoint = (previousRightSpeedSetpoint + maxAcceleration);
 		}
-		else if (previousRightSpeedSetpoint - rightSpeedSetpoint > maxAcceleration)
+		else if ((previousRightSpeedSetpoint - rightSpeedSetpoint)  > maxAcceleration)
 		{
 			rightSpeedSetpoint = (previousRightSpeedSetpoint - maxAcceleration);
 		}
