@@ -2,13 +2,19 @@
 
 SensorMgr::SensorMgr()
 {
+	Wire.begin();
 
-	Wire.begin(I2C_MASTER,0x00,16,17);
+	/* CHANGEMENT PIN I2C */
+	CORE_PIN18_CONFIG = 0;  // turn off primary pins before enable alternates
+	CORE_PIN19_CONFIG = 0;
+	CORE_PIN16_CONFIG = PORT_PCR_MUX(2)|PORT_PCR_ODE|PORT_PCR_SRE|PORT_PCR_DSE;
+	CORE_PIN17_CONFIG = PORT_PCR_MUX(2)|PORT_PCR_ODE|PORT_PCR_SRE|PORT_PCR_DSE;
+
 	distances.reserve(NBR_OF_US_SENSOR);
-	//US[0] = new SRF10(0,255,SRF10::GAIN::G100);
-	/*US[1] = new SRF10(0,255,SRF10::GAIN::G100);
-	US[2] = new SRF10(0,255,SRF10::GAIN::G100);
-	US[3] = new SRF10(0,255,SRF10::GAIN::G100);*/
+
+	for( uint8_t i = 0 ; i < NBR_OF_US_SENSOR ; i++ )
+		US[i] = new SRF10(i,128,SRF10::GAIN::G100);
+		
 	distances.push_back(0x0000);
 	distances.push_back(0x0000);
 	distances.push_back(0x0000);

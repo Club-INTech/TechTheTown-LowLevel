@@ -71,11 +71,7 @@ void SRF10::request()
 
 bool SRF10::update(){
   uint16_t data = 42;
-  Wire.beginTransmission(real_addr);
-  Wire.write(REGISTER_REVISION);
-  Wire.endTransmission();
-  Wire.requestFrom(real_addr,1);
-  if( Wire.available() == 1)
+  if( ping() )
   {
     if( Wire.read() != 0xFF )
     {
