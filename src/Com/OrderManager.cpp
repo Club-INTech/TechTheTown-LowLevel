@@ -2,8 +2,8 @@
 #include "./Actuators/ActuatorValues.h"
 
 OrderManager::OrderManager():
-        motionControlSystem(MotionControlSystem::Instance()),
         sensorMgr(SensorMgr::Instance()),
+        motionControlSystem(MotionControlSystem::Instance()),
         actuatorsMgr(ActuatorsMgr::Instance()),
         hookList(HookList()),
         orderData(OrderData()),
@@ -732,13 +732,13 @@ void OrderManager::execute(const char* orderToExecute)
         }
         else if (!strcmp(order, "tlpAv"))
         {
-            actuatorsMgr.movAX12(frontDoor_ID,frontDoorClosed+5);
+            actuatorsMgr.movAX12(frontDoor_ID,frontDoorClosed+20);
             delay(500);
             actuatorsMgr.movAX12(frontDoor_ID,frontDoorClosed);
         }
         else if (!strcmp(order, "tlpAr"))
         {
-            actuatorsMgr.movAX12(backDoor_ID,backDoorClosed-5);
+            actuatorsMgr.movAX12(backDoor_ID,backDoorClosed-20);
             delay(500);
             actuatorsMgr.movAX12(backDoor_ID,backDoorClosed);
         }
