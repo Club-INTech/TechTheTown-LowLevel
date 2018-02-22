@@ -27,6 +27,13 @@ void setup() {
     pinMode(PIN_ELECTROVANNE_AR,OUTPUT);
     digitalWrite(PIN_ELECTROVANNE_AR,LOW);
 
+	pinMode(6,OUTPUT);
+	pinMode(7,OUTPUT);
+	pinMode(8,OUTPUT);
+	analogWriteFrequency(6,234375);
+	digitalWrite(7,HIGH);
+	analogWriteFrequency(8,234375);
+
     Serial.println("Fin du setup");
 }
 
@@ -67,21 +74,22 @@ void loop(){
     delay(3000);
 
     /* MotionControlSystem */
-    IntervalTimer motionControlInterruptTimer;
-    motionControlInterruptTimer.priority(253);
-    motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); // Setup de l'interruption d'asservissement
+//    IntervalTimer motionControlInterruptTimer;
+//    motionControlInterruptTimer.priority(253);
+//    motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); // Setup de l'interruption d'asservissement
 
 
     orderMgr.execute("ct0");
     orderMgr.execute("cr0");
     orderMgr.execute("monthlery");
-//    orderMgr.execute("cv0");
+    orderMgr.execute("cv0");
     orderMgr.execute("kpg 0.2");
     orderMgr.execute("kig 0.0001");      //.0001
     orderMgr.execute("kdg 0.2");      //0.2
     orderMgr.execute("kpd 0.2");
     orderMgr.execute("kid 0.0001");      //0.001
     orderMgr.execute("kdd 0.2");      //0.2
+
 
 //    orderMgr.execute("kpt 2.05");
 //    orderMgr.execute("kit 0.0");
@@ -95,15 +103,19 @@ void loop(){
     {
         if(i==20)
         {
+			analogWrite(6,100);
+			analogWrite(8,100);
 //            orderMgr.execute("d 1000");
 //            orderMgr.execute("t pi");
-            orderMgr.execute("av");
+//            orderMgr.execute("av");
 //            orderMgr.execute("rawpwm 70");
         }
         orderMgr.execute("rawposdata");
         delay(10);
     }
     orderMgr.execute("sstop");
+	analogWrite(6,0);
+	analogWrite(8,0);
 //    orderMgr.execute("rawpwm 0");
     for(int i = 0;i<200;i++)
     {

@@ -21,7 +21,7 @@ MOSI	11/11
 #include <SPI.h>
 #include <Ethernet.h>
 #include "MotionControl/MotionControlSystem.h"
-#include "Utils/pin_mapping.h"
+#include "Utils/pin_mapping_select.h"
 
 #define PORT 23500
 

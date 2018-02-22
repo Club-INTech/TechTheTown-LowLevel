@@ -6,7 +6,7 @@
 #include "Motor.h"
 #include "Utils/pid.hpp"
 #include "Utils/average.hpp"
-#include "Utils/pin_mapping.h"
+#include "Utils/pin_mapping_select.h"
 #include "Utils/defines.h"
 #include "MotionControl/Encoder.h"
 

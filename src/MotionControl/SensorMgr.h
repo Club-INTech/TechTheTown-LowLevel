@@ -10,9 +10,9 @@
 #include <i2c_t3.h>
 
 #include "Utils/Singleton.hpp"
-#include "Utils/pin_mapping.h"
+#include "Utils/pin_mapping_select.h"
 #include "MotionControlSystem.h"
-#include "Utils/pin_mapping.h"
+#include "Utils/pin_mapping_select.h"
 #include "Com/EthernetMgr.h"
 #include "Com/SerialMgr.h"
 #include "SRF10.h"
