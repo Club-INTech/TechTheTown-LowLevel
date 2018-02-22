@@ -13,7 +13,7 @@ constexpr int frontArmGroup_ID = 0;
 constexpr int frontLeftAX12_ID = 1;
 constexpr int frontRightAX12_ID = 2;
 
-constexpr int backArmGroup_ID = 0;
+constexpr int backArmGroup_ID = 1;
 constexpr int backLeftAX12_ID = 4;
 constexpr int backRightAX12_ID = 5;
 

@@ -2,13 +2,19 @@
 
 SensorMgr::SensorMgr()
 {
+	Wire.begin();
 
-	Wire.begin(I2C_MASTER,0x00,16,17);
-	distances.reserve(NBR_OF_US_CAPTOR);
-	//US[0] = new SRF10(0,255,SRF10::GAIN::G100);
-	/*US[1] = new SRF10(0,255,SRF10::GAIN::G100);
-	US[2] = new SRF10(0,255,SRF10::GAIN::G100);
-	US[3] = new SRF10(0,255,SRF10::GAIN::G100);*/
+	/* CHANGEMENT PIN I2C */
+	CORE_PIN18_CONFIG = 0;  // turn off primary pins before enable alternates
+	CORE_PIN19_CONFIG = 0;
+	CORE_PIN16_CONFIG = PORT_PCR_MUX(2)|PORT_PCR_ODE|PORT_PCR_SRE|PORT_PCR_DSE;
+	CORE_PIN17_CONFIG = PORT_PCR_MUX(2)|PORT_PCR_ODE|PORT_PCR_SRE|PORT_PCR_DSE;
+
+	distances.reserve(NBR_OF_US_SENSOR);
+
+	for( uint8_t i = 0 ; i < NBR_OF_US_SENSOR ; i++ )
+		US[i] = new SRF10(i,128,SRF10::GAIN::G100);
+		
 	distances.push_back(0x0000);
 	distances.push_back(0x0000);
 	distances.push_back(0x0000);
@@ -17,7 +23,7 @@ SensorMgr::SensorMgr()
 
 void SensorMgr::refresh(MOVING_DIRECTION dir)
 {
-	if(NBR_OF_US_CAPTOR)
+	if(NBR_OF_US_SENSOR)
 	{
 		if(!isMeasuring)
 		{
@@ -28,7 +34,7 @@ void SensorMgr::refresh(MOVING_DIRECTION dir)
 				if( dir == MOVING_DIRECTION::FORWARD || dir == MOVING_DIRECTION::NONE )
 					currentMeasuringUS=0;
 				else
-					currentMeasuringUS=NBR_OF_US_CAPTOR/2;
+					currentMeasuringUS=NBR_OF_US_SENSOR/2;
 				measure_direction = dir;
 				firstMeasure=false;
 			}
@@ -41,7 +47,7 @@ void SensorMgr::refresh(MOVING_DIRECTION dir)
 			isMeasuring=false;
 			if( measure_direction == MOVING_DIRECTION::FORWARD )
 			{
-				if( currentMeasuringUS < NBR_OF_US_CAPTOR/2-1 )
+				if( currentMeasuringUS < NBR_OF_US_SENSOR/2-1 )
 					++currentMeasuringUS;
 				else
 					firstMeasure = true;
@@ -49,7 +55,7 @@ void SensorMgr::refresh(MOVING_DIRECTION dir)
 			}
 			else
 			{
-				if( currentMeasuringUS < NBR_OF_US_CAPTOR-1 )
+				if( currentMeasuringUS < NBR_OF_US_SENSOR-1 )
 					++currentMeasuringUS;
 				else
 					firstMeasure = true;

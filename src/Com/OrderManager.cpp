@@ -2,49 +2,49 @@
 #include "./Actuators/ActuatorValues.h"
 
 OrderManager::OrderManager():
-                                motionControlSystem(MotionControlSystem::Instance()),
-                                sensorMgr(SensorMgr::Instance()),
-								actuatorsMgr(ActuatorsMgr::Instance()),
-								hookList(HookList()),
-								orderData(OrderData()),
-								#if DEBUG
-									highLevel(SerialMgr::Instance())
-								#else
-									highLevel(EthernetMgr::Instance())
-								#endif
+        sensorMgr(SensorMgr::Instance()),
+        motionControlSystem(MotionControlSystem::Instance()),
+        actuatorsMgr(ActuatorsMgr::Instance()),
+        hookList(HookList()),
+        orderData(OrderData()),
+#if DEBUG
+        highLevel(SerialMgr::Instance())
+#else
+        highLevel(EthernetMgr::Instance())
+#endif
 {
 #if DEBUG
     pinMode(LED_BUILTIN,OUTPUT);
 #endif
-	memset(readMessage, 0, RX_BUFFER_SIZE);
-	isSendingUS = false;
-	hooksEnabled = true;
-	highLevel.log("Communications ready");
+    memset(readMessage, 0, RX_BUFFER_SIZE);
+    isSendingUS = false;
+    hooksEnabled = true;
+    highLevel.log("Communications ready");
 }
 
 void OrderManager::communicate() {
 
-	if (highLevel.read(readMessage)) {
-		execute(readMessage);
-	}
+    if (highLevel.read(readMessage)) {
+        execute(readMessage);
+    }
 
-	memset(readMessage, 0, RX_BUFFER_SIZE);
+    memset(readMessage, 0, RX_BUFFER_SIZE);
 
-	static Metro checkMovement = Metro(10);
+    static Metro checkMovement = Metro(10);
     static Metro checkHooksTimer = Metro(20);
 
 
-	if (checkMovement.check())
-	{
-		if (!motionControlSystem.sentMoveAbnormal() && motionControlSystem.isMoveAbnormal()) {//Si on est bloqué et qu'on n'a pas encore prévenu
-			motionControlSystem.setMoveAbnormalSent(true);
+    if (checkMovement.check())
+    {
+        if (!motionControlSystem.sentMoveAbnormal() && motionControlSystem.isMoveAbnormal()) {//Si on est bloqué et qu'on n'a pas encore prévenu
+            motionControlSystem.setMoveAbnormalSent(true);
             //TODO prévoir le cas quand on ne peut pas bouger car on a détecté un obstable (envoyer "unableToMove o")
-			highLevel.sendEvent("unableToMove p");
-		}
-		else if (motionControlSystem.sentMoveAbnormal() && !motionControlSystem.isMoveAbnormal()) {//Si on est plus bloqué et qu'on avait prévenu
-			motionControlSystem.setMoveAbnormalSent(false);
-		}
-	}
+            highLevel.sendEvent("unableToMove p");
+        }
+        else if (motionControlSystem.sentMoveAbnormal() && !motionControlSystem.isMoveAbnormal()) {//Si on est plus bloqué et qu'on avait prévenu
+            motionControlSystem.setMoveAbnormalSent(false);
+        }
+    }
 
 
     if (checkHooksTimer.check() && hooksEnabled)
@@ -54,30 +54,28 @@ void OrderManager::communicate() {
     }
 
 
-	//Code compilé seulement si on utilise l'ethernet
-	#if !DEBUG
+    //Code compilé seulement si on utilise l'ethernet
+#if !DEBUG
     static Metro sendPos = Metro(50);
-	    if (sendPos.check()) {
-			if (motionControlSystem.isMoving()) {
-                float posToSend[3]={motionControlSystem.getX(), motionControlSystem.getY(), motionControlSystem.getAngleRadian()};
-				highLevel.sendPosition(posToSend);
-                motionControlSystem.setPreviousIsMoving(true);
-            } else {
-                if (motionControlSystem.previousIsMoving()){
-                    highLevel.sendEvent("stoppedMoving");
-                }
-                motionControlSystem.setPreviousIsMoving(false);
+    if (sendPos.check()) {
+        if (motionControlSystem.isMoving()) {
+            float posToSend[3]={motionControlSystem.getX(), motionControlSystem.getY(), motionControlSystem.getAngleRadian()};
+            highLevel.sendPosition(posToSend);
+            motionControlSystem.setPreviousIsMoving(true);
+        } else {
+            if (motionControlSystem.previousIsMoving()){
+                highLevel.sendEvent("stoppedMoving");
             }
-		}
-
-    #endif
-
+            motionControlSystem.setPreviousIsMoving(false);
+        }
+    }
+#endif
 }
 
 void OrderManager::execute(const char* orderToExecute)
 {
 //	#ifdef DEBUG                    /*A LAISSER COMMENTÉ
-	char order[RX_BUFFER_SIZE];
+    char order[RX_BUFFER_SIZE];
 //    #else                          *TANT QU'ON RESTE EN ORDRES
 //    int order;                     *SOUS FORME STRINGS
 //    #endif                        \*m'voyez
@@ -85,11 +83,11 @@ void OrderManager::execute(const char* orderToExecute)
 	strcpy(orderBuffer, orderToExecute);
 //	highLevel.log("Message recu: %s", orderBuffer);
 
-	int8_t n_param = split(orderBuffer, orderData, SEPARATOR);		//Sépare l'ordre en plusieurs mots, n_param=nombre de paramètres
+    int8_t n_param = split(orderBuffer, orderData, SEPARATOR);		//Sépare l'ordre en plusieurs mots, n_param=nombre de paramètres
 
-	if (n_param >= 0) {
-		//#ifdef DEBUG
-		strcpy(order, orderData.at(0));
+    if (n_param >= 0) {
+        //#ifdef DEBUG
+        strcpy(order, orderData.at(0));
         //#else
         //order = parseInt(orderData.at(0));
         //#endif //DEBUG
@@ -734,13 +732,13 @@ void OrderManager::execute(const char* orderToExecute)
         }
         else if (!strcmp(order, "tlpAv"))
         {
-            actuatorsMgr.movAX12(frontDoor_ID,frontDoorClosed+5);
+            actuatorsMgr.movAX12(frontDoor_ID,frontDoorClosed+20);
             delay(500);
             actuatorsMgr.movAX12(frontDoor_ID,frontDoorClosed);
         }
         else if (!strcmp(order, "tlpAr"))
         {
-            actuatorsMgr.movAX12(backDoor_ID,backDoorClosed-5);
+            actuatorsMgr.movAX12(backDoor_ID,backDoorClosed-20);
             delay(500);
             actuatorsMgr.movAX12(backDoor_ID,backDoorClosed);
         }
@@ -883,14 +881,14 @@ void OrderManager::execute(const char* orderToExecute)
         */
 
 
-	}
+    }
 
     checkHooks();
 }
 
 void OrderManager::refreshUS()
 {
-	sensorMgr.refresh(motionControlSystem.getMovingDirection());
+    sensorMgr.refresh(motionControlSystem.getMovingDirection());
 }
 
 
@@ -918,22 +916,22 @@ uint8_t OrderManager::split(char* input, OrderData& output, const char* separato
 }
 
 int OrderManager::parseInt(const char* s) {
-	return strtol(s, nullptr, DEC);
+    return strtol(s, nullptr, DEC);
 }
 
 float OrderManager::parseFloat(const char* s) {
-	return strtof(s, nullptr);
+    return strtof(s, nullptr);
 }
 
 void OrderManager::checkHooks() {
-		hookList.check(motionControlSystem.getX(), motionControlSystem.getY(),motionControlSystem.getAngleRadian());
+    hookList.check(motionControlSystem.getX(), motionControlSystem.getY(),motionControlSystem.getAngleRadian());
 }
 
 void OrderManager::executeHooks() {
-	std::vector<String> orders = hookList.executeHooks();
+    std::vector<String> orders = hookList.executeHooks();
 
     for(String &order : orders)
     {
         execute(order.c_str());
-	}
+    }
 }

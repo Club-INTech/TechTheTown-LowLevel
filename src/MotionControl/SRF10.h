@@ -5,7 +5,7 @@
 #include <i2c_t3.h>
 #include "AbstractSensorUS.h"
 
-class SRF10 : public AbstractSensorUS
+class SRF10 : public AbstractI2CSensorUS
 {
 private:
     uint8_t real_addr = BASE_OFFSET_ADDRESS;

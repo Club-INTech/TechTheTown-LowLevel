@@ -3,7 +3,7 @@
 
 #include <i2c_t3.h>
 
-class AbstractSensorUS
+class AbstractI2CSensorUS
 {
   public:
     virtual uint16_t getDistance() = 0;
