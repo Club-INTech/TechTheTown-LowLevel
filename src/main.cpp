@@ -27,12 +27,14 @@ void setup() {
     pinMode(PIN_ELECTROVANNE_AR,OUTPUT);
     digitalWrite(PIN_ELECTROVANNE_AR,LOW);
 
-	pinMode(6,OUTPUT);
-	pinMode(7,OUTPUT);
-	pinMode(8,OUTPUT);
-	analogWriteFrequency(6,234375);
-	digitalWrite(7,HIGH);
-	analogWriteFrequency(8,234375);
+
+	/*9pinMode(5,INPUT);
+	pinMode(PIN_PWM_LEFT,OUTPUT);
+	pinMode(PIN_DIR_LEFT,OUTPUT);
+	pinMode(PIN_PWM_RIGHT,OUTPUT);
+	analogWriteFrequency(PIN_PWM_LEFT,234375);
+	digitalWrite(PIN_DIR_LEFT,HIGH);
+	analogWriteFrequency(PIN_PWM_RIGHT,234375);*/
 
     Serial.println("Fin du setup");
 }
@@ -71,12 +73,12 @@ void loop(){
     orderMgr.execute("flpAr");
     delay(1000);
 
-    delay(3000);
+    delay(2000);
 
     /* MotionControlSystem */
-//    IntervalTimer motionControlInterruptTimer;
-//    motionControlInterruptTimer.priority(253);
-//    motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); // Setup de l'interruption d'asservissement
+    IntervalTimer motionControlInterruptTimer;
+    motionControlInterruptTimer.priority(253);
+    motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); // Setup de l'interruption d'asservissement
 
 
     orderMgr.execute("ct0");
@@ -103,8 +105,8 @@ void loop(){
     {
         if(i==20)
         {
-			analogWrite(6,100);
-			analogWrite(8,100);
+//			analogWrite(PIN_PWM_LEFT,100);
+//			analogWrite(PIN_PWM_RIGHT,100);
 //            orderMgr.execute("d 1000");
 //            orderMgr.execute("t pi");
 //            orderMgr.execute("av");
@@ -114,8 +116,8 @@ void loop(){
         delay(10);
     }
     orderMgr.execute("sstop");
-	analogWrite(6,0);
-	analogWrite(8,0);
+//	analogWrite(PIN_PWM_LEFT,0);
+//	analogWrite(PIN_PWM_RIGHT,0);
 //    orderMgr.execute("rawpwm 0");
     for(int i = 0;i<200;i++)
     {

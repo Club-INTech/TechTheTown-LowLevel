@@ -5,36 +5,37 @@
 
 /* Ethernet */
 //Ne pas oublier: PIN13 (LED) utilisée par l'ethernet
-#define PWD 24
-#define RST 9
+#define PWD 15
+#define RST 14
 
 /* Serial RXTX */
-	//AX
-#define RX1 31
-#define TX1 32
+//AX
+#define RX1 0
+#define TX1 1
 
 /* Codeuses */
-	//Gauche
-#define PIN_A_LEFT_ENCODER 18
-#define PIN_B_LEFT_ENCODER 19
-	//Droite
+//Gauche
+#define PIN_A_LEFT_ENCODER 22
+#define PIN_B_LEFT_ENCODER 23
+
+//Droite
 #define PIN_A_RIGHT_ENCODER 20
 #define PIN_B_RIGHT_ENCODER 21
 
 /* Moteurs */
-	//Gauche
-#define PIN_DIR_LEFT 5
-#define PIN_PWM_LEFT 6
-	//Droite
-#define PIN_DIR_RIGHT 7
-#define PIN_PWM_RIGHT 8
+//Gauche
+#define PIN_DIR_LEFT 2
+#define PIN_PWM_LEFT 3
+//Droite
+#define PIN_DIR_RIGHT 4
+#define PIN_PWM_RIGHT 5
 
 /* Electrovannes */
-#define PIN_ELECTROVANNE_AV 2
-#define PIN_ELECTROVANNE_AR 4
+#define PIN_ELECTROVANNE_AV 7
+#define PIN_ELECTROVANNE_AR 8
 
 /* Pompe a vide */
-#define PIN_PWM_POMPE 1
+#define PIN_PWM_POMPE 9
 
 /* CAPTEURS */
 
