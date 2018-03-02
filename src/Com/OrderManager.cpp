@@ -730,17 +730,13 @@ void OrderManager::execute(const char* orderToExecute)
         {
             actuatorsMgr.movAX12(backDoor_ID,backDoorOpen);
         }
-        else if (!strcmp(order, "tlpAv"))
+        else if (!strcmp(order, "olpAvp"))
         {
             actuatorsMgr.movAX12(frontDoor_ID,frontDoorClosed+20);
-            delay(500);
-            actuatorsMgr.movAX12(frontDoor_ID,frontDoorClosed);
         }
-        else if (!strcmp(order, "tlpAr"))
+        else if (!strcmp(order, "olpArp"))
         {
             actuatorsMgr.movAX12(backDoor_ID,backDoorClosed-20);
-            delay(500);
-            actuatorsMgr.movAX12(backDoor_ID,backDoorClosed);
         }
         /*
          * POMPE
