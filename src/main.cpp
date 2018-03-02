@@ -83,7 +83,7 @@ void loop(){
     IntervalTimer motionControlInterruptTimer;
     motionControlInterruptTimer.priority(253);
     motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); // Setup de l'interruption d'asservissement
-
+	delay(1500);//Laisse le temps aux capteurs de clignotter leur ID
 #if DEBUG
 	IntervalTimer blinkTim;
 	blinkTim.priority(255);
