@@ -42,7 +42,7 @@ public:
 	SensorMgr();
 	void refresh(MOVING_DIRECTION dir);
 
-	bool isJumpEngaged();
+	bool isJumperEngaged();
 	bool isCont1Engaged();
 };
 

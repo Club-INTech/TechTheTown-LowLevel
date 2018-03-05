@@ -66,7 +66,7 @@ void SensorMgr::refresh(MOVING_DIRECTION dir)
 
 //Contacteurs et Jumper
 
-bool SensorMgr::isJumpEngaged()
+bool SensorMgr::isJumperEngaged()
 {
 	return digitalRead(PIN_JMPR);
 }

@@ -89,9 +89,14 @@ void loop(){
 	blinkTim.priority(255);
 	blinkTim.begin(blink,500000);
 #endif
+
     while (true) {
-		 orderMgr.communicate();
-		 orderMgr.refreshUS();
+        orderMgr.communicate();
+        orderMgr.refreshUS();
+        if(orderMgr.isHLWaiting())
+        {
+            orderMgr.checkJumper();
+        }
     }
 }
 

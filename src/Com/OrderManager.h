@@ -140,36 +140,39 @@ private:
 	HookList hookList;
 	OrderData orderData;
 	char readMessage[RX_BUFFER_SIZE];
+	bool HLWaiting;
 
 	//Variables booleennes pour envoi de données au HL
 	bool isSendingUS;
 
 public:
 	#if DEBUG
-	 SerialMgr &highLevel;
+    SerialMgr &highLevel;
 	#else
-	 EthernetMgr &highLevel;
+    EthernetMgr &highLevel;
 	#endif
 
-	 OrderManager();
+    OrderManager();
 
-	 //Com&exec
-	 void refreshUS();
-	 void communicate();
-	 void execute(const char*);	//public pour pouvoir executer des scripts de hook
-
-
-	 //Utilitaire
-	 uint8_t split(char* , OrderData& , const char* separator = " ");
-	 int parseInt(const char*);
-	 float parseFloat(const char*);
-
-	 //Hooks
-	 void checkHooks();
-	 void executeHooks();
-	 bool hooksEnabled;
+    //Com&exec
+    void refreshUS();
+    void communicate();
+    void execute(const char*);	//public pour pouvoir executer des scripts de hook
 
 
+    //Utilitaire
+    uint8_t split(char* , OrderData& , const char* separator = " ");
+    int parseInt(const char*);
+    float parseFloat(const char*);
+	bool isHLWaiting();
+	void checkJumper();
+
+    //Hooks
+    void checkHooks();
+    void executeHooks();
+    bool hooksEnabled;
+	
+	
 //    std::map<std::string,int> lookupTable;
 };
 

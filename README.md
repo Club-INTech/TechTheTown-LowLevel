@@ -25,6 +25,7 @@ Au boulot les 1As !
 |   Ordres  |                       Actions                      |
 |:---------:|:--------------------------------------------------:|
 |     ?     |                     Ping le LL                     |
+|     j     |       Active l'attente de l'activation du jumper   |
 |    sus    |                    Switch les US                   |
 |     f     |                 Check le mouvement                 |
 |    ?xyo   |               Position + Orientation               |
@@ -80,14 +81,14 @@ Au boulot les 1As !
 |   rlbAv   |                Relève le bras avant                |
 |   flpAv   |                Ferme la porte avant                |
 |   olpAv   |                Ouvre la porte avant                |
-|   tlpAv   |                Tilt la porte avant                 |
+|  olpAvp   |          Ouvre légèrement la porte avant           |
 |    aeAv   |            Active l'électrovanne avant             |
 |    deAv   |           Désactive l'électrovanne avant           |
 |   blbAr   |               Baisse le bras arrière               |
 |   rlbAr   |               Relève le bras arrière               |
 |   flpAr   |               Ferme la porte arrière               |
 |   olpAr   |               Ouvre la porte arrière               |
-|   tlpAr   |               Tilt la porte arrière                |
+|  olpArp   |          Ouvre légèrement la porte arrière         |
 |    aeAr   |           Active l'électrovanne arrière            |
 |    deAr   |          Désactive l'électrovanne arrière          |
 

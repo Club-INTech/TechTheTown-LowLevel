@@ -19,6 +19,7 @@ OrderManager::OrderManager():
     memset(readMessage, 0, RX_BUFFER_SIZE);
     isSendingUS = false;
     hooksEnabled = true;
+    HLWaiting = false;
     highLevel.log("Communications ready");
 }
 
@@ -95,6 +96,10 @@ void OrderManager::execute(const char* orderToExecute)
         if (!strcmp(order, "?"))			//Ping
         {
             highLevel.printfln("0");
+        }
+        else if (!strcmp(order, "j"))       //Le HL attend l'activation du Jumper
+        {
+            HLWaiting = true;
         }
         else if (!strcmp(order, "sus"))		//Switch d'envois périodiques de données des capteurs
         {
@@ -917,6 +922,18 @@ int OrderManager::parseInt(const char* s) {
 
 float OrderManager::parseFloat(const char* s) {
     return strtof(s, nullptr);
+}
+
+bool OrderManager::isHLWaiting() {
+    return(HLWaiting);
+}
+
+void OrderManager::checkJumper() {
+    if(!sensorMgr.isJumperEngaged() && HLWaiting)
+    {
+        highLevel.sendEvent("BLITZKRIEG");
+        HLWaiting = false;
+    }
 }
 
 void OrderManager::checkHooks() {
