@@ -1,8 +1,8 @@
 #include "SRF10.h"
 
-SRF10::SRF10(uint8_t addr,uint8_t rangeByte,GAIN gain){
-  if( addr > 0x0F ) addr = 0x0F;
-  real_addr = (addr*2+BASE_OFFSET_ADDRESS)>>1;
+SRF10::SRF10(uint8_t id,uint8_t rangeByte,GAIN gain){
+  if( id > 0x0F ) id = 0x0F;
+  real_addr = (id*2+BASE_OFFSET_ADDRESS)>>1;
   setMaxRangeByte(rangeByte);
   setMaxGain(gain);
 }
@@ -34,27 +34,36 @@ void SRF10::setMaxGain( GAIN gain ){
   Wire.endTransmission();
 }
 
-void SRF10::changeAddressTo(uint8_t new_addr){
+void SRF10::changeIdTo(uint8_t id){
 
-  if( new_addr > 0x0F )new_addr=0x0F;
-  Wire.beginTransmission(real_addr);
-  Wire.write(COMMAND_REGISTER_ADDRES);
-  Wire.write(0xA0);
-  Wire.endTransmission();
-  Wire.beginTransmission(real_addr);
-  Wire.write(COMMAND_REGISTER_ADDRES);
-  Wire.write(0xAA);
-  Wire.endTransmission();
-  Wire.beginTransmission(real_addr);
-  Wire.write(COMMAND_REGISTER_ADDRES);
-  Wire.write(0xA5);
-  Wire.endTransmission();
-  Wire.beginTransmission(real_addr);
-  real_addr = new_addr*2+BASE_OFFSET_ADDRESS;
-  Wire.write(COMMAND_REGISTER_ADDRES);
-  Wire.write(real_addr);
-  Wire.endTransmission();
-  real_addr = real_addr>>1;
+  if( id > 0x0F )id=0x0F;
+  changeAddressTo(id*2+BASE_OFFSET_ADDRESS);
+}
+
+void SRF10::changeAddressTo(uint8_t addr)
+{
+    if( addr < 0xE0 )       addr=0xE0;
+    else if(addr > 0xFE )   addr=0xFE;
+    else if(addr & 0x01)    --addr;
+
+    Wire.beginTransmission(real_addr);
+    Wire.write(COMMAND_REGISTER_ADDRES);
+    Wire.write(0xA0);
+    Wire.endTransmission();
+    Wire.beginTransmission(real_addr);
+    Wire.write(COMMAND_REGISTER_ADDRES);
+    Wire.write(0xAA);
+    Wire.endTransmission();
+    Wire.beginTransmission(real_addr);
+    Wire.write(COMMAND_REGISTER_ADDRES);
+    Wire.write(0xA5);
+    Wire.endTransmission();
+    Wire.beginTransmission(real_addr);
+    real_addr = addr;
+    Wire.write(COMMAND_REGISTER_ADDRES);
+    Wire.write(real_addr);
+    Wire.endTransmission();
+    real_addr = real_addr>>1;
 }
 
 void SRF10::request()
