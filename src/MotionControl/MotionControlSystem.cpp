@@ -40,8 +40,8 @@ MotionControlSystem::MotionControlSystem() :
 
 
 	delayToStop = 100;              // Temps a l'arret avant de considérer un blocage
-	toleranceTranslation = 150;
-	toleranceRotation = 150;
+	toleranceTranslation = 200;
+	toleranceRotation = 200;
 	toleranceSpeed = 40;
 	toleranceSpeedEstablished = 50; // Doit être la plus petite possible, sans bloquer les trajectoires courbes 50
 	delayToEstablish = 100;
