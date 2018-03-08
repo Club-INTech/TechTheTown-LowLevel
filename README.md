@@ -55,7 +55,7 @@ Au boulot les 1As !
 |   errors  |         Retourne les erreurs d'incertitude         |
 |  rawspeed |               Vitesse brute des roues              |
 | rawposdata|         Pos x,y,α; vL,vR, targetvL,targetvR        |
-| monthlery |                Mode de présentation                |
+| montlhery |                Mode de présentation                |
 |     av    |                       Avance                       |
 |     rc    |                       Recule                       |
 |     td    |                   Tourne à droite                  |
