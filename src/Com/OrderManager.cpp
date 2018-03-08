@@ -385,7 +385,7 @@ void OrderManager::execute(const char* orderToExecute)
             *		   *|___________________________|*
             */
 
-        else if (!strcmp(order, "monthlery"))
+        else if (!strcmp(order, "montlhery"))
         {
             motionControlSystem.enableTranslationControl(false);
             motionControlSystem.enableRotationControl(false);
