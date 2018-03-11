@@ -859,21 +859,21 @@ void OrderManager::execute(const char* orderToExecute)
         else if (!strcmp(order, "demo"))
         {
             motionControlSystem.orderTranslation(400);
-            delay(3000);
+            delay(1500);
             motionControlSystem.orderRotation(-1.6f, MotionControlSystem::FREE);
-            delay(2000);
-            motionControlSystem.orderTranslation(200);
-            delay(2000);
-            actuatorsMgr.movAX12(3,100);
             delay(1000);
+            motionControlSystem.orderTranslation(200);
+            delay(1000);
+            actuatorsMgr.movAX12(3,100);
+            delay(500);
             motionControlSystem.orderTranslation(-200);
-            delay(2000);
+            delay(1000);
             motionControlSystem.orderRotation(0, MotionControlSystem::FREE);
             actuatorsMgr.movAX12(3,10);
-            delay(2000);
+            delay(1000);
             motionControlSystem.orderTranslation(-400);
             actuatorsMgr.movAX12G(0,95);
-            delay(2000);
+            delay(1000);
             actuatorsMgr.movAX12G(0,177);
         }
 

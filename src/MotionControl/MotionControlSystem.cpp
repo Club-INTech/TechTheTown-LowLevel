@@ -38,12 +38,12 @@ MotionControlSystem::MotionControlSystem() :
 
     maxSpeed = 12000;				// Limite globale de la vitesse (Rotation + Translation)
     maxSpeedTranslation = 10000;
-    maxSpeedRotation = 6000;
+    maxSpeedRotation = 4000;
 
 
 	delayToStop = 100;              // Temps a l'arret avant de considérer un blocage
-	toleranceTranslation = 72;
-	toleranceRotation = 120;
+	toleranceTranslation = 50;
+	toleranceRotation = 100;
 	toleranceSpeed = 24;			// 48 Proportionnellement aux 2A
 	toleranceSpeedEstablished = 120; // Doit être la plus petite possible, sans bloquer les trajectoires courbes 50
 	delayToEstablish = 100;
@@ -56,7 +56,7 @@ MotionControlSystem::MotionControlSystem() :
 	rightSpeedPID.setTunings(0.11,0,0.005);
 
 
-	maxAcceleration = 75;
+	maxAcceleration = 30;
 
 	leftMotor.init();
 	rightMotor.init();
@@ -268,6 +268,13 @@ void MotionControlSystem::manageStop()
 
 		else if ((timeToEstablish > delayToEstablish) && !isSpeedEstablished) {
 			isSpeedEstablished = true;
+            if(leftSpeedSetpoint == 0 && rightSpeedSetpoint == 0)
+            {
+                leftMotor.run(0);
+                rightMotor.run(0);
+                leftSpeedPID.resetErrors();
+                rightSpeedPID.resetErrors();
+            }
 
 		}
 	}

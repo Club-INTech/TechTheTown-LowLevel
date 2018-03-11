@@ -91,39 +91,46 @@ void loop(){
 //    orderMgr.execute("cr0");
 //    orderMgr.execute("monthlery");
 //    orderMgr.execute("cv0");
-    orderMgr.execute("kpg 0.2115");
+    orderMgr.execute("kpg 0.2015");
     orderMgr.execute("kig 0.000");
     orderMgr.execute("kdg 0.384");
-    orderMgr.execute("kpd 0.22");
+    orderMgr.execute("kpd 0.21");
     orderMgr.execute("kid 0.000");
-    orderMgr.execute("kdd 0.36");
+    orderMgr.execute("kdd 0.37");
 
 
-    orderMgr.execute("kpt 3.355");
+    orderMgr.execute("kpt 6.5");
     orderMgr.execute("kit 0");
-    orderMgr.execute("kdt 0");
+    orderMgr.execute("kdt 1.08");
 
-    orderMgr.execute("kpr 6.0");
-    orderMgr.execute("kir 0.0");
-    orderMgr.execute("kdr 0.0");
+    orderMgr.execute("kpr 10.0");
+    orderMgr.execute("kir 0");
+    orderMgr.execute("kdr 0");/*
 //    orderMgr.execute("t pi");
-    for(int i=0;i<200;i++)
+//    int i = 0;
+    for(int i=0;i<100;i++)
+//    while(true)
     {
         if(i==20)
         {
 //			analogWrite(PIN_PWM_LEFT,100);
 //			analogWrite(PIN_PWM_RIGHT,100);
-//            orderMgr.execute("d 100");
-//            orderMgr.execute("t -1.57");
-            orderMgr.execute("av");
+//            orderMgr.execute("d 15");
+            orderMgr.execute("t 1.57");
+//            orderMgr.execute("av");
 //            orderMgr.execute("rawpwm 70");
         }
+//        if(i%200==100)
+//        {
+//            orderMgr.execute("t 0.2");
+//        }
 //        if(i==120)
 //        {
 //            orderMgr.execute("d 300");
 //        }
         orderMgr.execute("rawposdata");
-        delay(10);
+        delay(40);
+        i++;
     }
     orderMgr.execute("sstop");
 //	analogWrite(PIN_PWM_LEFT,0);
@@ -157,7 +164,7 @@ void loop(){
 //	delay(4000);
 //	orderMgr.execute("d -2000");
 //	orderMgr.execute("t pi");
-//	delay(2000);
+//	delay(2000);*/
     while (true) {
         orderMgr.communicate();
         /*if(i%100==0)
