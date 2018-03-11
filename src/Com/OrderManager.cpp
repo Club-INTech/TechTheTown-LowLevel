@@ -339,6 +339,14 @@ void OrderManager::execute(const char* orderToExecute)
             highLevel.log("Deriv: %f - %f", leftDer, rightDer);
             highLevel.log("Integ: %f - %f", leftInt, rightInt);
         }
+        else if(!strcmp(order, "transError"))
+        {
+            int32_t propError,intError,derError;
+            motionControlSystem.getTranslationErrors(propError,intError,derError);
+            highLevel.log("Prop: %i", propError);
+            highLevel.log("Integ: %i", intError);
+            highLevel.log("Deriv: %i", derError);
+        }
         else if (!strcmp(order, "rawspeed")) {
             int32_t leftsetpoint, rightsetpoint;
 

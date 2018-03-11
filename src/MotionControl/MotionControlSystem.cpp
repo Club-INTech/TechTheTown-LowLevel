@@ -27,7 +27,7 @@ MotionControlSystem::MotionControlSystem() :
 	moving = false;
 	moveAbnormal = false;
 	moveAbnormalSent = false;
-	forcedMovement = true;
+	forcedMovement = false;
     pointToPointMovement = false;
 	translation = true;
 	direction = NONE;
@@ -36,19 +36,19 @@ MotionControlSystem::MotionControlSystem() :
 	rightSpeedPID.setOutputLimits(-255, 255);
 
 
-    maxSpeed = 12000;				// Limite globale de la vitesse (Rotation + Translation)
-    maxSpeedTranslation = 9000;
-    maxSpeedRotation = 6000;
+    maxSpeed = 16661;				// Limite globale de la vitesse (Rotation + Translation)
+    maxSpeedTranslation = 14404;
+    maxSpeedRotation = 3000;
 
 
 	delayToStop = 100;              // Temps a l'arret avant de considérer un blocage
-	toleranceTranslation = 15;
-	toleranceRotation = 15;
-	toleranceSpeed = 40;
-	toleranceSpeedEstablished = 50; // Doit être la plus petite possible, sans bloquer les trajectoires courbes 50
+	toleranceTranslation = 72;
+	toleranceRotation = 120;
+	toleranceSpeed = 24;			// 48 Proportionnellement aux 2A
+	toleranceSpeedEstablished = 120; // Doit être la plus petite possible, sans bloquer les trajectoires courbes 50
 	delayToEstablish = 100;
-	toleranceDifferentielle = 500;  // Pour les trajectoires "normales", verifie que les roues ne font pas nawak chacunes de leur cote.
-
+	toleranceDifferentielle = 4500;  // Pour les trajectoires "normales", verifie que les roues ne font pas nawak chacunes de leur cote.
+	toleranceDerivative = 0; 		// Doit être suffisament faible pour être fiable mais suffisament élevée pour arrêter contre un mur
 
 	translationPID.setTunings(10,0,50);
 	rotationPID.setTunings(17,0,100);
@@ -56,7 +56,7 @@ MotionControlSystem::MotionControlSystem() :
 	rightSpeedPID.setTunings(0.11,0,0.005);
 
 
-	maxAcceleration = 10;
+	maxAcceleration = 30;
 
 	leftMotor.init();
 	rightMotor.init();
@@ -135,8 +135,8 @@ void MotionControlSystem::control()
 		else if (rotationSpeed < -maxSpeedRotation)
 			rotationSpeed = -maxSpeedRotation;
 
-			leftSpeedSetpoint = (int32_t)(translationSpeed - rotationSpeed);
-			rightSpeedSetpoint = (int32_t)(translationSpeed + rotationSpeed);
+		leftSpeedSetpoint = (int32_t)(translationSpeed - rotationSpeed);
+		rightSpeedSetpoint = (int32_t)(translationSpeed + rotationSpeed);
 
 		// Limitation de la vitesse
 		if (leftSpeedSetpoint > maxSpeed) {
@@ -153,19 +153,19 @@ void MotionControlSystem::control()
 		}
 
 		//Limiteurs d'accélération et décélération
-		if ((leftSpeedSetpoint - previousLeftSpeedSetpoint)  > maxAcceleration)
+		if (((leftSpeedSetpoint - previousLeftSpeedSetpoint)  > maxAcceleration) && moving)
 		{
 			leftSpeedSetpoint = (previousLeftSpeedSetpoint + maxAcceleration);
 		}
-		else if ((previousLeftSpeedSetpoint - leftSpeedSetpoint)  > maxAcceleration)
+		else if (((previousLeftSpeedSetpoint - leftSpeedSetpoint)  > maxAcceleration) && moving)
 		{
 			leftSpeedSetpoint = (previousLeftSpeedSetpoint - maxAcceleration);
 		}
-		if ((rightSpeedSetpoint - previousRightSpeedSetpoint)  > maxAcceleration)
+		if (((rightSpeedSetpoint - previousRightSpeedSetpoint)  > maxAcceleration) && moving)
 		{
 			rightSpeedSetpoint = (previousRightSpeedSetpoint + maxAcceleration);
 		}
-		else if ((previousRightSpeedSetpoint - rightSpeedSetpoint)  > maxAcceleration)
+		else if (((previousRightSpeedSetpoint - rightSpeedSetpoint)  > maxAcceleration) && moving)
 		{
 			rightSpeedSetpoint = (previousRightSpeedSetpoint - maxAcceleration);
 		}
@@ -215,7 +215,19 @@ void MotionControlSystem::enableSpeedControl(bool enabled) {
 }
 
 bool MotionControlSystem::isPhysicallyStopped() {
-	return ((translationPID.getDerivativeError() == 0) && (rotationPID.getDerivativeError() == 0)) || (ABS(ABS(leftSpeedPID.getError()) - ABS(rightSpeedPID.getError()))>toleranceDifferentielle);
+	bool translationBlockage = ABS(translationPID.getDerivativeError()) <= toleranceDerivative;
+	bool rotationBlockage = ABS(rotationPID.getDerivativeError()) <= toleranceDerivative;
+	bool speedDifferenceTooHigh = ABS(ABS(leftSpeedPID.getError()) - ABS(rightSpeedPID.getError()))>toleranceDifferentielle;
+	/*Serial.print("Translation check: ");
+	Serial.println(translationBlockage);
+	Serial.print("Rotation check: ");
+	Serial.println(rotationBlockage);
+	Serial.print("Speed check: ");
+	Serial.println(speedDifferenceTooHigh);*/
+//	Serial.println("tests");
+//	Serial.println(translationBlockage && rotationBlockage && moving);
+//	Serial.println(speedDifferenceTooHigh && moving);
+	return ((translationBlockage && rotationBlockage) || speedDifferenceTooHigh);
 }
 
 bool MotionControlSystem::isLeftWheelSpeedAbnormal() {
@@ -262,18 +274,22 @@ void MotionControlSystem::manageStop()
 
 	if (isPhysicallyStopped() && moving && !forcedMovement) // Pour un blocage classique
 	{
+//		Serial.println("Je test le blocage");
 		if (time == 0)
 		{ //Debut du timer
 			time = millis();
+//			Serial.println("Je set le timer");
 		}
 		else
 		{
+//			Serial.println("Je vérifie si je suis bien arrêté");
+//			Serial.print("dt: ");
+//			Serial.println(millis()-time);
 			if ((millis() - time) >= delayToStop)
-			{ //Si arreté plus de 'delayToStop' ms
-				{ //Stoppe pour cause de fin de mouvement
-					moveAbnormal = !(ABS((translationPID.getError()) <= toleranceTranslation) && ABS(rotationPID.getError()) <= toleranceRotation);
-					stop();
-				}
+			{ 	//Si arreté plus de 'delayToStop' ms
+			  	// Stoppe pour cause de fin de mouvement
+				moveAbnormal = !(ABS((translationPID.getError()) <= toleranceTranslation) && ABS(rotationPID.getError()) <= toleranceRotation);
+				stop();
 			}
 		}
 	}
@@ -297,6 +313,7 @@ void MotionControlSystem::manageStop()
 
 	else
 	{
+//		Serial.println("Je reset les timer");
 		time = 0;
 		time2 = 0;
 		if (moving)
@@ -331,7 +348,7 @@ void MotionControlSystem::resetPosition()
 void MotionControlSystem::orderTranslation(int32_t mmDistance)
 {
 
-    if(mmDistance<300)
+    /*if(mmDistance<300)
     {
         translationPID.setTunings(2.8,0,0);
     }
@@ -342,7 +359,7 @@ void MotionControlSystem::orderTranslation(int32_t mmDistance)
     else
     {
         translationPID.setTunings(5.5,0,0);
-    }
+    }*/
     
 	translationSetpoint += (int32_t)mmDistance / TICK_TO_MM;
 	if (!moving)
@@ -430,6 +447,9 @@ void MotionControlSystem::orderRawPwm(Side side, int16_t pwm) {
 
 
 void MotionControlSystem::stop() {
+	Serial.println("STOPPING");
+	Serial.println(currentDistance);
+	Serial.println(currentAngle);
 
 	moving = false;
 	translationSetpoint = currentDistance;
@@ -437,6 +457,8 @@ void MotionControlSystem::stop() {
 
 	leftSpeedSetpoint = 0;
 	rightSpeedSetpoint = 0;
+	translationSpeed = 0;
+	rotationSpeed = 0;
 
 	//Arrete les moteurs
 	leftMotor.run(0);
@@ -477,6 +499,9 @@ bool MotionControlSystem::sentMoveAbnormal() const
 
 void MotionControlSystem::setMoveAbnormalSent(bool status) {
 	moveAbnormalSent = status;
+	translationSetpoint = currentDistance;
+	rotationSetpoint = currentAngle;
+	controlled = true;
 }
 
 void MotionControlSystem::setRawPositiveTranslationSpeed() {
@@ -566,10 +591,10 @@ void MotionControlSystem::getTranslationTunings(float &kp, float &ki, float &kd)
 	ki = translationPID.getKi();
 	kd = translationPID.getKd();
 }
-void MotionControlSystem::getTranslationErrors(float& translationProp, float& translationIntegral, float& translationDerivative) {
-    translationProp = translationPID.getError()*TICK_TO_MM;
-    translationIntegral = translationPID.getIntegralErrol()*TICK_TO_MM;
-    translationDerivative = translationPID.getDerivativeError()*TICK_TO_MM;
+void MotionControlSystem::getTranslationErrors(int32_t& translationProp, int32_t& translationIntegral, int32_t& translationDerivative) {
+    translationProp = translationPID.getError();
+    translationIntegral = translationPID.getIntegralErrol();
+    translationDerivative = translationPID.getDerivativeError();
 }
 
 /* Getter des réglages de PID en rotation */

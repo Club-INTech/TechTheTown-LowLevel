@@ -41,11 +41,17 @@ void setup() {
 
 /* Interruptions d'asservissements */
 void motionControlInterrupt() {
+	static int compteurDeLavage = 0;
 	static MotionControlSystem &motionControlSystem = MotionControlSystem::Instance();
 	motionControlSystem.updateTicks();
     motionControlSystem.control();
 	motionControlSystem.updatePosition();
-	motionControlSystem.manageStop();
+	if(compteurDeLavage == 5)
+	{
+		motionControlSystem.manageStop();
+		compteurDeLavage = 0;
+	}
+	compteurDeLavage++;
 }
 
 
@@ -81,37 +87,41 @@ void loop(){
     motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); // Setup de l'interruption d'asservissement
 
 
-    orderMgr.execute("ct0");
-    orderMgr.execute("cr0");
-    orderMgr.execute("monthlery");
-    orderMgr.execute("cv0");
+//    orderMgr.execute("ct0");
+//    orderMgr.execute("cr0");
+//    orderMgr.execute("monthlery");
+//    orderMgr.execute("cv0");
     orderMgr.execute("kpg 0.2");
-    orderMgr.execute("kig 0.0001");      //.0001
-    orderMgr.execute("kdg 0.2");      //0.2
+    orderMgr.execute("kig 0.0001");
+    orderMgr.execute("kdg 0.23");
     orderMgr.execute("kpd 0.2");
-    orderMgr.execute("kid 0.0001");      //0.001
-    orderMgr.execute("kdd 0.2");      //0.2
+    orderMgr.execute("kid 0.0001");
+    orderMgr.execute("kdd 0.23");
 
 
-//    orderMgr.execute("kpt 2.05");
-//    orderMgr.execute("kit 0.0");
-//    orderMgr.execute("kdt 0.0");
-//
-//    orderMgr.execute("kpr 3.0");
-//    orderMgr.execute("kir 0.0");
-//    orderMgr.execute("kdr 0.0");
+    orderMgr.execute("kpt 3.5");
+    orderMgr.execute("kit 0");
+    orderMgr.execute("kdt 0");
+
+    orderMgr.execute("kpr 6.0");
+    orderMgr.execute("kir 0.0");
+    orderMgr.execute("kdr 0.0");
 //    orderMgr.execute("t pi");
-    for(int i=0;i<200;i++)
+    for(int i=0;i<400;i++)
     {
         if(i==20)
         {
 //			analogWrite(PIN_PWM_LEFT,100);
 //			analogWrite(PIN_PWM_RIGHT,100);
 //            orderMgr.execute("d 1000");
-//            orderMgr.execute("t pi");
+            orderMgr.execute("t -1.57");
 //            orderMgr.execute("av");
 //            orderMgr.execute("rawpwm 70");
         }
+//        if(i==120)
+//        {
+//            orderMgr.execute("d 300");
+//        }
         orderMgr.execute("rawposdata");
         delay(10);
     }
@@ -119,16 +129,16 @@ void loop(){
 //	analogWrite(PIN_PWM_LEFT,0);
 //	analogWrite(PIN_PWM_RIGHT,0);
 //    orderMgr.execute("rawpwm 0");
-    for(int i = 0;i<200;i++)
-    {
-        orderMgr.execute("rawposdata");
-        delay(10);
-    }
-    delay(1000);
+//    for(int i = 0;i<200;i++)
+//    {
+//        orderMgr.execute("rawposdata");
+//        delay(10);
+//    }
+//    delay(1000);
 //    orderMgr.execute("rc");
 //    delay(130*10);
 //    orderMgr.execute("sstop");
-//    orderMgr.execute("d -1000");
+//    orderMgr.execute("d -2000");
 //    orderMgr.execute("t 0");
 //    orderMgr.execute("rawpwm 0");
 //    for(int i=0;i<600/1;i++)
@@ -142,9 +152,17 @@ void loop(){
 //    }
     Serial.println("DATAEND");
 
-
+//    long long unsigned int i = 0;
+//	orderMgr.execute("d 2000");
+//	delay(4000);
+//	orderMgr.execute("d -2000");
+//	orderMgr.execute("t pi");
+//	delay(2000);
     while (true) {
-		 orderMgr.communicate();
+        orderMgr.communicate();
+        /*if(i%100==0)
+            orderMgr.execute("transError");
+        i++;*/
 //		 orderMgr.refreshUS();
     }
 

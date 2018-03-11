@@ -134,6 +134,7 @@ private:
 	int toleranceSpeedEstablished;  // Tolérance autour de la vitesse établie avant de capter un blocage
 
 	int toleranceDifferentielle;
+	int toleranceDerivative;
 
 	int delayToEstablish;           // Temps à attendre avant de considérer la vitesse stable
 
@@ -154,7 +155,7 @@ public:
 	/* Asservissement */
     //LA fonction d'asservissement
 	void control();
-	bool controlled;
+	volatile bool controlled;
 
     /* Vitesse */
 	void setLeftSpeedTunings(float, float, float);
@@ -165,7 +166,7 @@ public:
 	void getSpeedSetpoints(int32_t & left, int32_t & right);
 	void printValues();
 	void getTranslationTunings(float &, float &, float &) const;
-    void getTranslationErrors(float& translationProp, float& translationIntegral, float& translationDerivative);
+    void getTranslationErrors(int32_t& translationProp, int32_t& translationIntegral, int32_t& translationDerivative);
 	void getRotationTunings(float &, float &, float &) const;
     void getRotationErrors(float& rotaProp, float& rotaIntegral, float& rotaDerivative);
 
