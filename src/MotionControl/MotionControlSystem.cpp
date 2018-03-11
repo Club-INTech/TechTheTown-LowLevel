@@ -56,7 +56,7 @@ MotionControlSystem::MotionControlSystem() :
 	rightSpeedPID.setTunings(0.11,0,0.005);
 
 
-	maxAcceleration = 16;
+	maxAcceleration = 75;
 
 	leftMotor.init();
 	rightMotor.init();

@@ -86,23 +86,17 @@ void loop(){
     motionControlInterruptTimer.priority(253);
     motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); // Setup de l'interruption d'asservissement
 
-	orderMgr.execute("mothlery");
-	while(true)
-	{
-		orderMgr.execute("cod");
-		delay(100);
-	}
 
 //    orderMgr.execute("ct0");
 //    orderMgr.execute("cr0");
 //    orderMgr.execute("monthlery");
 //    orderMgr.execute("cv0");
-    orderMgr.execute("kpg 0.2");
-    orderMgr.execute("kig 0.0001");
-    orderMgr.execute("kdg 0.232");
-    orderMgr.execute("kpd 0.2");
-    orderMgr.execute("kid 0.0001");
-    orderMgr.execute("kdd 0.23");
+    orderMgr.execute("kpg 0.2115");
+    orderMgr.execute("kig 0.000");
+    orderMgr.execute("kdg 0.384");
+    orderMgr.execute("kpd 0.22");
+    orderMgr.execute("kid 0.000");
+    orderMgr.execute("kdd 0.36");
 
 
     orderMgr.execute("kpt 3.355");
@@ -113,15 +107,15 @@ void loop(){
     orderMgr.execute("kir 0.0");
     orderMgr.execute("kdr 0.0");
 //    orderMgr.execute("t pi");
-    for(int i=0;i<300;i++)
+    for(int i=0;i<200;i++)
     {
         if(i==20)
         {
 //			analogWrite(PIN_PWM_LEFT,100);
 //			analogWrite(PIN_PWM_RIGHT,100);
-            orderMgr.execute("d 100");
+//            orderMgr.execute("d 100");
 //            orderMgr.execute("t -1.57");
-//            orderMgr.execute("av");
+            orderMgr.execute("av");
 //            orderMgr.execute("rawpwm 70");
         }
 //        if(i==120)
@@ -135,11 +129,11 @@ void loop(){
 //	analogWrite(PIN_PWM_LEFT,0);
 //	analogWrite(PIN_PWM_RIGHT,0);
 //    orderMgr.execute("rawpwm 0");
-//    for(int i = 0;i<200;i++)
-//    {
-//        orderMgr.execute("rawposdata");
-//        delay(10);
-//    }
+    for(int i = 0;i<200;i++)
+    {
+        orderMgr.execute("rawposdata");
+        delay(10);
+    }
 //    delay(1000);
 //    orderMgr.execute("rc");
 //    delay(130*10);
