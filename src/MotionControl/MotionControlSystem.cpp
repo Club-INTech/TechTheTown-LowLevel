@@ -35,26 +35,26 @@ MotionControlSystem::MotionControlSystem() :
 	rightSpeedPID.setOutputLimits(-255, 255);
 
     maxSpeed = 12000;				// Limite globale de la vitesse (Rotation + Translation)
-    maxSpeedTranslation = 9000;
-    maxSpeedRotation = 6000;
+    maxSpeedTranslation = 10000;
+    maxSpeedRotation = 4000;
 
 
 	delayToStop = 100;              // Temps a l'arret avant de considérer un blocage
-	toleranceTranslation = 200;
-	toleranceRotation = 200;
-	toleranceSpeed = 40;
-	toleranceSpeedEstablished = 50; // Doit être la plus petite possible, sans bloquer les trajectoires courbes 50
+	toleranceTranslation = 50;
+	toleranceRotation = 100;
+	toleranceSpeed = 24;
+	toleranceSpeedEstablished = 120; // Doit être la plus petite possible, sans bloquer les trajectoires courbes 50
 	delayToEstablish = 100;
-	toleranceDifferentielle = 500;  // Pour les trajectoires "normales", verifie que les roues ne font pas nawak chacunes de leur cote.
+	toleranceDifferentielle = 4500;  // Pour les trajectoires "normales", verifie que les roues ne font pas nawak chacunes de leur cote.
 
 
-	translationPID.setTunings(10,0,50);
-	rotationPID.setTunings(17,0,100);
-	leftSpeedPID.setTunings(0.11,0,0.005);
-	rightSpeedPID.setTunings(0.11,0,0.005);
+    leftSpeedPID.setTunings(0.2015,0,0.384);
+    rightSpeedPID.setTunings(0.21,0,0.37);
+	translationPID.setTunings(6.5,0,1.08);
+	rotationPID.setTunings(10,0,0);
 
 
-	maxAcceleration = 10;
+	maxAcceleration = 30;
 
 	leftMotor.init();
 	rightMotor.init();
