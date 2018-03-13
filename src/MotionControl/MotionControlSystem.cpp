@@ -598,7 +598,7 @@ void MotionControlSystem::setRightSpeedTunings(float kp, float ki, float kd) {
 	rightSpeedPID.setTunings(kp, ki, kd);
 }
 
-void MotionControlSystem::getPWMS(uint32_t& left, uint32_t& right) {
+void MotionControlSystem::getPWMS(int32_t& left, int32_t& right) {
 	left = leftPWM;
 	right = rightPWM;
 }

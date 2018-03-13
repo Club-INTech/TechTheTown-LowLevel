@@ -333,7 +333,7 @@ void OrderManager::execute(const char* orderToExecute)
             motionControlSystem.orderRawPwm(Side::RIGHT,rawPWM);
         }
         else if (!strcmp(order, "getpwm")) {
-            uint32_t left, right;
+            int32_t left, right;
             motionControlSystem.getPWMS(left, right);
             highLevel.log("PWMS: %d - %d", left, right);
         }

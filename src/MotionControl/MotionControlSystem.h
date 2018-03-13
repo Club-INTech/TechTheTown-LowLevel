@@ -158,7 +158,7 @@ public:
     /* Vitesse */
 	void setLeftSpeedTunings(float, float, float);
 	void setRightSpeedTunings(float, float, float);
-	void getPWMS(uint32_t&  left, uint32_t&  right);
+	void getPWMS(int32_t&  left, int32_t&  right);
 	void getSpeedErrors(float & leftProp, float & leftIntegral, float & leftDerivative, float & rightProp, float & rightIntegral, float & rightDerivative);
 	void rawWheelSpeed(uint16_t speed, int32_t& leftsetpoint, int32_t& rightsetpoint);
 	void getSpeedSetpoints(int32_t & left, int32_t & right);
