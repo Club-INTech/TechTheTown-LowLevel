@@ -177,6 +177,7 @@ public:
 	void getRightSpeedTunings(float &, float &, float &) const;
     float getLeftSpeed();
     float getRightSpeed();
+	int32_t getDistanceTicks();
 
 	void setRawPositiveTranslationSpeed();
 

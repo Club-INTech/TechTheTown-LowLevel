@@ -52,6 +52,7 @@ Au boulot les 1As !
 |   rawpwm  |        Demande un PWM brut aux deux moteurs        |
 |   getpwn  |          Retourne le PWN des deux moteurs          |
 |   errors  |         Retourne les erreurs d'incertitude         |
+|rawdistance|         Retourne la distance brute en ticks        |
 |  rawspeed |               Vitesse brute des roues              |
 | rawposdata|         Pos x,y,α; vL,vR, targetvL,targetvR        |
 | monthlery |                Mode de présentation                |

@@ -91,32 +91,34 @@ void loop(){
 //    orderMgr.execute("cr0");
 //    orderMgr.execute("monthlery");
 //    orderMgr.execute("cv0");
-    orderMgr.execute("kpg 0.2015");
-    orderMgr.execute("kig 0.000");
-    orderMgr.execute("kdg 0.384");
-    orderMgr.execute("kpd 0.21");
-    orderMgr.execute("kid 0.000");
-    orderMgr.execute("kdd 0.37");
+    orderMgr.execute("kpg 0.2165");
+    orderMgr.execute("kig 0.00005");
+    orderMgr.execute("kdg 0.414");
+    orderMgr.execute("kpd 0.225");
+    orderMgr.execute("kid 0.00005");
+    orderMgr.execute("kdd 0.4121");
 
 
     orderMgr.execute("kpt 6.5");
     orderMgr.execute("kit 0");
     orderMgr.execute("kdt 1.08");
 
-    orderMgr.execute("kpr 10.0");
-    orderMgr.execute("kir 0");
-    orderMgr.execute("kdr 0");/*
+    orderMgr.execute("kpr 15");
+    orderMgr.execute("kir 0.00001");
+    orderMgr.execute("kdr 0");
+
+    /*
 //    orderMgr.execute("t pi");
 //    int i = 0;
-    for(int i=0;i<100;i++)
+    for(int i=0;i<250;i++)
 //    while(true)
     {
         if(i==20)
         {
 //			analogWrite(PIN_PWM_LEFT,100);
 //			analogWrite(PIN_PWM_RIGHT,100);
-//            orderMgr.execute("d 15");
-            orderMgr.execute("t 1.57");
+//            orderMgr.execute("d 1000");
+            orderMgr.execute("t pi");
 //            orderMgr.execute("av");
 //            orderMgr.execute("rawpwm 70");
         }
@@ -129,7 +131,8 @@ void loop(){
 //            orderMgr.execute("d 300");
 //        }
         orderMgr.execute("rawposdata");
-        delay(40);
+//        orderMgr.execute("rawdistance");
+        delay(10);
         i++;
     }
     orderMgr.execute("sstop");
@@ -141,6 +144,7 @@ void loop(){
         orderMgr.execute("rawposdata");
         delay(10);
     }
+//    orderMgr.execute("rawdistance");
 //    delay(1000);
 //    orderMgr.execute("rc");
 //    delay(130*10);
@@ -165,6 +169,8 @@ void loop(){
 //	orderMgr.execute("d -2000");
 //	orderMgr.execute("t pi");
 //	delay(2000);*/
+    orderMgr.execute("demo");
+
     while (true) {
         orderMgr.communicate();
         /*if(i%100==0)

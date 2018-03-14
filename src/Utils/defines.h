@@ -42,7 +42,7 @@ constexpr uint16_t  MC_FREQUENCY =              1000; //1Khz
 constexpr double    MC_PERIOD = static_cast<double>(1000000/MC_FREQUENCY); // Durée en µs entre deux mesures
 
 constexpr uint16_t  TICKS_PER_TURN =            2400;   // Unité : ticks
-constexpr float     COD_WHEEL_DIAMETER =        65.3;  // Unité : mm
+constexpr float     COD_WHEEL_DIAMETER =        65.948;  // Unité : mm
 
 constexpr uint8_t   DISTANCE_COD_GAUCHE_CENTRE = 112; // Unité : mm
 constexpr uint8_t   DISTANCE_COD_DROITE_CENTRE = 111; // Unité : mm

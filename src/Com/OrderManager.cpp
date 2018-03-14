@@ -347,6 +347,10 @@ void OrderManager::execute(const char* orderToExecute)
             highLevel.log("Integ: %i", intError);
             highLevel.log("Deriv: %i", derError);
         }
+            else if (!strcmp(order,"rawdistance"))
+        {
+            highLevel.log("%i",motionControlSystem.getDistanceTicks());
+        }
         else if (!strcmp(order, "rawspeed")) {
             int32_t leftsetpoint, rightsetpoint;
 

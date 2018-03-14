@@ -38,7 +38,7 @@ MotionControlSystem::MotionControlSystem() :
 
     maxSpeed = 12000;				// Limite globale de la vitesse (Rotation + Translation)
     maxSpeedTranslation = 10000;
-    maxSpeedRotation = 4000;
+    maxSpeedRotation = 8000;
 
 
 	delayToStop = 100;              // Temps a l'arret avant de considérer un blocage
@@ -635,6 +635,9 @@ float MotionControlSystem::getLeftSpeed() {
 float MotionControlSystem::getRightSpeed() {
     return(currentRightSpeed*TICK_TO_MM);
 }
+int32_t MotionControlSystem::getDistanceTicks() {
+    return(currentDistance);
+}
 
 /* Setters des réglages de PID */
 void MotionControlSystem::setTranslationTunings(float kp, float ki, float kd) {
@@ -732,3 +735,5 @@ void MotionControlSystem::printValues() {
 	Serial.print("LeftPwm  - "); Serial.println(this->leftPWM);
 	Serial.print("RightPwm - "); Serial.println(this->rightPWM);
 }
+
+
