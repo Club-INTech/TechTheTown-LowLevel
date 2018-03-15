@@ -161,7 +161,7 @@ public:
 
 
     //Utilitaire
-    uint8_t split(char* , OrderData& , const char* separator = " ");
+    int8_t split(char* , OrderData& , const char* separator = " ");
     int parseInt(const char*);
     float parseFloat(const char*);
 	bool isHLWaiting();

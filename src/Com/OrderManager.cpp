@@ -897,13 +897,14 @@ void OrderManager::refreshUS()
 *	Sépare une courte chaîne de caractères(RX_BUFFER_SIZE) selon un séparateur, dans un tableau output (au plus 4 mots)
 */
 
-uint8_t OrderManager::split(char* input, OrderData& output, const char* separator) {
+int8_t OrderManager::split(char* input, OrderData& output, const char* separator) {
     char *token;
-    uint8_t i = 0;
+    int8_t i = -1;
     output.clear();
     token = strtok(input, separator);
     if (token != nullptr) {
         output.push_back(token);
+        i++;
     }
     do {
         token = strtok(nullptr, separator);
