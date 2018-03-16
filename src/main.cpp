@@ -75,7 +75,6 @@ void loop(){
 	blinkTim.priority(255);
 	blinkTim.begin(blink,500000);
 #endif
-
     while (true) {
         orderMgr.communicate();
         orderMgr.refreshUS();
@@ -83,6 +82,7 @@ void loop(){
         {
             orderMgr.checkJumper();
         }
+
     }
 }
 

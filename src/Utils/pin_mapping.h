@@ -38,9 +38,9 @@
 
 /* CAPTEURS */
 
-	//US
-#define PIN_TRIGGER_TEST 0
-#define PIN_ECHO_TEST 0
+	//IR
+#define PIN_CUBES_AV_THRESH 28
+#define PIN_CUBES_AR_THRESH 29
 
 	//CONT
 #define PIN_JMPR 0
