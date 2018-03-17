@@ -387,21 +387,20 @@ bool VL6180X::timeoutOccurred()
   return tmp;
 }
 
-void VL6180X::enableThreshRangeMode(uint8_t value, bool condition , uint8_t refresh_period )
+/*
+void VL6180X::enableThreshRangeMode(uint8_t value, bool condition , uint16_t refresh_period )
 {
-    writeReg(SYSTEM__INTERRUPT_CONFIG_GPIO,0x01);
-    setThreshRange(value);
-    if(condition)
-        writeReg(SYSTEM__MODE_GPIO1,0x10);
-    else
-        writeReg(SYSTEM__MODE_GPIO1,0x30);
-    writeReg(SYSRANGE__INTERMEASUREMENT_PERIOD,refresh_period);
-    writeReg(SYSRANGE__START,0x03);
+    stopContinuous();
+    writeReg(SYSRANGE__THRESH_LOW,value);
+    writeReg(SYSTEM__MODE_GPIO1,0x20);
+    startRangeContinuous(refresh_period);
 }
 
 void VL6180X::disableThreshRangeMode()
 {
+    stopContinuous();
     writeReg(SYSTEM__MODE_GPIO1,0x20);
     writeReg(SYSTEM__INTERRUPT_CONFIG_GPIO,0x00);
     writeReg(SYSRANGE__START,0x00);
 }
+*/

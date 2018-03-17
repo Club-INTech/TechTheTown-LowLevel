@@ -47,12 +47,24 @@ void blink(){
 		digitalWrite(LED_BUILTIN,!digitalRead(LED_BUILTIN));
 	}
 }
+
+void test()
+{
+	Serial.println("coucou");
+	delay(200);
+}
 /**
  * Boucle principale, y est géré:
  * La communication HL
  * Les capteurs
  * Divers initialisations et instanciations
  */
+
+void inc()
+{
+	Serial.println("caca");
+}
+
 void loop(){
 	OrderManager& orderMgr = OrderManager::Instance();
 
@@ -75,9 +87,14 @@ void loop(){
 	blinkTim.priority(255);
 	blinkTim.begin(blink,500000);
 #endif
+
+
+	//PassageCounter cnter(100,10,inc);
     while (true) {
         orderMgr.communicate();
         orderMgr.refreshUS();
+		//cnter.update();
+		//Serial.println("test");
         if(orderMgr.isHLWaiting())
         {
             orderMgr.checkJumper();

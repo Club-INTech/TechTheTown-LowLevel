@@ -128,10 +128,10 @@ class VL6180X
     inline uint16_t getTimeout(void) { return io_timeout; }
     bool timeoutOccurred(void);
 
-    inline void setThreshRange(uint8_t value){ writeReg(SYSRANGE__THRESH_LOW,value); }
+    
 
-    void enableThreshRangeMode(uint8_t value, bool condition, uint8_t refresh_period = 0x00 );
-    void disableThreshRangeMode();
+    //void enableThreshRangeMode(uint8_t value, bool condition, uint16_t refresh_period = 100 );
+    //void disableThreshRangeMode();
 
   private:
     uint8_t address;

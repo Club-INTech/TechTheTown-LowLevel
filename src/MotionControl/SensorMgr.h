@@ -16,7 +16,7 @@
 #include "Com/EthernetMgr.h"
 #include "Com/SerialMgr.h"
 #include "SRF10.h"
-#include "VL6180X.h"
+#include "PassageCounter.h"
 #include "AbstractSensorUS.h"
 
 
