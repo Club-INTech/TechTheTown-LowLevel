@@ -13,7 +13,7 @@ SensorMgr::SensorMgr()
 	distances.reserve(NBR_OF_US_SENSOR);
 
 	for( uint8_t i = 0 ; i < NBR_OF_US_SENSOR ; i++ )
-		US[i] = new SRF10(i,128,SRF10::GAIN::G100);
+		US[i] = new SRF10(i,128,SRF10::GAIN::G120);
 
 	distances.push_back(0x0000);
 	distances.push_back(0x0000);
