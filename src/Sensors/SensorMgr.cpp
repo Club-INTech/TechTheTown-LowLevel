@@ -1,5 +1,11 @@
 #include "SensorMgr.h"
 
+
+void PCCubeInterrupt(){
+	static SensorMgr& sensorMgr = SensorMgr::Instance();
+	sensorMgr.refreshPC();
+}
+
 SensorMgr::SensorMgr()
 {
 	Wire.begin();
@@ -13,15 +19,20 @@ SensorMgr::SensorMgr()
 	distances.reserve(NBR_OF_US_SENSOR);
 
 	for( uint8_t i = 0 ; i < NBR_OF_US_SENSOR ; i++ )
-		US[i] = new SRF10(i,128,SRF10::GAIN::G140);
+		US[i] = new SRF10(i,128,SRF10::GAIN::G120);
 
 	distances.push_back(0x0000);
 	distances.push_back(0x0000);
 	distances.push_back(0x0000);
 	distances.push_back(0x0000);
+
+	PC_cube_av = new PassageCounter(40,10,-10);
+	//PC_cube_ar = new PassageCounter(40,10);
+
+	m_timer_update_PC_cube.priority(250);
 }
 
-void SensorMgr::refresh(MOVING_DIRECTION dir)
+void SensorMgr::refreshUS(MOVING_DIRECTION dir)
 {
 	if(NBR_OF_US_SENSOR)
 	{
@@ -61,6 +72,24 @@ void SensorMgr::refresh(MOVING_DIRECTION dir)
 					firstMeasure = true;
 			}
 		}
+	}
+}
+
+void SensorMgr::enableCheckPC()
+{
+	m_timer_update_PC_cube.begin(PCCubeInterrupt,50000);
+}
+
+void SensorMgr::disableCheckPC()
+{
+	m_timer_update_PC_cube.end();
+}
+
+void SensorMgr::refreshPC()
+{
+	if(PC_cube_av->update() /*|| PC_cube_ar->update() */){
+		disableCheckPC();
+		highLevel.sendEvent("cubeDetected");
 	}
 }
 

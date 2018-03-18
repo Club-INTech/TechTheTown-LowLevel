@@ -8,19 +8,17 @@ class PassageCounter
 {
     private:
         VL6180X m_sensor;
-        uint8_t m_count = 0;
+        uint16_t m_count = 0;
         uint8_t m_threshold_mm = 20;
         uint8_t m_delta_threshold_mm;
         bool m_detection = false;
-        void(*m_onIncrement)();
-
-        static inline void do_nothing(){}
 
     public:
-        PassageCounter(uint8_t threshold_mm = 20 , uint8_t delta_threshold_mm = 0 , void(*)() = do_nothing );
-        void update();
+        PassageCounter(uint8_t threshold_mm = 20 , uint8_t delta_threshold_mm = 0 , int8_t offset_mm = 0 );
+        bool update();
+        void enableContinuousUpdate(uint16_t period);
         inline void reset(){ m_count = 0; }
-        inline uint8_t getCount() const { return m_count; }
+        inline uint16_t getCount() const { return m_count; }
 };
 
 #endif //PASSAGECOUNTER_H

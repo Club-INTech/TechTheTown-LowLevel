@@ -722,6 +722,7 @@ void OrderManager::execute(const char* orderToExecute)
         else if (!strcmp(order, "flpAv"))
         {
             actuatorsMgr.movAX12(frontDoor_ID,frontDoorClosed);
+            sensorMgr.disableCheckPC();
         }
         else if (!strcmp(order, "olpAv"))
         {
@@ -730,6 +731,7 @@ void OrderManager::execute(const char* orderToExecute)
         else if (!strcmp(order, "flpAr"))
         {
             actuatorsMgr.movAX12(backDoor_ID,backDoorClosed);
+            sensorMgr.disableCheckPC();
         }
         else if (!strcmp(order, "olpAr"))
         {
@@ -760,6 +762,7 @@ void OrderManager::execute(const char* orderToExecute)
         else if (!strcmp(order, "aeAv"))
         {
             actuatorsMgr.setElecVanneAV(true);
+            sensorMgr.enableCheckPC();
         }
         else if (!strcmp(order, "deAv"))
         {
@@ -768,6 +771,7 @@ void OrderManager::execute(const char* orderToExecute)
         else if (!strcmp(order, "aeAr"))
         {
             actuatorsMgr.setElecVanneAR(true);
+            sensorMgr.enableCheckPC();
         }
         else if (!strcmp(order, "deAr"))
         {
@@ -886,12 +890,6 @@ void OrderManager::execute(const char* orderToExecute)
 
     checkHooks();
 }
-
-void OrderManager::refreshUS()
-{
-    sensorMgr.refresh(motionControlSystem.getMovingDirection());
-}
-
 
 /**
 *	Sépare une courte chaîne de caractères(RX_BUFFER_SIZE) selon un séparateur, dans un tableau output (au plus 4 mots)

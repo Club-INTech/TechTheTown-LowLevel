@@ -39,7 +39,6 @@ void motionControlInterrupt() {
 	motionControlSystem.manageStop();
 }
 
-
 void blink(){
 	static int32_t t=0;
 	if(millis()-t>500){
@@ -60,11 +59,6 @@ void test()
  * Divers initialisations et instanciations
  */
 
-void inc()
-{
-	Serial.println("caca");
-}
-
 void loop(){
 	OrderManager& orderMgr = OrderManager::Instance();
 
@@ -81,20 +75,18 @@ void loop(){
     IntervalTimer motionControlInterruptTimer;
     motionControlInterruptTimer.priority(253);
     motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); // Setup de l'interruption d'asservissement
+
+
 	delay(1500);//Laisse le temps aux capteurs de clignotter leur ID
 #if DEBUG
 	IntervalTimer blinkTim;
-	blinkTim.priority(255);
+	blinkTim.priority(254);
 	blinkTim.begin(blink,500000);
 #endif
 
-
-	//PassageCounter cnter(100,10,inc);
     while (true) {
         orderMgr.communicate();
         orderMgr.refreshUS();
-		//cnter.update();
-		//Serial.println("test");
         if(orderMgr.isHLWaiting())
         {
             orderMgr.checkJumper();

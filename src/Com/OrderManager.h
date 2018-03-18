@@ -19,7 +19,7 @@
 #include "WString.h"
 #include "Utils/Singleton.hpp"
 #include "MotionControl/MotionControlSystem.h"
-#include "MotionControl/SensorMgr.h"
+#include "Sensors/SensorMgr.h"
 #include "SerialMgr.h"
 #include "Com/EthernetMgr.h"
 #include "Actuators/ActuatorsMgr.h"
@@ -155,7 +155,12 @@ public:
     OrderManager();
 
     //Com&exec
-    void refreshUS();
+    inline void refreshUS(){
+		sensorMgr.refreshUS(motionControlSystem.getMovingDirection());
+	}
+	inline void refreshPC(){
+		sensorMgr.refreshPC();
+	}
     void communicate();
     void execute(const char*);	//public pour pouvoir executer des scripts de hook
 
@@ -171,8 +176,8 @@ public:
     void checkHooks();
     void executeHooks();
     bool hooksEnabled;
-	
-	
+
+
 //    std::map<std::string,int> lookupTable;
 };
 

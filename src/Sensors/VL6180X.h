@@ -85,10 +85,6 @@ class VL6180X
       I2C_SLAVE__DEVICE_ADDRESS             = 0x212,
       INTERLEAVED_MODE__ENABLE              = 0x2A3,
     };
-
-    static constexpr bool INF = false;
-    static constexpr bool SUP = true;
-
     static constexpr uint8_t ADDRESS_DEFAULT = 0x29;
 
     uint8_t last_status; // status of last I2C transmission
@@ -111,6 +107,8 @@ class VL6180X
     void setScaling(uint8_t new_scaling);
     inline uint8_t getScaling(void) { return scaling; }
 
+    inline void setSoftwareOffset(int8_t offset){ software_offset=offset; }
+
     uint8_t readRangeSingle(void);
     inline uint16_t readRangeSingleMillimeters(void) { return (uint16_t)scaling * readRangeSingle(); }
     uint16_t readAmbientSingle(void);
@@ -128,7 +126,7 @@ class VL6180X
     inline uint16_t getTimeout(void) { return io_timeout; }
     bool timeoutOccurred(void);
 
-    
+
 
     //void enableThreshRangeMode(uint8_t value, bool condition, uint16_t refresh_period = 100 );
     //void disableThreshRangeMode();
@@ -137,6 +135,7 @@ class VL6180X
     uint8_t address;
     uint8_t scaling;
     uint8_t ptp_offset;
+    int8_t software_offset;
     uint16_t io_timeout;
     bool did_timeout;
 };

@@ -12,6 +12,7 @@ VL6180X::VL6180X(void)
   : address(ADDRESS_DEFAULT)
   , scaling(0)
   , ptp_offset(0)
+  , software_offset(0)
   , io_timeout(0) // no timeout
   , did_timeout(false)
 {
@@ -351,10 +352,13 @@ uint8_t VL6180X::readRangeContinuous()
     }
   }
 
-  uint8_t range = readReg(RESULT__RANGE_VAL);
+  int16_t range = readReg(RESULT__RANGE_VAL) + software_offset;
   writeReg(SYSTEM__INTERRUPT_CLEAR, 0x01);
 
-  return range;
+  if(range>=0)
+    return range;
+  else
+    return 0;
 }
 
 // Returns an ambient light reading when continuous mode is activated

@@ -11,7 +11,7 @@
 
 #include "Utils/Singleton.hpp"
 #include "Utils/pin_mapping.h"
-#include "MotionControlSystem.h"
+#include "MotionControl/MotionControlSystem.h"
 #include "Utils/pin_mapping.h"
 #include "Com/EthernetMgr.h"
 #include "Com/SerialMgr.h"
@@ -31,7 +31,13 @@ private:
 	 EthernetMgr &highLevel = EthernetMgr::Instance();
 	#endif
 
-	AbstractI2CSensorUS* US[NBR_OF_US_SENSOR];
+	IntervalTimer m_timer_update_PC_cube;
+
+	SRF10* US[NBR_OF_US_SENSOR];
+	PassageCounter* PC_cube_av;
+	//PassageCounter* PC_cube_ar;
+
+
 	std::vector<uint16_t> distances;
 	uint8_t currentMeasuringUS = 0;
 	bool isMeasuring = false;
@@ -41,7 +47,11 @@ private:
 public:
 
 	SensorMgr();
-	void refresh(MOVING_DIRECTION dir);
+	void refreshUS(MOVING_DIRECTION dir);
+	//refresh PassageCounters
+	void refreshPC();
+	void enableCheckPC();
+	void disableCheckPC();
 
 	bool isJumperEngaged();
 	bool isCont1Engaged();
