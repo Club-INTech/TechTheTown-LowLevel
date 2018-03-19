@@ -1,14 +1,14 @@
 #include "SensorMgr.h"
 
 
-void PCCubeAVInterrupt(){
+void PassageCubeAVInterrupt(){
 	static SensorMgr& sensorMgr = SensorMgr::Instance();
-	sensorMgr.refreshPCAV();
+	sensorMgr.refreshCPAV();
 }
 
-void PCCubeARInterrupt(){
+void PassageCubeARInterrupt(){
 	static SensorMgr& sensorMgr = SensorMgr::Instance();
-	sensorMgr.refreshPCAR();
+	sensorMgr.refreshCPAR();
 }
 
 SensorMgr::SensorMgr()
@@ -81,23 +81,23 @@ void SensorMgr::refreshUS(MOVING_DIRECTION dir)
 	}
 }
 
-void SensorMgr::enableCheckPCAV()
+void SensorMgr::enableCheckCPAV()
 {
-	//m_timer_update_PC_cube.begin(PCCubeAVInterrupt,50000);
+	//m_timer_update_PC_cube.begin(PassageCubeAVInterrupt,50000);
 }
 
-void SensorMgr::enableCheckPCAR()
+void SensorMgr::enableCheckCPAR()
 {
-	//m_timer_update_PC_cube_AR.begin(PCCubeARInterrupt,50000);
+	//m_timer_update_PC_cube_AR.begin(PassageCubeARInterrupt,50000);
 }
 
-void SensorMgr::disableCheckPC()
+void SensorMgr::disableCheckCP()
 {
 	m_timer_update_PC_cube_AV.end();
 	m_timer_update_PC_cube_AR.end();
 }
 
-void SensorMgr::refreshPCAV()
+void SensorMgr::refreshCPAV()
 {
 	/*
 	if(PC_cube_av->update()){
@@ -107,7 +107,7 @@ void SensorMgr::refreshPCAV()
 	*/
 }
 
-void SensorMgr::refreshPCAR()
+void SensorMgr::refreshCPAR()
 {
 	/*
 	if(PC_cube_ar->update()){

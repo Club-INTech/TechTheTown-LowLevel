@@ -722,7 +722,6 @@ void OrderManager::execute(const char* orderToExecute)
         else if (!strcmp(order, "flpAv"))
         {
             actuatorsMgr.movAX12(frontDoor_ID,frontDoorClosed);
-            sensorMgr.disableCheckPC();
         }
         else if (!strcmp(order, "olpAv"))
         {
@@ -731,7 +730,6 @@ void OrderManager::execute(const char* orderToExecute)
         else if (!strcmp(order, "flpAr"))
         {
             actuatorsMgr.movAX12(backDoor_ID,backDoorClosed);
-            sensorMgr.disableCheckPC();
         }
         else if (!strcmp(order, "olpAr"))
         {
@@ -762,7 +760,6 @@ void OrderManager::execute(const char* orderToExecute)
         else if (!strcmp(order, "aeAv"))
         {
             actuatorsMgr.setElecVanneAV(true);
-            sensorMgr.enableCheckPCAR();
         }
         else if (!strcmp(order, "deAv"))
         {
@@ -771,11 +768,29 @@ void OrderManager::execute(const char* orderToExecute)
         else if (!strcmp(order, "aeAr"))
         {
             actuatorsMgr.setElecVanneAR(true);
-            sensorMgr.enableCheckPCAV();
         }
         else if (!strcmp(order, "deAr"))
         {
             actuatorsMgr.setElecVanneAR(false);
+        }
+
+            /*			 _________________________________
+            * 		   *|                                 |*
+            *		   *|			  Capteurs            |*
+            *    	   *|_________________________________|*
+            */
+
+        else if(!strcmp(order, "acpAv"))
+        {
+            sensorMgr.enableCheckCPAV();
+        }
+        else if(!strcmp(order, "acpAr"))
+        {
+            sensorMgr.enableCheckCPAR();
+        }
+        else if(!strcmp(order, "dcp"))
+        {
+            sensorMgr.disableCheckCP();
         }
 
             /*			 _________________________________

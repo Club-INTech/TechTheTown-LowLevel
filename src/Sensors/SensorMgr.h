@@ -51,11 +51,11 @@ public:
 	SensorMgr();
 	void refreshUS(MOVING_DIRECTION dir);
 	//refresh PassageCounters
-	void refreshPCAV();
-	void refreshPCAR();
-	void enableCheckPCAV();
-	void enableCheckPCAR();
-	void disableCheckPC();
+	void refreshCPAV();
+	void refreshCPAR();
+	void enableCheckCPAV();
+	void enableCheckCPAR();
+	void disableCheckCP();
 
 	bool isJumperEngaged();
 	bool isCont1Engaged();
