@@ -8,7 +8,8 @@ MotionControlSystem::MotionControlSystem() :
 											leftSpeedPID(&currentLeftSpeed, &leftPWM, &leftSpeedSetpoint),
 											translationPID(&currentDistance, &translationSpeed, &translationSetpoint),
 											rotationPID(&currentAngle, &rotationSpeed, &rotationSetpoint),
-											averageLeftSpeed(), averageRightSpeed() {
+											averageLeftSpeed(), averageRightSpeed(), maxAcceptableTranslationSpeed(10000),
+                                            maxAcceptableRotationSpeed(6000){
 	translationControlled = true;
 	rotationControlled = true;
 	leftSpeedControlled = true;
@@ -35,8 +36,8 @@ MotionControlSystem::MotionControlSystem() :
 	rightSpeedPID.setOutputLimits(-255, 255);
 
     maxSpeed = 12000;				// Limite globale de la vitesse (Rotation + Translation)
-    maxSpeedTranslation = 10000;
-    maxSpeedRotation = 6000;
+    maxSpeedTranslation = maxAcceptableTranslationSpeed;
+    maxSpeedRotation = maxAcceptableRotationSpeed;
 
 
 	delayToStop = 100;              // Temps a l'arret avant de considérer un blocage
@@ -517,12 +518,18 @@ void MotionControlSystem::setY(float newY)
 void MotionControlSystem::setTranslationSpeed(float raw_speed)
 {
 	// Conversion de raw_speed de mm / s en ticks / s
-	double speed = raw_speed / TICK_TO_MM;
+	float speed = raw_speed / TICK_TO_MM;
 
-	if (speed < 0) { // SINGEPROOF
+    if (speed < 0)
+    { // SINGEPROOF
 		maxSpeedTranslation = 0;
 	}
-	else {
+    else if(speed>maxAcceptableTranslationSpeed)
+    {
+        maxSpeedTranslation = maxAcceptableTranslationSpeed;
+    }
+    else
+    {
 		maxSpeedTranslation = (int32_t)speed;
 	}
 }
@@ -530,13 +537,19 @@ void MotionControlSystem::setTranslationSpeed(float raw_speed)
 void MotionControlSystem::setRotationSpeed(float raw_speed)
 {
 	// Conversion de raw_speed de rad/s en ticks/s
-	int speed = raw_speed / TICK_TO_RADIAN;
+	float speed = raw_speed / TICK_TO_RADIAN;
 
-	if (speed < 0) {
+    if (speed < 0)
+    {
 		maxSpeedRotation = 0;
 	}
-	else {
-		maxSpeedRotation = speed;
+    else if(speed>maxAcceptableRotationSpeed)
+    {
+        maxSpeedRotation = maxAcceptableRotationSpeed;
+    }
+    else
+    {
+		maxSpeedRotation = (int32_t)speed;
 	}
 }
 

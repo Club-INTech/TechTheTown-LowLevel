@@ -78,6 +78,8 @@ private:
 	volatile int32_t maxSpeed;                // definit la vitesse maximal des moteurs du robot
 	volatile int32_t maxSpeedTranslation;    // definit la consigne max de vitesse de translation envoiée au PID (trapèze)
 	volatile int32_t maxSpeedRotation;        // definit la consigne max de vitesse de rotation envoiée au PID (trapèze)
+    const int32_t maxAcceptableTranslationSpeed;
+    const int32_t maxAcceptableRotationSpeed;
 
 											  //	Limitation d'accélération
 	volatile int8_t maxAcceleration;
