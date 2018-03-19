@@ -31,7 +31,9 @@ private:
 	 EthernetMgr &highLevel = EthernetMgr::Instance();
 	#endif
 
-	IntervalTimer m_timer_update_PC_cube;
+	IntervalTimer m_timer_update_PC_cube_AV;
+	IntervalTimer m_timer_update_PC_cube_AR;
+
 
 	SRF10* US[NBR_OF_US_SENSOR];
 	PassageCounter* PC_cube_av;
@@ -49,8 +51,10 @@ public:
 	SensorMgr();
 	void refreshUS(MOVING_DIRECTION dir);
 	//refresh PassageCounters
-	void refreshPC();
-	void enableCheckPC();
+	void refreshPCAV();
+	void refreshPCAR();
+	void enableCheckPCAV();
+	void enableCheckPCAR();
 	void disableCheckPC();
 
 	bool isJumperEngaged();

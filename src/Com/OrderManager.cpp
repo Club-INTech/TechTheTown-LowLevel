@@ -762,7 +762,7 @@ void OrderManager::execute(const char* orderToExecute)
         else if (!strcmp(order, "aeAv"))
         {
             actuatorsMgr.setElecVanneAV(true);
-            sensorMgr.enableCheckPC();
+            sensorMgr.enableCheckPCAR();
         }
         else if (!strcmp(order, "deAv"))
         {
@@ -771,7 +771,7 @@ void OrderManager::execute(const char* orderToExecute)
         else if (!strcmp(order, "aeAr"))
         {
             actuatorsMgr.setElecVanneAR(true);
-            sensorMgr.enableCheckPC();
+            sensorMgr.enableCheckPCAV();
         }
         else if (!strcmp(order, "deAr"))
         {

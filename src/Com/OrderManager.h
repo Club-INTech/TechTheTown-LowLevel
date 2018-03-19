@@ -158,9 +158,6 @@ public:
     inline void refreshUS(){
 		sensorMgr.refreshUS(motionControlSystem.getMovingDirection());
 	}
-	inline void refreshPC(){
-		sensorMgr.refreshPC();
-	}
     void communicate();
     void execute(const char*);	//public pour pouvoir executer des scripts de hook
 

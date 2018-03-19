@@ -1,9 +1,14 @@
 #include "SensorMgr.h"
 
 
-void PCCubeInterrupt(){
+void PCCubeAVInterrupt(){
 	static SensorMgr& sensorMgr = SensorMgr::Instance();
-	sensorMgr.refreshPC();
+	sensorMgr.refreshPCAV();
+}
+
+void PCCubeARInterrupt(){
+	static SensorMgr& sensorMgr = SensorMgr::Instance();
+	sensorMgr.refreshPCAR();
 }
 
 SensorMgr::SensorMgr()
@@ -26,10 +31,11 @@ SensorMgr::SensorMgr()
 	distances.push_back(0x0000);
 	distances.push_back(0x0000);
 
-	PC_cube_av = new PassageCounter(40,10,-10);
-	//PC_cube_ar = new PassageCounter(40,10);
+	//PC_cube_av = new PassageCounter(40,10,-10);
+	//PC_cube_ar = new PassageCounter(40,10;-10);
 
-	m_timer_update_PC_cube.priority(250);
+	m_timer_update_PC_cube_AV.priority(250);
+	m_timer_update_PC_cube_AR.priority(250);
 }
 
 void SensorMgr::refreshUS(MOVING_DIRECTION dir)
@@ -75,22 +81,40 @@ void SensorMgr::refreshUS(MOVING_DIRECTION dir)
 	}
 }
 
-void SensorMgr::enableCheckPC()
+void SensorMgr::enableCheckPCAV()
 {
-	m_timer_update_PC_cube.begin(PCCubeInterrupt,50000);
+	//m_timer_update_PC_cube.begin(PCCubeAVInterrupt,50000);
+}
+
+void SensorMgr::enableCheckPCAR()
+{
+	//m_timer_update_PC_cube_AR.begin(PCCubeARInterrupt,50000);
 }
 
 void SensorMgr::disableCheckPC()
 {
-	m_timer_update_PC_cube.end();
+	m_timer_update_PC_cube_AV.end();
+	m_timer_update_PC_cube_AR.end();
 }
 
-void SensorMgr::refreshPC()
+void SensorMgr::refreshPCAV()
 {
-	if(PC_cube_av->update() /*|| PC_cube_ar->update() */){
+	/*
+	if(PC_cube_av->update()){
 		disableCheckPC();
-		highLevel.sendEvent("cubeDetected");
+		highLevel.sendEvent("cubeDetectedAV");
 	}
+	*/
+}
+
+void SensorMgr::refreshPCAR()
+{
+	/*
+	if(PC_cube_ar->update()){
+		disableCheckPC();
+		highLevel.sendEvent("cubeDetectedAR");
+	}
+	*/
 }
 
 //Contacteurs et Jumper
