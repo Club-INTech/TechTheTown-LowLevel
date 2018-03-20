@@ -128,6 +128,7 @@ private:
                                     // Variables de réglage de la détection de blocage physique
 	unsigned int delayToStop;       //En ms
 
+    int toleranceRadiale;         // Tolérance en mm pour le point à point
 	//Nombre de ticks de tolérance pour considérer qu'on est arrivé à destination
 	int toleranceTranslation;
 	int toleranceRotation;

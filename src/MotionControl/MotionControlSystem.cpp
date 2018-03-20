@@ -42,6 +42,7 @@ MotionControlSystem::MotionControlSystem() :
 
 
 	delayToStop = 100;              // Temps a l'arret avant de considérer un blocage
+    toleranceRadiale = 20;          // Rayon du cercle de tolérance du point à point avant de considérer une droite
 	toleranceTranslation = 50;
 	toleranceRotation = 100;
 	toleranceSpeed = 24;			// 48 Proportionnellement aux 2A
@@ -342,16 +343,21 @@ void MotionControlSystem::updatePosition() {
     {
         float moveVectorX = targetX - x;
         float moveVectorY = targetY - y;
+        int moveNorm = (int)sqrtf(moveVectorX*moveVectorX+moveVectorY*moveVectorY);
         float moveArgument = atanf(moveVectorY/moveVectorX);
         if(ABS(currentAngle-moveArgument)<(float)PI/2)
         {
-            orderTranslation(-(int32_t)sqrtf(moveVectorX*moveVectorX+moveVectorY*moveVectorY));
+            orderTranslation(-moveNorm);
             orderRotation(moveArgument,RotationWay::FREE);
         }
         else
         {
-            orderTranslation((int32_t)sqrtf(moveVectorX*moveVectorX+moveVectorY*moveVectorY));
+            orderTranslation(moveNorm);
             orderRotation((float)PI-moveArgument,RotationWay::FREE);
+        }
+        if(moveNorm<toleranceRadiale)
+        {
+            pointToPointMovement = false;
         }
     }
 }
