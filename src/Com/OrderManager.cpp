@@ -143,6 +143,26 @@ void OrderManager::execute(const char* orderToExecute)
                 highLevel.log("ERREUR::Paramètres incorrects");
             }
         }
+        else if (!strcmp(order, "goto"))
+        {
+            if(n_param <= 2)
+            {
+                float targetX = strtof(orderData.at(1),nullptr);
+                float targetY = strtof(orderData.at(2),nullptr);
+
+                if(0 <= targetX && targetX <= 3000 && 0 <= targetY && targetY <= 2000)
+                {
+                    motionControlSystem.orderGoto(targetX,targetY);
+                }
+                else
+                {
+                    highLevel.log("ERREUR::Paramètres incorrects");
+                }
+            }
+            else {
+                highLevel.log("ERREUR::Paramètres incorrects");
+            }
+        }
         else if (!strcmp(order, "stop"))
         {
             motionControlSystem.stop();

@@ -105,6 +105,8 @@ private:
 	*/
 	volatile float x;                // Positionnement 'x' (mm)
 	volatile float y;                // Positionnement 'y' (mm)
+    volatile float targetX;
+    volatile float targetY;
 	volatile float originalAngle;    // Angle d'origine	  (radians)
 									 // 'originalAngle' représente un offset ajouté à l'angle courant pour que nos angles en radians coïncident avec la représentation haut niveau des angles.
     // Variables d'état du mouvement
@@ -200,12 +202,12 @@ public:
 	void setRotationSpeed(float);
 
 	void updatePosition();
-	void resetPosition(void);
+	void resetPosition();
 
 	/* Ordres */
 	void orderTranslation(int32_t);
 	void orderRotation(float, RotationWay);
-	void orderPoint(float targetX, float targetY);
+	void orderGoto(float, float);
 	void orderRawPwm(Side, int16_t);
 
 	/* Autres */

@@ -337,6 +337,23 @@ void MotionControlSystem::updatePosition() {
 
 	x += (deltaDistanceMm * cosf(getAngleRadian()));
 	y += (deltaDistanceMm * sinf(getAngleRadian()));
+
+    if(pointToPointMovement)
+    {
+        float moveVectorX = targetX - x;
+        float moveVectorY = targetY - y;
+        float moveArgument = atanf(moveVectorY/moveVectorX);
+        if(ABS(currentAngle-moveArgument)<(float)PI/2)
+        {
+            orderTranslation(-(int32_t)sqrtf(moveVectorX*moveVectorX+moveVectorY*moveVectorY));
+            orderRotation(moveArgument,RotationWay::FREE);
+        }
+        else
+        {
+            orderTranslation((int32_t)sqrtf(moveVectorX*moveVectorX+moveVectorY*moveVectorY));
+            orderRotation((float)PI-moveArgument,RotationWay::FREE);
+        }
+    }
 }
 
 void MotionControlSystem::resetPosition()
@@ -354,6 +371,7 @@ void MotionControlSystem::resetPosition()
 
 void MotionControlSystem::orderTranslation(int32_t mmDistance)
 {
+    pointToPointMovement = false;
 
     /*if(mmDistance<300)
     {
@@ -388,6 +406,7 @@ void MotionControlSystem::orderRotation(float targetAngleRadian, RotationWay rot
  * @param rotationWay : Stratégie de rotation (FREE, TRIGO, ANTITRIGO)
  */
 {
+    pointToPointMovement = false;
 
 	static int32_t deuxPiTick = (int32_t)(2 * PI / TICK_TO_RADIAN);
 	static int32_t piTick = (int32_t)(PI / TICK_TO_RADIAN);
@@ -440,8 +459,10 @@ void MotionControlSystem::orderRotation(float targetAngleRadian, RotationWay rot
 	moveAbnormal = false;
 }
 
-void MotionControlSystem::orderPoint(float targetX, float targetY) {
-
+void MotionControlSystem::orderGoto(float targetX, float targetY) {
+    this->targetX = targetX;
+    this->targetY = targetY;
+    pointToPointMovement = true;
 }
 
 
@@ -459,6 +480,7 @@ void MotionControlSystem::stop() {
 	Serial.println(currentAngle);
 
 	moving = false;
+    pointToPointMovement = false;
 	translationSetpoint = currentDistance;
 	rotationSetpoint = currentAngle;
 
