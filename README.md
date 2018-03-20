@@ -76,7 +76,7 @@ Au boulot les 1As !
 |    AXGs   |           Modifie la vitesse d'un groupe           |
 |    alp    |                  Active la pompe                   |
 |    dlp    |                 Désactive la pompe                 |
-|  blbAbei  |         Baisse le bras avant pour abeille          |
+|  blbAvbei |         Baisse le bras avant pour abeille          |
 |   blbAv   |                Baisse le bras avant                |
 |   rlbAv   |                Relève le bras avant                |
 |   flpAv   |                Ferme la porte avant                |
@@ -84,6 +84,7 @@ Au boulot les 1As !
 |  olpAvp   |          Ouvre légèrement la porte avant           |
 |    aeAv   |            Active l'électrovanne avant             |
 |    deAv   |           Désactive l'électrovanne avant           |
+|  blbArbei |         Baisse le bras arrière pour abeille        |
 |   blbAr   |               Baisse le bras arrière               |
 |   rlbAr   |               Relève le bras arrière               |
 |   flpAr   |               Ferme la porte arrière               |

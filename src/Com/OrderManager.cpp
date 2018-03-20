@@ -696,7 +696,7 @@ void OrderManager::execute(const char* orderToExecute)
         /*
          * BRAS
          */
-        else if(!strcmp(order, "blbAbei"))
+        else if(!strcmp(order, "blbAvbei"))
         {
             actuatorsMgr.movAX12G(frontArmGroup_ID,frontLowBee);
         }
@@ -707,6 +707,10 @@ void OrderManager::execute(const char* orderToExecute)
         else if (!strcmp(order, "rlbAv"))
         {
             actuatorsMgr.movAX12G(frontArmGroup_ID,frontFolded);
+        }
+        else if (!strcmp(order, "blbArbei"))
+        {
+            actuatorsMgr.movAX12G(backArmGroup_ID,backLowBee);
         }
         else if (!strcmp(order, "blbAr"))
         {

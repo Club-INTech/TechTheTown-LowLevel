@@ -21,7 +21,7 @@ constexpr int frontDoor_ID = 3;
 constexpr int backDoor_ID = 6;
 
 
-constexpr int armBaseSpeed = 200;
+constexpr int armBaseSpeed = 250;
 
 /*
  * Bras avant
@@ -36,13 +36,14 @@ constexpr int frontFolded = 182;
  */
 
 constexpr int backLowCubes = 205;
+constexpr int backLowBee = 180;
 constexpr int backFolded = 120;
 
 /*
  * Portes
  */
 
-constexpr int doorBaseSpeed = 250;
+constexpr int doorBaseSpeed = 300;
 
 constexpr int frontDoorOpen = 240;
 constexpr int frontDoorClosed = 155;
