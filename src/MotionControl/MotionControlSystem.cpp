@@ -346,18 +346,23 @@ void MotionControlSystem::updatePosition() {
 
     if(pointToPointMovement)
     {
+		static volatile int lastMoveNorm = 0;
         float moveVectorX = targetX - x;
         float moveVectorY = targetY - y;
         int moveNorm = (int)sqrtf(moveVectorX*moveVectorX+moveVectorY*moveVectorY);
         float moveArgument = atan2f(moveVectorY,moveVectorX);
+		Serial.println(x);
+		Serial.println(y);
+		Serial.println(getAngleRadian());
 		Serial.println(moveVectorX);
 		Serial.println(moveVectorY);
 		Serial.println(moveNorm);
-		Serial.println(moveArgument);
-		Serial.println(getAngleRadian());
 		Serial.println("-----------------------");
+		Serial.println(currentDistance);
+		Serial.println(translationSetpoint);
 		Serial.println(getAngleRadian()-moveArgument);
 		Serial.println("-----------------------");
+		translationSetpoint = currentDistance;
         if(ABS(getAngleRadian()-moveArgument)<(float)PI/2)
         {
             orderTranslation(moveNorm);
@@ -372,6 +377,7 @@ void MotionControlSystem::updatePosition() {
 			Serial.println(-moveNorm);
 			Serial.println((float)PI-moveArgument);
         }
+		lastMoveNorm = moveNorm;
         if(moveNorm<toleranceRadiale)
         {
             pointToPointMovement = false;
