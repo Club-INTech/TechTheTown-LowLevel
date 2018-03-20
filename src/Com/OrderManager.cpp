@@ -118,6 +118,7 @@ void OrderManager::execute(const char* orderToExecute)
             if (n_param == 1) {
                 int16_t deplacement = strtod(orderData.at(1), nullptr);
                 highLevel.log("distance : %d", deplacement);
+                motionControlSystem.disablePointToPoint();
                 motionControlSystem.orderTranslation(deplacement);
             }
             else {
@@ -127,7 +128,7 @@ void OrderManager::execute(const char* orderToExecute)
         else if (!strcmp(order, "t"))
         {
             if (n_param == 1) {
-                float angle = motionControlSystem.getAngleRadian();
+                float angle;
                 if(!strcmp(orderData.at(1),"pi"))
                 {
                     angle = (float)PI;
@@ -137,6 +138,7 @@ void OrderManager::execute(const char* orderToExecute)
                     angle = strtof(orderData.at(1),nullptr);
                 }
                 highLevel.log("angle : %f", angle);
+                motionControlSystem.disablePointToPoint();
                 motionControlSystem.orderRotation(angle, MotionControlSystem::FREE);
             }
             else {
@@ -150,14 +152,14 @@ void OrderManager::execute(const char* orderToExecute)
                 float targetX = strtof(orderData.at(1),nullptr);
                 float targetY = strtof(orderData.at(2),nullptr);
 
-                if(0 <= targetX && targetX <= 3000 && 0 <= targetY && targetY <= 2000)
-                {
+//                if(-1500 <= targetX && targetX <= 1500 && 0 <= targetY && targetY <= 2000)
+//                {
                     motionControlSystem.orderGoto(targetX,targetY);
-                }
-                else
-                {
-                    highLevel.log("ERREUR::Paramètres incorrects");
-                }
+//                }
+//                else
+//                {
+//                    highLevel.log("ERREUR::Paramètres incorrects");
+//                }
             }
             else {
                 highLevel.log("ERREUR::Paramètres incorrects");

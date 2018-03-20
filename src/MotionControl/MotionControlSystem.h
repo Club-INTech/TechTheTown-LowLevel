@@ -228,6 +228,7 @@ public:
 	void manageStop();
 	void enableForcedMovement();
 	void disableForcedMovement();
+	void disablePointToPoint();
 
 };
 

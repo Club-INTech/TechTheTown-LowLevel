@@ -169,7 +169,7 @@ void loop(){
 //	orderMgr.execute("d -2000");
 //	orderMgr.execute("t pi");
 //	delay(2000);*/
-    orderMgr.execute("demo");
+//    orderMgr.execute("demo");
 
     while (true) {
         orderMgr.communicate();

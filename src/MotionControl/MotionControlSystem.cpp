@@ -42,7 +42,7 @@ MotionControlSystem::MotionControlSystem() :
 
 
 	delayToStop = 100;              // Temps a l'arret avant de considérer un blocage
-    toleranceRadiale = 20;          // Rayon du cercle de tolérance du point à point avant de considérer une droite
+    toleranceRadiale = 10;          // Rayon du cercle de tolérance du point à point avant de considérer une droite
 	toleranceTranslation = 50;
 	toleranceRotation = 100;
 	toleranceSpeed = 24;			// 48 Proportionnellement aux 2A
@@ -247,6 +247,11 @@ void MotionControlSystem::disableForcedMovement() {
 	forcedMovement = false;
 }
 
+void MotionControlSystem::disablePointToPoint()
+{
+	pointToPointMovement = false;
+}
+
 void MotionControlSystem::manageStop()
 {
 	static uint32_t time = 0;
@@ -344,21 +349,34 @@ void MotionControlSystem::updatePosition() {
         float moveVectorX = targetX - x;
         float moveVectorY = targetY - y;
         int moveNorm = (int)sqrtf(moveVectorX*moveVectorX+moveVectorY*moveVectorY);
-        float moveArgument = atanf(moveVectorY/moveVectorX);
-        if(ABS(currentAngle-moveArgument)<(float)PI/2)
+        float moveArgument = atan2f(moveVectorY,moveVectorX);
+		Serial.println(moveVectorX);
+		Serial.println(moveVectorY);
+		Serial.println(moveNorm);
+		Serial.println(moveArgument);
+		Serial.println(getAngleRadian());
+		Serial.println("-----------------------");
+		Serial.println(getAngleRadian()-moveArgument);
+		Serial.println("-----------------------");
+        if(ABS(getAngleRadian()-moveArgument)<(float)PI/2)
         {
-            orderTranslation(-moveNorm);
+            orderTranslation(moveNorm);
             orderRotation(moveArgument,RotationWay::FREE);
+			Serial.println(moveNorm);
+			Serial.println(moveArgument);
         }
         else
         {
-            orderTranslation(moveNorm);
+            orderTranslation(-moveNorm);
             orderRotation((float)PI-moveArgument,RotationWay::FREE);
+			Serial.println(-moveNorm);
+			Serial.println((float)PI-moveArgument);
         }
         if(moveNorm<toleranceRadiale)
         {
             pointToPointMovement = false;
         }
+		Serial.println("======================");
     }
 }
 
@@ -377,8 +395,6 @@ void MotionControlSystem::resetPosition()
 
 void MotionControlSystem::orderTranslation(int32_t mmDistance)
 {
-    pointToPointMovement = false;
-
     /*if(mmDistance<300)
     {
         translationPID.setTunings(2.8,0,0);
@@ -412,15 +428,13 @@ void MotionControlSystem::orderRotation(float targetAngleRadian, RotationWay rot
  * @param rotationWay : Stratégie de rotation (FREE, TRIGO, ANTITRIGO)
  */
 {
-    pointToPointMovement = false;
-
 	static int32_t deuxPiTick = (int32_t)(2 * PI / TICK_TO_RADIAN);
 	static int32_t piTick = (int32_t)(PI / TICK_TO_RADIAN);
 
 	int32_t highLevelOffset = originalAngle / TICK_TO_RADIAN;
 
 	int32_t targetAngleTick = targetAngleRadian / TICK_TO_RADIAN;
-	Serial.println(targetAngleTick);
+//	Serial.println(targetAngleTick);
 	int32_t currentAngleTick = currentAngle + highLevelOffset;
 
     targetAngleTick = modulo(targetAngleTick, deuxPiTick);
@@ -481,9 +495,9 @@ void MotionControlSystem::orderRawPwm(Side side, int16_t pwm) {
 
 
 void MotionControlSystem::stop() {
-	Serial.println("STOPPING");
-	Serial.println(currentDistance);
-	Serial.println(currentAngle);
+//	Serial.println("STOPPING");
+//	Serial.println(currentDistance);
+//	Serial.println(currentAngle);
 
 	moving = false;
     pointToPointMovement = false;
