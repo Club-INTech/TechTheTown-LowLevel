@@ -84,14 +84,12 @@ void loop(){
 	blinkTim.begin(blink,500000);
 #endif
 
+    static Metro USRefresh = Metro(66);
+
     while (true) {
         orderMgr.communicate();
-        orderMgr.refreshUS();
-        if(orderMgr.isHLWaiting())
-        {
-            orderMgr.checkJumper();
-        }
-
+        USRefresh.check() ? orderMgr.refreshUS() : void();
+        orderMgr.isHLWaiting() ? orderMgr.checkJumper() : void();
     }
 }
 

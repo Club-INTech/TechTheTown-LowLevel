@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <i2c_t3.h>
 
+#include "Utils/average.hpp"
 #include "Utils/Singleton.hpp"
 #include "Utils/pin_mapping.h"
 #include "MotionControl/MotionControlSystem.h"
@@ -40,7 +41,7 @@ private:
 	//PassageCounter* PC_cube_ar;
 
 
-	std::vector<uint16_t> distances;
+	std::vector<Average<uint16_t,AVERAGE_US_SIZE>> distances;
 	uint8_t currentMeasuringUS = 0;
 	bool isMeasuring = false;
 	bool firstMeasure = true;

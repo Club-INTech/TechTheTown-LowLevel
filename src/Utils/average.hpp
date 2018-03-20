@@ -1,7 +1,7 @@
 /**
  *  @file library/average.hpp
- *  @brief Ce fichier défini la classe Average permettant de calculer des moyennes sur les n précédentes valeurs d'une variable,
- *  		et d'actaliser efficacement cette moyenne à chaque ajout de valeur.
+ *  @brief Ce fichier dï¿½fini la classe Average permettant de calculer des moyennes sur les n prï¿½cï¿½dentes valeurs d'une variable,
+ *  		et d'actaliser efficacement cette moyenne ï¿½ chaque ajout de valeur.
  *  @author Sylvain Gaultier
  *  @date 25/05/2015
  */
@@ -10,9 +10,9 @@
 #define AVERAGE_HPP
 
 /*
- * 	Limites d'utilisation : le type T doit représenter un nombre (int, float, double) et doit permettre
- * 	non seulement de contenir les valeurs de données mais aussi et surtout la somme de BUFFER_SIZE de ces
- * 	données. En gros, éviter le type int8_t avec BUFFER_SIZE grand ^.^
+ * 	Limites d'utilisation : le type T doit reprï¿½senter un nombre (int, float, double) et doit permettre
+ * 	non seulement de contenir les valeurs de donnï¿½es mais aussi et surtout la somme de BUFFER_SIZE de ces
+ * 	donnï¿½es. En gros, ï¿½viter le type int8_t avec BUFFER_SIZE grand ^.^
  */
 
 template<typename T, unsigned int BUFFER_SIZE>
@@ -48,7 +48,7 @@ public:
 		currentElement = (currentElement + 1) % BUFFER_SIZE;
 	}
 
-	T value()
+	T value() const
 	{
 		return currentSum / (T)BUFFER_SIZE;
 	}

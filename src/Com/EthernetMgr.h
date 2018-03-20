@@ -58,7 +58,7 @@ public:
 	bool read(float&);
 
 	/* ENVOI */
-	void sendUS(const std::vector<uint16_t>&);
+	void sendUS(const std::vector<Average<uint16_t,AVERAGE_US_SIZE>>&);
 	void sendEvent(const char*);
 	void sendPosition(const float*);
     void log(const char*, ...) __attribute__((format(printf, 2, 3)));

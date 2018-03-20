@@ -24,12 +24,10 @@ SensorMgr::SensorMgr()
 	distances.reserve(NBR_OF_US_SENSOR);
 
 	for( uint8_t i = 0 ; i < NBR_OF_US_SENSOR ; i++ )
+	{
 		US[i] = new SRF10(i,40,SRF10::GAIN::G120);
-
-	distances.push_back(0x0000);
-	distances.push_back(0x0000);
-	distances.push_back(0x0000);
-	distances.push_back(0x0000);
+		distances.push_back(Average<uint16_t,AVERAGE_US_SIZE>());
+	}
 
 	//PC_cube_av = new PassageCounter(40,10,-10);
 	//PC_cube_ar = new PassageCounter(40,10;-10);
@@ -47,7 +45,6 @@ void SensorMgr::refreshUS(MOVING_DIRECTION dir)
 			if( firstMeasure )
 			{
 				highLevel.sendUS(distances);
-				std::fill(distances.begin(),distances.end(),0x00);
 				if( dir == MOVING_DIRECTION::FORWARD || dir == MOVING_DIRECTION::NONE )
 					currentMeasuringUS=0;
 				else
@@ -60,7 +57,7 @@ void SensorMgr::refreshUS(MOVING_DIRECTION dir)
 		}
 		if( isMeasuring && US[currentMeasuringUS]->update())
 		{
-			distances[currentMeasuringUS] = US[currentMeasuringUS]->getDistance();
+			distances[currentMeasuringUS].add(US[currentMeasuringUS]->getDistance());
 			isMeasuring=false;
 			if( measure_direction == MOVING_DIRECTION::FORWARD )
 			{

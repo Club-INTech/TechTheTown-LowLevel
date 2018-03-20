@@ -157,13 +157,13 @@ void EthernetMgr::printfln(const char* message, ...) {
 /**
 *	Envoie une chaine de caracteres commencant par 2 headers Ultrason, puis les SENSOR_NB valeurs separees par des espaces
 */
-void EthernetMgr::sendUS(const std::vector<uint16_t>& distances)
+void EthernetMgr::sendUS(const std::vector<Average<uint16_t,AVERAGE_US_SIZE>>& distances)
 {
     valueString="";
     valueString.append(SENSOR_HEADER[0]);
-		valueString.append(SENSOR_HEADER[1]);
+	valueString.append(SENSOR_HEADER[1]);
     for(uint8_t i=0;i<distances.size();i++){
-        valueString.append(distances[i]);
+        valueString.append(distances[i].value());
         valueString.append(" ");
     }
 

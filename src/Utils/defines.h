@@ -52,6 +52,7 @@ constexpr float     TICK_TO_RADIAN = static_cast<float>(TICK_TO_MM/DISTANCE_COD_
 // Nombre de valeurs par moyenne
 constexpr uint8_t   AVERAGE_SPEED_SIZE =        25;
 constexpr uint8_t   AVERAGE_DERIVATIVE_SIZE =   100;
+constexpr uint8_t   AVERAGE_US_SIZE =           10;
 
 constexpr float     WHEEL_DISTANCE_TO_CENTER =  145.1;
 constexpr uint8_t   TOLERANCY =                 50;

@@ -8,8 +8,8 @@ MotionControlSystem::MotionControlSystem() :
 											leftSpeedPID(&currentLeftSpeed, &leftPWM, &leftSpeedSetpoint),
 											translationPID(&currentDistance, &translationSpeed, &translationSetpoint),
 											rotationPID(&currentAngle, &rotationSpeed, &rotationSetpoint),
-											averageLeftSpeed(), averageRightSpeed(), maxAcceptableTranslationSpeed(10000),
-                                            maxAcceptableRotationSpeed(6000){
+                                            maxAcceptableTranslationSpeed(10000), maxAcceptableRotationSpeed(6000),
+											averageLeftSpeed(), averageRightSpeed(){
 	translationControlled = true;
 	rotationControlled = true;
 	leftSpeedControlled = true;
