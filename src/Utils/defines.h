@@ -57,4 +57,11 @@ constexpr uint8_t   AVERAGE_US_SIZE =           10;
 constexpr float     WHEEL_DISTANCE_TO_CENTER =  145.1;
 constexpr uint8_t   TOLERANCY =                 50;
 
+/**
+*CAPTEURS
+*/
+
+constexpr float     CUBE_AV_DETECTION_RANGE_MM = 30;
+constexpr float     CUBE_AR_DETECTION_RANGE_MM = 30;
+
 #endif

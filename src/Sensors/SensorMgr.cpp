@@ -1,16 +1,5 @@
 #include "SensorMgr.h"
 
-
-void PassageCubeAVInterrupt(){
-	static SensorMgr& sensorMgr = SensorMgr::Instance();
-	sensorMgr.refreshCPAV();
-}
-
-void PassageCubeARInterrupt(){
-	static SensorMgr& sensorMgr = SensorMgr::Instance();
-	sensorMgr.refreshCPAR();
-}
-
 SensorMgr::SensorMgr()
 {
 	Wire.begin();
@@ -29,11 +18,15 @@ SensorMgr::SensorMgr()
 		distances.push_back(Average<uint16_t,AVERAGE_US_SIZE>());
 	}
 
-	//PC_cube_av = new PassageCounter(40,10,-10);
-	//PC_cube_ar = new PassageCounter(40,10;-10);
+	/*
+	sensorCubeAV.init();
+	sensorCubeAV.configureDefault();
+	sensorCubeAV.setSoftwareOffset(-10);
+	*/
 
-	m_timer_update_PC_cube_AV.priority(250);
-	m_timer_update_PC_cube_AR.priority(250);
+	sensorCubeAR.init();
+	sensorCubeAR.configureDefault();
+
 }
 
 void SensorMgr::refreshUS(MOVING_DIRECTION dir)
@@ -78,40 +71,22 @@ void SensorMgr::refreshUS(MOVING_DIRECTION dir)
 	}
 }
 
-void SensorMgr::enableCheckCPAV()
-{
-	//m_timer_update_PC_cube.begin(PassageCubeAVInterrupt,50000);
-}
-
-void SensorMgr::enableCheckCPAR()
-{
-	//m_timer_update_PC_cube_AR.begin(PassageCubeARInterrupt,50000);
-}
-
-void SensorMgr::disableCheckCP()
-{
-	m_timer_update_PC_cube_AV.end();
-	m_timer_update_PC_cube_AR.end();
-}
-
-void SensorMgr::refreshCPAV()
+void SensorMgr::checkCubeAV()
 {
 	/*
-	if(PC_cube_av->update()){
-		disableCheckPC();
+	if( sensorCubeAV.readRangeSingle() < CUBE_AV_DETECTION_RANGE_MM )
 		highLevel.sendEvent("cubeDetectedAV");
-	}
+	else
+		highLevel.sendEvent("noCubeDetectedAV");
 	*/
 }
 
-void SensorMgr::refreshCPAR()
+void SensorMgr::checkCubeAR()
 {
-	/*
-	if(PC_cube_ar->update()){
-		disableCheckPC();
+	if( sensorCubeAV.readRangeSingle() < CUBE_AR_DETECTION_RANGE_MM )
 		highLevel.sendEvent("cubeDetectedAR");
-	}
-	*/
+	else
+		highLevel.sendEvent("noCubeDetectedAR");
 }
 
 //Contacteurs et Jumper

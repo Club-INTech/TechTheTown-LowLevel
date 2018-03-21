@@ -17,7 +17,7 @@
 #include "Com/EthernetMgr.h"
 #include "Com/SerialMgr.h"
 #include "SRF10.h"
-#include "PassageCounter.h"
+#include "VL6180X.h"
 #include "AbstractSensorUS.h"
 
 
@@ -32,14 +32,9 @@ private:
 	 EthernetMgr &highLevel = EthernetMgr::Instance();
 	#endif
 
-	IntervalTimer m_timer_update_PC_cube_AV;
-	IntervalTimer m_timer_update_PC_cube_AR;
-
 
 	SRF10* US[NBR_OF_US_SENSOR];
-	PassageCounter* PC_cube_av;
-	//PassageCounter* PC_cube_ar;
-
+	VL6180X sensorCubeAV,sensorCubeAR;
 
 	std::vector<Average<uint16_t,AVERAGE_US_SIZE>> distances;
 	uint8_t currentMeasuringUS = 0;
@@ -51,12 +46,8 @@ public:
 
 	SensorMgr();
 	void refreshUS(MOVING_DIRECTION dir);
-	//refresh PassageCounters
-	void refreshCPAV();
-	void refreshCPAR();
-	void enableCheckCPAV();
-	void enableCheckCPAR();
-	void disableCheckCP();
+	void checkCubeAV();
+	void checkCubeAR();
 
 	bool isJumperEngaged();
 	bool isCont1Engaged();

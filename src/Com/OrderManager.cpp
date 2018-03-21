@@ -784,19 +784,14 @@ void OrderManager::execute(const char* orderToExecute)
             *    	   *|_________________________________|*
             */
 
-        else if(!strcmp(order, "acpAv"))
+        else if(!strcmp(order, "ccAv"))
         {
-            sensorMgr.enableCheckCPAV();
+            sensorMgr.checkCubeAV();
         }
-        else if(!strcmp(order, "acpAr"))
+        else if(!strcmp(order, "ccAr"))
         {
-            sensorMgr.enableCheckCPAR();
+            sensorMgr.checkCubeAR();
         }
-        else if(!strcmp(order, "dcp"))
-        {
-            sensorMgr.disableCheckCP();
-        }
-
             /*			 _________________________________
             * 		   *|                                 |*
             *		   *|			   HOOKS	          |*
