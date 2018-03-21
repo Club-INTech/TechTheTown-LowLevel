@@ -83,10 +83,14 @@ void SensorMgr::checkCubeAV()
 
 void SensorMgr::checkCubeAR()
 {
-	if( sensorCubeAV.readRangeSingle() < CUBE_AR_DETECTION_RANGE_MM )
+	if( sensorCubeAR.readRangeSingle() < CUBE_AR_DETECTION_RANGE_MM )
+	{
 		highLevel.sendEvent("cubeDetectedAR");
+	}
 	else
+	{
 		highLevel.sendEvent("noCubeDetectedAR");
+	}
 }
 
 //Contacteurs et Jumper

@@ -85,14 +85,14 @@ uint8_t inline SerialMgr::available()
 	return Serial.available();
 }
 
-void SerialMgr::sendUS(const std::vector<uint16_t>& distances)
+void SerialMgr::sendUS(const std::vector<Average<uint16_t,AVERAGE_US_SIZE>>& distances)
 {
 	data="";
 	data.append(SENSOR_HEADER[0]);
 	data.append(SENSOR_HEADER[1]);
 	for( uint8_t i=0;i<distances.size();i++)
 	{
-		data.append(distances[i]);
+		data.append(distances[i].value());
 		data.append(" ");
 	}
 	Serial.println(data);

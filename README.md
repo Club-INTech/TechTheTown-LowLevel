@@ -92,8 +92,8 @@ Au boulot les 1As !
 |  olpArp   |          Ouvre légèrement la porte arrière         |
 |    aeAr   |           Active l'électrovanne arrière            |
 |    deAr   |          Désactive l'électrovanne arrière          |
-|    ccAv   |                Check capteur Avant                 |
-|    ccAr   |                Check capteur Arriere               |
+|    ccAv   |                Check cube Avant                    |
+|    ccAr   |                Check cube Arriere                  |
 
 ### ORDRES SPECIFIQUES LL
 

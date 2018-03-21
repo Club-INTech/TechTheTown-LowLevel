@@ -8,6 +8,7 @@
 #include "Utils/Singleton.hpp"
 #include "Utils/stdarg.h"
 #include "Utils/defines.h"
+#include "Utils/average.hpp"
 
 
 
@@ -25,7 +26,7 @@ public:
 	bool read(float&);
 
 	/* ENVOI */
-	void sendUS(const std::vector<uint16_t>&);
+	void sendUS(const std::vector<Average<uint16_t,AVERAGE_US_SIZE>>&);
 	void sendEvent(const char*);
 
 	template<typename T>
