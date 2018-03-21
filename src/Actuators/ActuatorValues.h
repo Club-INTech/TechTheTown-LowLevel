@@ -27,7 +27,7 @@ constexpr int armBaseSpeed = 250;
  * Bras avant
  */
 
-constexpr int frontLowCubes = 95;
+constexpr int frontLowCubes = 90;
 constexpr int frontLowBee = 110;
 constexpr int frontFolded = 182;
 
