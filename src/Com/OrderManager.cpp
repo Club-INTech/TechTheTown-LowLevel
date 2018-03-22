@@ -741,11 +741,11 @@ void OrderManager::execute(const char* orderToExecute)
         }
         else if (!strcmp(order, "olpAvp"))
         {
-            actuatorsMgr.movAX12(frontDoor_ID,frontDoorClosed+20);
+            actuatorsMgr.movAX12(frontDoor_ID,frontDoorClosed+doorSmallOpeningAngle);
         }
         else if (!strcmp(order, "olpArp"))
         {
-            actuatorsMgr.movAX12(backDoor_ID,backDoorClosed-20);
+            actuatorsMgr.movAX12(backDoor_ID,backDoorClosed-doorSmallOpeningAngle);
         }
         /*
          * POMPE
