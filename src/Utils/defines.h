@@ -60,7 +60,7 @@ constexpr uint8_t   TOLERANCY =                 50;
 /**
 *CAPTEURS
 */
-
+constexpr uint8_t   CUBE_AV_DETECTION_ADDR = 0x10;
 constexpr float     CUBE_AV_DETECTION_RANGE_MM = 50;
 constexpr float     CUBE_AR_DETECTION_RANGE_MM = 50;
 

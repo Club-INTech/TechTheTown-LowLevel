@@ -8,8 +8,8 @@ static uint16_t const ScalerValues[] = {0, 253, 127, 84};
 
 // Constructors ////////////////////////////////////////////////////////////////
 
-VL6180X::VL6180X(void)
-  : address(ADDRESS_DEFAULT)
+VL6180X::VL6180X(uint8_t addr)
+  : address(addr)
   , scaling(0)
   , ptp_offset(0)
   , software_offset(0)

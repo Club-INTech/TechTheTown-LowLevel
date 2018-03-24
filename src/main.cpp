@@ -85,12 +85,11 @@ void loop(){
 #endif
 
     static Metro USRefresh = Metro(66);
-
     while (true) {
         orderMgr.communicate();
         USRefresh.check() ? orderMgr.refreshUS() : void();
         orderMgr.isHLWaiting() ? orderMgr.checkJumper() : void();
-    }
+	}
 }
 
 /*

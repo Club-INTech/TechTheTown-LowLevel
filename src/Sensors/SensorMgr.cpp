@@ -18,15 +18,21 @@ SensorMgr::SensorMgr()
 		distances.push_back(Average<uint16_t,AVERAGE_US_SIZE>());
 	}
 
-	/*
-	sensorCubeAV.init();
-	sensorCubeAV.configureDefault();
-	sensorCubeAV.setSoftwareOffset(-10);
-	*/
+	 //puts sensorcubeAR in sleep mode
+	pinMode(PIN_CUBE_AR_DETECTION_SLEEP,OUTPUT);
+	digitalWrite(PIN_CUBE_AR_DETECTION_SLEEP,LOW);
 
+	//init sensorCubeAV at addr=0x10
+	sensorCubeAV.init();
+	sensorCubeAV.setAddress(CUBE_AV_DETECTION_ADDR);
+	sensorCubeAV.configureDefault();
+	delay(50);
+	//wake up sensorcubeAR
+	digitalWrite(PIN_CUBE_AR_DETECTION_SLEEP,HIGH);
+	delay(50);
+	//init sensorCubeAR at defaultAddress
 	sensorCubeAR.init();
 	sensorCubeAR.configureDefault();
-
 }
 
 void SensorMgr::refreshUS(MOVING_DIRECTION dir)
@@ -73,12 +79,10 @@ void SensorMgr::refreshUS(MOVING_DIRECTION dir)
 
 void SensorMgr::checkCubeAV()
 {
-	/*
 	if( sensorCubeAV.readRangeSingle() < CUBE_AV_DETECTION_RANGE_MM )
 		highLevel.sendEvent("cubeDetectedAV");
 	else
 		highLevel.sendEvent("noCubeDetectedAV");
-	*/
 }
 
 void SensorMgr::checkCubeAR()

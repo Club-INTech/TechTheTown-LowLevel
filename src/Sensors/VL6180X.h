@@ -89,7 +89,7 @@ class VL6180X
 
     uint8_t last_status; // status of last I2C transmission
 
-    VL6180X(void);
+    VL6180X(uint8_t addr = ADDRESS_DEFAULT);
 
     void setAddress(uint8_t new_addr);
 

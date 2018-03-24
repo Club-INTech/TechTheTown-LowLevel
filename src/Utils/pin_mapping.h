@@ -39,8 +39,7 @@
 /* CAPTEURS */
 
 	//IR
-#define PIN_CUBES_AV_THRESH 28
-#define PIN_CUBES_AR_THRESH 29
+#define PIN_CUBE_AR_DETECTION_SLEEP 14
 
 	//CONT
 #define PIN_JMPR 0

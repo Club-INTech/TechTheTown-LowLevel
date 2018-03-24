@@ -34,7 +34,8 @@ private:
 
 
 	SRF10* US[NBR_OF_US_SENSOR];
-	VL6180X sensorCubeAV,sensorCubeAR;
+	VL6180X sensorCubeAV;
+	VL6180X sensorCubeAR;
 
 	std::vector<Average<uint16_t,AVERAGE_US_SIZE>> distances;
 	uint8_t currentMeasuringUS = 0;
