@@ -91,21 +91,21 @@ void loop(){
 //    orderMgr.execute("cr0");
 //    orderMgr.execute("monthlery");
 //    orderMgr.execute("cv0");
-    orderMgr.execute("kpg 0.2165");
-    orderMgr.execute("kig 0.00005");
-    orderMgr.execute("kdg 0.414");
-    orderMgr.execute("kpd 0.225");
-    orderMgr.execute("kid 0.00005");
-    orderMgr.execute("kdd 0.4121");
+//    orderMgr.execute("kpg 0.2165");
+//    orderMgr.execute("kig 0.00005");
+//    orderMgr.execute("kdg 0.414");
+//    orderMgr.execute("kpd 0.225");
+//    orderMgr.execute("kid 0.00005");
+//    orderMgr.execute("kdd 0.4121");
 
 
-    orderMgr.execute("kpt 6.5");
-    orderMgr.execute("kit 0");
-    orderMgr.execute("kdt 1.08");
-
-    orderMgr.execute("kpr 15");
-    orderMgr.execute("kir 0.00001");
-    orderMgr.execute("kdr 0");
+//    orderMgr.execute("kpt 6.5");
+//    orderMgr.execute("kit 0");
+//    orderMgr.execute("kdt 1.08");
+//
+//    orderMgr.execute("kpr 15");
+//    orderMgr.execute("kir 0.00001");
+//    orderMgr.execute("kdr 0");
 
     /*
 //    orderMgr.execute("t pi");

@@ -38,7 +38,7 @@ MotionControlSystem::MotionControlSystem() :
 
     maxSpeed = 12000;				// Limite globale de la vitesse (Rotation + Translation)
     maxSpeedTranslation = 10000;
-    maxSpeedRotation = 8000;
+    maxSpeedRotation = 5000;
 
 
 	delayToStop = 100;              // Temps a l'arret avant de considérer un blocage
@@ -51,10 +51,10 @@ MotionControlSystem::MotionControlSystem() :
 	toleranceDifferentielle = 4500;  // Pour les trajectoires "normales", verifie que les roues ne font pas nawak chacunes de leur cote.
 	toleranceDerivative = 0; 		// Doit être suffisament faible pour être fiable mais suffisament élevée pour arrêter contre un mur
 
-	translationPID.setTunings(10,0,50);
-	rotationPID.setTunings(17,0,100);
-	leftSpeedPID.setTunings(0.11,0,0.005);
-	rightSpeedPID.setTunings(0.11,0,0.005);
+    leftSpeedPID.setTunings(0.2165,0.00005,0.414);
+    rightSpeedPID.setTunings(0.225,0.00005,0.4121);
+    translationPID.setTunings(6.5,0,1.08);
+    rotationPID.setTunings(15,0.00001,0);
 
 
 	maxAcceleration = 30;
@@ -501,9 +501,10 @@ void MotionControlSystem::orderRawPwm(Side side, int16_t pwm) {
 
 
 void MotionControlSystem::stop() {
-//	Serial.println("STOPPING");
-//	Serial.println(currentDistance);
-//	Serial.println(currentAngle);
+	Serial.print(millis());
+	Serial.println(" - STOPPING");
+	Serial.println(currentDistance);
+	Serial.println(currentAngle);
 
 	moving = false;
     pointToPointMovement = false;

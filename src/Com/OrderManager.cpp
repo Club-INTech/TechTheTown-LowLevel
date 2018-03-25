@@ -55,8 +55,8 @@ void OrderManager::communicate() {
 
 
     //Code compilé seulement si on utilise l'ethernet
-#if !DEBUG
     static Metro sendPos = Metro(50);
+#if !DEBUG
     if (sendPos.check()) {
         if (motionControlSystem.isMoving()) {
             float posToSend[3]={motionControlSystem.getX(), motionControlSystem.getY(), motionControlSystem.getAngleRadian()};
@@ -65,6 +65,24 @@ void OrderManager::communicate() {
         } else {
             if (motionControlSystem.previousIsMoving()){
                 highLevel.sendEvent("stoppedMoving");
+            }
+            motionControlSystem.setPreviousIsMoving(false);
+        }
+    }
+#else
+    if(sendPos.check())
+    {
+        if (motionControlSystem.isMoving())
+        {
+            motionControlSystem.setPreviousIsMoving(true);
+        }
+        else
+        {
+            if(motionControlSystem.previousIsMoving())
+            {
+                Serial.print(millis());
+                Serial.println(" - BISMILLAH");
+//                execute("blbAv");
             }
             motionControlSystem.setPreviousIsMoving(false);
         }
