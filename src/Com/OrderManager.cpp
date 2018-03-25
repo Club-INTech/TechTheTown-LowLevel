@@ -17,7 +17,7 @@ OrderManager::OrderManager():
     pinMode(LED_BUILTIN,OUTPUT);
 #endif
     memset(readMessage, 0, RX_BUFFER_SIZE);
-    isSendingUS = false;
+    isSendingUS = true;
     hooksEnabled = true;
     HLWaiting = false;
     highLevel.log("Communications ready");

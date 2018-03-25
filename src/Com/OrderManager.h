@@ -156,7 +156,8 @@ public:
 
     //Com&exec
     inline void refreshUS(){
-		sensorMgr.refreshUS(motionControlSystem.getMovingDirection());
+		if(isSendingUS)
+			sensorMgr.refreshUS(motionControlSystem.getMovingDirection());
 	}
     void communicate();
     void execute(const char*);	//public pour pouvoir executer des scripts de hook
