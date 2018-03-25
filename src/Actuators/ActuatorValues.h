@@ -44,7 +44,7 @@ constexpr int backFolded = 120;
  */
 
 constexpr int doorBaseSpeed = 300;
-constexpr int doorSmallOpeningAngle = 15;
+constexpr int doorSmallOpeningAngle = 10;
 
 constexpr int frontDoorOpen = 240;
 constexpr int frontDoorClosed = 155;
