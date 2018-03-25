@@ -84,7 +84,7 @@ void loop(){
 	blinkTim.begin(blink,500000);
 #endif
 
-    static Metro USRefresh = Metro(66);
+    static Metro USRefresh = Metro(25);
     while (true) {
         orderMgr.communicate();
         USRefresh.check() ? orderMgr.refreshUS() : void();
