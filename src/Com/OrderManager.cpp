@@ -131,8 +131,8 @@ void OrderManager::execute(const char* orderToExecute)
         }
         else if (!strcmp(order, "t"))
         {
-            if (n_param == 1) {
-                float angle = motionControlSystem.getAngleRadian();
+            if (n_param >= 1) {
+                float angle;
                 if(!strcmp(orderData.at(1),"pi"))
                 {
                     angle = (float)PI;
@@ -142,7 +142,19 @@ void OrderManager::execute(const char* orderToExecute)
                     angle = strtof(orderData.at(1),nullptr);
                 }
                 highLevel.log("angle : %f", angle);
-                motionControlSystem.orderRotation(angle, MotionControlSystem::FREE);
+                MotionControlSystem::RotationWay rotationWay = MotionControlSystem::FREE;
+                if(n_param == 2)
+                {
+                    if(!strcmp(orderData.at(2),"trigo"))
+                    {
+                        rotationWay = MotionControlSystem::TRIGO;
+                    }
+                    else if(!strcmp(orderData.at(2),"antitrigo"))
+                    {
+                        rotationWay = MotionControlSystem::ANTITRIGO;
+                    }
+                }
+                motionControlSystem.orderRotation(angle, rotationWay);
             }
             else {
                 highLevel.log("ERREUR::Paramètres incorrects");
