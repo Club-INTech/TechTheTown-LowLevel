@@ -35,14 +35,20 @@ SensorMgr::SensorMgr()
 	sensorCubeAR.configureDefault();
 }
 
+void SensorMgr::sendUS()
+{
+	sendRequest=true;
+}
+
 void SensorMgr::refreshUS(MOVING_DIRECTION dir)
 {
 	if(NBR_OF_US_SENSOR)
 	{
 		if(!isMeasuring)
 		{
-			if( firstMeasure )
+			if( firstMeasure && sendRequest  )
 			{
+				sendRequest=false;
 				highLevel.sendUS(distances);
 				if( dir == MOVING_DIRECTION::FORWARD || dir == MOVING_DIRECTION::NONE )
 					currentMeasuringUS=0;
@@ -71,7 +77,9 @@ void SensorMgr::refreshUS(MOVING_DIRECTION dir)
 				if( currentMeasuringUS < NBR_OF_US_SENSOR-1 )
 					++currentMeasuringUS;
 				else
+				{
 					firstMeasure = true;
+				}
 			}
 		}
 	}

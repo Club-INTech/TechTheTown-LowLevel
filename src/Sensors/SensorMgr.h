@@ -41,6 +41,7 @@ private:
 	uint8_t currentMeasuringUS = 0;
 	bool isMeasuring = false;
 	bool firstMeasure = true;
+	bool sendRequest= false;
 	MOVING_DIRECTION measure_direction;
 
 public:
@@ -49,6 +50,7 @@ public:
 	void refreshUS(MOVING_DIRECTION dir);
 	void checkCubeAV();
 	void checkCubeAR();
+	void sendUS();
 
 	bool isJumperEngaged();
 	bool isCont1Engaged();

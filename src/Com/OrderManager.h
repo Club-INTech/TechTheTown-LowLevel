@@ -159,6 +159,9 @@ public:
 		if(isSendingUS)
 			sensorMgr.refreshUS(motionControlSystem.getMovingDirection());
 	}
+	inline void sendUS(){
+		sensorMgr.sendUS();
+	}
     void communicate();
     void execute(const char*);	//public pour pouvoir executer des scripts de hook
 
