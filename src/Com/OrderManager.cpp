@@ -39,11 +39,13 @@ void OrderManager::communicate() {
     {
         if (!motionControlSystem.sentMoveAbnormal() && motionControlSystem.isMoveAbnormal()) {//Si on est bloqué et qu'on n'a pas encore prévenu
             motionControlSystem.setMoveAbnormalSent(true);
-            //TODO prévoir le cas quand on ne peut pas bouger car on a détecté un obstable (envoyer "unableToMove o")
             highLevel.sendEvent("unableToMove p");
         }
         else if (motionControlSystem.sentMoveAbnormal() && !motionControlSystem.isMoveAbnormal()) {//Si on est plus bloqué et qu'on avait prévenu
             motionControlSystem.setMoveAbnormalSent(false);
+        }
+        else if(motionControlSystem.isBasicBlocked()) {
+            highLevel.sendEvent("unableToMove o");
         }
     }
 
@@ -278,6 +280,7 @@ void OrderManager::execute(const char* orderToExecute)
         else if (!strcmp(order, "ct1"))		//Activer l'asservissement en translation
         {
             motionControlSystem.enableTranslationControl(true);
+            motionControlSystem.resetBasicBlocked();
             highLevel.log("asservi en translation");
         }
         else if (!strcmp(order, "cr0"))		//Désactiver l'asservissement en rotation
@@ -288,6 +291,7 @@ void OrderManager::execute(const char* orderToExecute)
         else if (!strcmp(order, "cr1"))		//Activer l'asservissement en rotation
         {
             motionControlSystem.enableRotationControl(true);
+            motionControlSystem.resetBasicBlocked();
             highLevel.log("asservi en rotation");
         }
         else if (!strcmp(order, "cv0"))		//Désactiver l'asservissement en vitesse
@@ -298,6 +302,7 @@ void OrderManager::execute(const char* orderToExecute)
         else if (!strcmp(order, "cv1"))		//Activer l'asservissement en vitesse
         {
             motionControlSystem.enableSpeedControl(true);
+            motionControlSystem.resetBasicBlocked();
             highLevel.log("asservi en vitesse");
         }
 
@@ -803,6 +808,16 @@ void OrderManager::execute(const char* orderToExecute)
         else if(!strcmp(order, "ccAr"))
         {
             sensorMgr.checkCubeAR();
+        }
+        else if(!strcmp(order, "bde"))
+        {
+            sensorMgr.enableBasicDetection(true);
+            motionControlSystem.resetBasicBlocked();
+        }
+        else if(!strcmp(order, "bdd"))
+        {
+            sensorMgr.enableBasicDetection(false);
+            motionControlSystem.resetBasicBlocked();
         }
             /*			 _________________________________
             * 		   *|                                 |*

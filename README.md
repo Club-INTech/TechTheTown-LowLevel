@@ -95,6 +95,8 @@ Au boulot les 1As !
 |    deAr   |          Désactive l'électrovanne arrière          |
 |    ccAv   |                Check cube Avant                    |
 |    ccAr   |                Check cube Arriere                  |
+|    bde    |             Active la basic detection              |
+|    bdd    |           Désactive la basic detection             |
 
 ### ORDRES SPECIFIQUES LL
 
