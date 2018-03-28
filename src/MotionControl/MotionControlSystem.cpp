@@ -32,7 +32,6 @@ MotionControlSystem::MotionControlSystem() :
 	translation = true;
 	direction = NONE;
 
-    basicBlocked = false;
     wasMoving = false;
 
 	leftSpeedPID.setOutputLimits(-255, 255);
@@ -435,13 +434,7 @@ void MotionControlSystem::stop() {
 	direction = NONE;
 }
 
-void MotionControlSystem::emergencyStop()
-{
-    enableTranslationControl(false);
-    enableRotationControl(false);
-    setRawNullSpeed();
-    stop();
-}
+
 
 bool MotionControlSystem::isMoving() const
 {
@@ -469,14 +462,6 @@ bool MotionControlSystem::sentMoveAbnormal() const
 
 void MotionControlSystem::setMoveAbnormalSent(bool status) {
 	moveAbnormalSent = status;
-}
-
-bool MotionControlSystem::isBasicBlocked() {
-    return(basicBlocked);
-}
-
-void MotionControlSystem::resetBasicBlocked() {
-    basicBlocked = false;
 }
 
 void MotionControlSystem::setRawPositiveTranslationSpeed() {

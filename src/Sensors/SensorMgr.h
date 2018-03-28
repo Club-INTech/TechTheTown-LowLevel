@@ -45,6 +45,7 @@ private:
 	MOVING_DIRECTION measure_direction;
 
     bool isBasicDetectionOn;
+	unsigned int basicBlocked;
 public:
 
 	SensorMgr();
@@ -57,6 +58,8 @@ public:
 	bool isCont1Engaged();
 
     void enableBasicDetection(bool);
+	bool isBasicBlocked();
+	void resetBasicBlocked();
 };
 
 #endif

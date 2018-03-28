@@ -64,10 +64,10 @@ void SensorMgr::refreshUS(MOVING_DIRECTION dir)
 		{
             uint16_t currentDistance = US[currentMeasuringUS]->getDistance();
 			distances[currentMeasuringUS].add(currentDistance);
-            if(currentDistance <= BASIC_DETECTION_DISTANCE && currentDistance != 0 && measure_direction != MOVING_DIRECTION::NONE && isBasicDetectionOn )
+            if(currentDistance <= BASIC_DETECTION_DISTANCE && currentDistance != 0
+			   && measure_direction != MOVING_DIRECTION::NONE && isBasicDetectionOn && basicBlocked <= 1)
             {
-                MotionControlSystem::Instance().emergencyStop();
-                Serial.println("HALP");
+                basicBlocked++;
             }
 			isMeasuring=false;
 			if( measure_direction == MOVING_DIRECTION::FORWARD )
@@ -126,4 +126,14 @@ bool SensorMgr::isCont1Engaged()
 void SensorMgr::enableBasicDetection(bool newStatus)
 {
     isBasicDetectionOn = newStatus;
+}
+
+bool SensorMgr::isBasicBlocked()
+{
+	return(basicBlocked == 1);
+}
+
+void SensorMgr::resetBasicBlocked()
+{
+	basicBlocked = 0;
 }

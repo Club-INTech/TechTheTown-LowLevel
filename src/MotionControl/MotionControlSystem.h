@@ -112,7 +112,6 @@ private:
     // Variables d'état du mouvement
 	volatile bool moving;
 	volatile bool wasMoving;
-    volatile bool basicBlocked;
 	volatile MOVING_DIRECTION direction;
 	volatile bool moveAbnormal;
 	volatile bool moveAbnormalSent;
@@ -209,15 +208,12 @@ public:
 
 	/* Autres */
 	void stop();
-    void emergencyStop();
 	bool isMoving() const;
 	bool previousIsMoving() const;
 	void setPreviousIsMoving(bool);
 	bool isMoveAbnormal() const;
 	bool sentMoveAbnormal() const;
 	void setMoveAbnormalSent(bool);
-    bool isBasicBlocked();
-    void resetBasicBlocked();
 
 	MOVING_DIRECTION getMovingDirection() const;
 	void enable(bool);
