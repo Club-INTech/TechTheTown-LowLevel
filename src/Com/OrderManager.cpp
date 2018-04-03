@@ -44,7 +44,7 @@ void OrderManager::communicate() {
         else if (motionControlSystem.sentMoveAbnormal() && !motionControlSystem.isMoveAbnormal()) {//Si on est plus bloqué et qu'on avait prévenu
             motionControlSystem.setMoveAbnormalSent(false);
         }
-        else if(sensorMgr.isBasicBlocked()) {
+        if(sensorMgr.isBasicBlocked()) {
             highLevel.sendEvent("basicDetectionTriggered");
         }
     }
