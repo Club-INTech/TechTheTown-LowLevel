@@ -165,14 +165,21 @@ void OrderManager::execute(const char* orderToExecute)
         }
         else if (!strcmp(order, "goto"))
         {
-            if(n_param <= 2)
+            if(n_param == 2 || n_param == 3)
             {
                 float targetX = strtof(orderData.at(1),nullptr);
                 float targetY = strtof(orderData.at(2),nullptr);
+                bool isSequential = false;
 
+                if(n_param == 3)
+                {
+                    isSequential = !strcmp(orderData.at(3),"true") || !strcmp(orderData.at(3),"1");
+                    Serial.print("On séquentialise : ");
+                    Serial.println(isSequential);
+                }
 //                if(-1500 <= targetX && targetX <= 1500 && 0 <= targetY && targetY <= 2000)
 //                {
-                    motionControlSystem.orderGoto(targetX,targetY);
+                    motionControlSystem.orderGoto(targetX,targetY, isSequential);
 //                }
 //                else
 //                {

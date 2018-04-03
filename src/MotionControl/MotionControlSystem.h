@@ -124,12 +124,15 @@ private:
 
 	volatile bool forcedMovement; 	// Si true, alors pas de gestion de l'arret : ON FORCE MODAFUCKA !!!
 	volatile bool pointToPointMovement;
+    volatile bool sequentialPointToPoint;   // Si true, on tourne pour s'orienter puis on avance
 
                                     // Variables de réglage de la détection de blocage physique
 	unsigned int delayToStop;       //En ms
 
-    int toleranceRadiale;         // Tolérance en mm pour le point à point
-	//Nombre de ticks de tolérance pour considérer qu'on est arrivé à destination
+    int toleranceRadiale;           // Tolérance en mm pour le point à point
+    float toleranceAngulairePtP;      // Tolérance angulaire en rad avant de translater en PtP séquentiel
+
+    //Nombre de ticks de tolérance pour considérer qu'on est arrivé à destination
 	int toleranceTranslation;
 	int toleranceRotation;
 
@@ -209,6 +212,7 @@ public:
 	void orderTranslation(int32_t);
 	void orderRotation(float, RotationWay);
 	void orderGoto(float, float);
+    void orderGoto(float, float, bool);
 	void orderRawPwm(Side, int16_t);
 
 	/* Autres */
