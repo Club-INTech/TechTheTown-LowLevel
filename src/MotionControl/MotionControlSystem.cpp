@@ -373,14 +373,15 @@ void MotionControlSystem::updatePosition() {
         else
         {
             orderTranslation(-moveNorm);
-            orderRotation((float)PI-moveArgument,RotationWay::FREE);
+            orderRotation((float)PI+moveArgument,RotationWay::FREE);
 			Serial.println(-moveNorm);
-			Serial.println((float)PI-moveArgument);
+			Serial.println((float)PI+moveArgument);
         }
 		lastMoveNorm = moveNorm;
         if(moveNorm<toleranceRadiale)
         {
             pointToPointMovement = false;
+            rotationSetpoint = currentAngle + (int32_t)(originalAngle/TICK_TO_RADIAN);
         }
 		Serial.println("======================");
     }

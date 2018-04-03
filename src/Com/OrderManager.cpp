@@ -852,7 +852,7 @@ void OrderManager::execute(const char* orderToExecute)
 
                 char hookOrder[RX_BUFFER_SIZE] = "";
 
-                for (int i = 7; i < n_param + 1; i++) {
+                for (uint8_t i = 7; i < n_param + 1; i++) {
                     strcat(hookOrder, orderData.at(i));
                     strcat(hookOrder, " ");
                 }
@@ -976,7 +976,7 @@ float OrderManager::parseFloat(const char* s) {
 }
 
 void OrderManager::checkHooks() {
-    hookList.check(motionControlSystem.getX(), motionControlSystem.getY(),motionControlSystem.getAngleRadian());
+    hookList.check((uint32_t)motionControlSystem.getX(), (uint32_t)motionControlSystem.getY(),motionControlSystem.getAngleRadian());
 }
 
 void OrderManager::executeHooks() {
