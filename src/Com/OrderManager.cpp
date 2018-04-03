@@ -45,7 +45,7 @@ void OrderManager::communicate() {
             motionControlSystem.setMoveAbnormalSent(false);
         }
         else if(sensorMgr.isBasicBlocked()) {
-            highLevel.sendEvent("Basic detection triggered");
+            highLevel.sendEvent("basicDetectionTriggered");
         }
     }
 
