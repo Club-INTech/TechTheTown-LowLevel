@@ -257,11 +257,11 @@ void OrderManager::execute(const char* orderToExecute)
 
         else if (!strcmp(order, "efm"))
         {
-            motionControlSystem.enableForcedMovement();
+            motionControlSystem.enableForcedMovement(true);
         }
         else if (!strcmp(order, "dfm"))
         {
-            motionControlSystem.disableForcedMovement();
+            motionControlSystem.enableForcedMovement(true);
         }
 
             /*			 ___________________
@@ -401,7 +401,7 @@ void OrderManager::execute(const char* orderToExecute)
         {
             motionControlSystem.enableTranslationControl(false);
             motionControlSystem.enableRotationControl(false);
-            motionControlSystem.enableForcedMovement();
+            motionControlSystem.enableForcedMovement(true);
         }
         else if (!strcmp(order, "av"))
         {

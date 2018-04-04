@@ -221,8 +221,7 @@ public:
 	void enableRotationControl(bool);
 	void enableSpeedControl(bool);
 	void manageStop();
-	void enableForcedMovement();
-	void disableForcedMovement();
+	void enableForcedMovement(bool);
 
 };
 

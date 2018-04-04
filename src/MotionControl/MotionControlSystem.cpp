@@ -224,14 +224,9 @@ bool MotionControlSystem::isRightWheelSpeedAbnormal() {
 	return (ABS(rightSpeedPID.getError())>toleranceSpeedEstablished);
 }
 
-void MotionControlSystem::enableForcedMovement() {
-	forcedMovement = true;
+void MotionControlSystem::enableForcedMovement(bool b) {
+	forcedMovement = b;
 }
-
-void MotionControlSystem::disableForcedMovement() {
-	forcedMovement = false;
-}
-
 void MotionControlSystem::manageStop()
 {
 	static uint32_t time = 0;
