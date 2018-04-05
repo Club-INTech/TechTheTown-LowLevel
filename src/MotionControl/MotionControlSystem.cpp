@@ -331,6 +331,7 @@ void MotionControlSystem::orderTranslation(int32_t mmDistance)
 	{
 		translationPID.resetErrors();
 		moving = true;
+        wasMoving = true;
 	}
 
 	direction = (mmDistance < 0) ? BACKWARD : FORWARD;
@@ -393,6 +394,7 @@ void MotionControlSystem::orderRotation(float targetAngleRadian, RotationWay rot
 	{
 		rotationPID.resetErrors();
 		moving = true;
+        wasMoving = true;
 	}
 	direction = NONE;
 	moveAbnormal = false;

@@ -64,12 +64,11 @@ void OrderManager::communicate() {
         if (motionControlSystem.isMoving()) {
             float posToSend[3]={motionControlSystem.getX(), motionControlSystem.getY(), motionControlSystem.getAngleRadian()};
             highLevel.sendPosition(posToSend);
-            motionControlSystem.setPreviousIsMoving(true);
         } else {
             if (motionControlSystem.previousIsMoving()){
                 highLevel.sendEvent("stoppedMoving");
+                motionControlSystem.setPreviousIsMoving(false);
             }
-            motionControlSystem.setPreviousIsMoving(false);
         }
     }
 #endif
