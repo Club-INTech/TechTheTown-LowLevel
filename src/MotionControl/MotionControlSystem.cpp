@@ -32,6 +32,8 @@ MotionControlSystem::MotionControlSystem() :
 	translation = true;
 	direction = NONE;
 
+    wasMoving = false;
+
 	leftSpeedPID.setOutputLimits(-255, 255);
 	rightSpeedPID.setOutputLimits(-255, 255);
 
@@ -426,6 +428,8 @@ void MotionControlSystem::stop() {
 
 	direction = NONE;
 }
+
+
 
 bool MotionControlSystem::isMoving() const
 {

@@ -62,7 +62,13 @@ void SensorMgr::refreshUS(MOVING_DIRECTION dir)
 		}
 		if( isMeasuring && US[currentMeasuringUS]->update())
 		{
-			distances[currentMeasuringUS].add(US[currentMeasuringUS]->getDistance());
+            uint16_t currentDistance = US[currentMeasuringUS]->getDistance();
+			distances[currentMeasuringUS].add(currentDistance);
+            if(currentDistance <= BASIC_DETECTION_DISTANCE && currentDistance != 0
+			   && measure_direction != MOVING_DIRECTION::NONE && isBasicDetectionOn && basicBlocked < 1)
+            {
+                basicBlocked++;
+            }
 			isMeasuring=false;
 			if( measure_direction == MOVING_DIRECTION::FORWARD )
 			{
@@ -115,4 +121,24 @@ bool SensorMgr::isJumperEngaged()
 bool SensorMgr::isCont1Engaged()
 {
 	return digitalRead(PIN_CONT1);
+}
+
+void SensorMgr::enableBasicDetection(bool newStatus)
+{
+    isBasicDetectionOn = newStatus;
+}
+
+bool SensorMgr::isBasicBlocked()
+{
+	if(basicBlocked == 1)
+	{
+		basicBlocked ++;
+		return(true);
+	}
+	return(false);
+}
+
+void SensorMgr::resetBasicBlocked()
+{
+	basicBlocked = 0;
 }

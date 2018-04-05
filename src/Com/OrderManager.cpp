@@ -39,11 +39,13 @@ void OrderManager::communicate() {
     {
         if (!motionControlSystem.sentMoveAbnormal() && motionControlSystem.isMoveAbnormal()) {//Si on est bloqué et qu'on n'a pas encore prévenu
             motionControlSystem.setMoveAbnormalSent(true);
-            //TODO prévoir le cas quand on ne peut pas bouger car on a détecté un obstable (envoyer "unableToMove o")
             highLevel.sendEvent("unableToMove p");
         }
         else if (motionControlSystem.sentMoveAbnormal() && !motionControlSystem.isMoveAbnormal()) {//Si on est plus bloqué et qu'on avait prévenu
             motionControlSystem.setMoveAbnormalSent(false);
+        }
+        if(sensorMgr.isBasicBlocked()) {
+            highLevel.sendEvent("basicDetectionTriggered");
         }
     }
 
@@ -124,6 +126,7 @@ void OrderManager::execute(const char* orderToExecute)
                 int16_t deplacement = strtod(orderData.at(1), nullptr);
                 highLevel.log("distance : %d", deplacement);
                 motionControlSystem.orderTranslation(deplacement);
+                sensorMgr.resetBasicBlocked();
             }
             else {
                 highLevel.log("ERREUR::Paramètres incorrects");
@@ -155,6 +158,7 @@ void OrderManager::execute(const char* orderToExecute)
                     }
                 }
                 motionControlSystem.orderRotation(angle, rotationWay);
+                sensorMgr.resetBasicBlocked();
             }
             else {
                 highLevel.log("ERREUR::Paramètres incorrects");
@@ -803,6 +807,16 @@ void OrderManager::execute(const char* orderToExecute)
         else if(!strcmp(order, "ccAr"))
         {
             sensorMgr.checkCubeAR();
+        }
+        else if(!strcmp(order, "bde"))
+        {
+            sensorMgr.enableBasicDetection(true);
+            sensorMgr.resetBasicBlocked();
+        }
+        else if(!strcmp(order, "bdd"))
+        {
+            sensorMgr.enableBasicDetection(false);
+            sensorMgr.resetBasicBlocked();
         }
             /*			 _________________________________
             * 		   *|                                 |*

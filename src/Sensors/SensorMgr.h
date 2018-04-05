@@ -44,6 +44,8 @@ private:
 	bool sendRequest= false;
 	MOVING_DIRECTION measure_direction;
 
+    bool isBasicDetectionOn;
+	unsigned int basicBlocked;
 public:
 
 	SensorMgr();
@@ -54,6 +56,10 @@ public:
 
 	bool isJumperEngaged();
 	bool isCont1Engaged();
+
+    void enableBasicDetection(bool);
+	bool isBasicBlocked();
+	void resetBasicBlocked();
 };
 
 #endif

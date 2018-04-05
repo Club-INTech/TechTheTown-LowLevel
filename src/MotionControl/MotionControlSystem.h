@@ -199,7 +199,7 @@ public:
 	void setRotationSpeed(float);
 
 	void updatePosition();
-	void resetPosition(void);
+	void resetPosition();
 
 	/* Ordres */
 	void orderTranslation(int32_t);
