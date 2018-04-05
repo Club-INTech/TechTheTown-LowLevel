@@ -11,7 +11,7 @@ Au boulot les 1As !
 - [x] Hooks
 - [x] Canal de Position (établir la fréquence d'envoie et le header associé avec le HL) & détection de fin de mouvement
 - [x] Détection des blocages physiques et transmission sur le canal Event
-- [ ] Mise en place de la basic Detection (arrêt si obstacle trop proche) - Discussion de l'implémentation à avoir
+- [x] Mise en place de la basic Detection (Envoi d'event si obstacle trop proche)
 - [ ] Fusion de la gestion Série/Ethernet
 - [ ] Gérer les ordres grâce à une classe pour que ce soit propre
 - [ ] Mise en place de cas d'erreur explicites et plus nombreux pour le HL
