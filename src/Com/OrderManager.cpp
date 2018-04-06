@@ -967,9 +967,9 @@ bool OrderManager::isHLWaiting() {
 }
 
 void OrderManager::checkJumper() {
-    if(!sensorMgr.isJumperEngaged() && HLWaiting)
+    if(sensorMgr.isReadyToGo() && HLWaiting)
     {
-        highLevel.printfln("j");
+        highLevel.sendEvent("BLITZKRIEG");
         HLWaiting = false;
     }
 }

@@ -88,8 +88,8 @@ void loop(){
     while (true) {
         orderMgr.communicate();
 		orderMgr.refreshUS();
-        USSend.check() ? orderMgr.sendUS() : void();
         orderMgr.isHLWaiting() ? orderMgr.checkJumper() : void();
+        USSend.check() ? orderMgr.sendUS() : void();
 	}
 }
 

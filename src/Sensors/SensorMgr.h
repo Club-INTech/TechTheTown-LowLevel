@@ -44,6 +44,7 @@ private:
 	bool sendRequest= false;
 	MOVING_DIRECTION measure_direction;
 
+	bool jumperPlugged;
     bool isBasicDetectionOn;
 	unsigned int basicBlocked;
 public:
@@ -55,6 +56,7 @@ public:
 	void sendUS();
 
 	bool isJumperEngaged();
+	bool isReadyToGo();
 	bool isCont1Engaged();
 
     void enableBasicDetection(bool);

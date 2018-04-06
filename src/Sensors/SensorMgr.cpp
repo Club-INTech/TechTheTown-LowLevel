@@ -4,6 +4,8 @@ SensorMgr::SensorMgr()
 {
 	Wire.begin();
 
+	pinMode(PIN_JMPR,INPUT_PULLUP);
+
 	/* CHANGEMENT PIN I2C */
 	CORE_PIN18_CONFIG = 0;  // turn off primary pins before enable alternates
 	CORE_PIN19_CONFIG = 0;
@@ -33,6 +35,8 @@ SensorMgr::SensorMgr()
 	//init sensorCubeAR at defaultAddress
 	sensorCubeAR.init();
 	sensorCubeAR.configureDefault();
+
+	jumperPlugged = isJumperEngaged();
 }
 
 void SensorMgr::sendUS()
@@ -114,8 +118,27 @@ void SensorMgr::checkCubeAR()
 //Contacteurs et Jumper
 
 bool SensorMgr::isJumperEngaged()
+/**
+ * Check l'état du jumper
+ * @return : Vrai si le jumper est présent
+ */
 {
-	return digitalRead(PIN_JMPR);
+	return !digitalRead(PIN_JMPR);				// Inversé car le switch descend à faux quand il est inséré
+}
+
+bool SensorMgr::isReadyToGo()
+/**
+ * Vérifie si on doit lancer le match
+ * @return : Vrai si on lance le match
+ */
+{
+	if(jumperPlugged)							// Si le jumper était présent au test précédent
+	{
+		jumperPlugged = isJumperEngaged();
+		return(!jumperPlugged);					// Alors on part si il ne l'est plus à ce test
+	}
+	jumperPlugged = isJumperEngaged();
+	return(false);								// Sinon on ne part pas de toutes façons
 }
 
 bool SensorMgr::isCont1Engaged()
