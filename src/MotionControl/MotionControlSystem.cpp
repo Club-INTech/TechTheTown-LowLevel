@@ -42,7 +42,7 @@ MotionControlSystem::MotionControlSystem() :
     maxSpeedRotation = maxAcceptableRotationSpeed;
 
 
-	delayToStop = 50;              // Temps a l'arret avant de considérer un blocage
+	delayToStop = 25;              // Temps a l'arret avant de considérer un blocage
 	toleranceTranslation = 50;
 	toleranceRotation = 100;
 	toleranceSpeed = 24;
