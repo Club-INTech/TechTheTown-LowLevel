@@ -345,7 +345,7 @@ void MotionControlSystem::orderRotation(float targetAngleRadian, RotationWay rot
  * Ordre de rotation
  * @param targetAngleRadian : Angle cible
  * @param rotationWay : Stratégie de rotation (FREE, TRIGO, ANTITRIGO)
- */
+ **/
 {
 
 	static int32_t deuxPiTick = (int32_t)(2 * PI / TICK_TO_RADIAN);
@@ -488,7 +488,13 @@ void MotionControlSystem::setRawNullSpeed() {
 
 float MotionControlSystem::getAngleRadian() const
 {
-	return(currentAngle * TICK_TO_RADIAN + originalAngle);
+    float angleMod2 = modulo(currentAngle + (int32_t)(originalAngle/TICK_TO_RADIAN),(int32_t)(2 * PI / TICK_TO_RADIAN)) * TICK_TO_RADIAN;
+    float angleFinal = angleMod2;
+    if(angleMod2 > PI)
+    {
+        angleFinal = angleMod2 - (float)TWO_PI;
+    }
+    return(angleFinal);
 }
 
 void MotionControlSystem::setOriginalAngle(float newAngle)
