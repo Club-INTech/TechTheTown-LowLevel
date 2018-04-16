@@ -67,7 +67,7 @@ public:
 		return hooks.at(id);
 	}
 
-    void addHook(uint8_t id, uint32_t x, uint32_t y, uint32_t r, float alpha, float tolerance, const char* o) {
+    void addHook(uint8_t id, int32_t x, uint32_t y, uint32_t r, float alpha, float tolerance, const char* o) {
         hooks.insert(std::make_pair(id, Hook(id, x, y, r, alpha, tolerance, o)));  //On initialise le hook
     }
 
@@ -83,7 +83,7 @@ public:
 		hooks.at(i).setActive(false);               //Si un hook est à effectuer maintenant, il ne sera plus activable
 		return hooks.at(i).getOrder();
 	}
-	void check(uint32_t x, uint32_t y, float alpha) {
+	void check(int32_t x, uint32_t y, float alpha) {
 		auto start = hooks.begin();
 		auto end = hooks.end();
 		while (start != end )

@@ -825,7 +825,8 @@ void OrderManager::execute(const char* orderToExecute)
 
         else if(!strcmp(order, "nh")){
             uint8_t id;
-            uint32_t x, y, r;
+            int32_t x;
+            uint32_t y, r;
             float angleHook,angleTolerance;
 
             if (n_param < 7)
@@ -836,7 +837,7 @@ void OrderManager::execute(const char* orderToExecute)
             {
 
                 id = (uint8_t)parseInt(orderData.at(1));
-                x = (uint32_t)parseInt(orderData.at(2));
+                x = (int32_t)parseInt(orderData.at(2));
                 y = (uint32_t)parseInt(orderData.at(3));
                 r = (uint32_t)parseInt(orderData.at(4));
                 angleHook = parseFloat(orderData.at(5));
