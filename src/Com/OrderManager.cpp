@@ -105,7 +105,18 @@ void OrderManager::execute(const char* orderToExecute)
         else if (!strcmp(order, "sus"))		//Switch d'envois périodiques de données des capteurs
         {
             highLevel.log("Activation US");
-            isSendingUS = !isSendingUS;
+            if(n_param == 0)
+            {
+                isSendingUS = !isSendingUS;
+            }
+            else if(n_param == 1)
+            {
+                isSendingUS = !strcmp(orderData.at(1), "on");
+            }
+            else
+            {
+                highLevel.log("ERREUR::Paramètres incorrects");
+            }
         }
         else if (!strcmp(order, "f"))
         {

@@ -27,7 +27,7 @@ Au boulot les 1As !
 |:---------:|:--------------------------------------------------:|
 |     ?     |                     Ping le LL                     |
 |     j     |       Active l'attente de l'activation du jumper   |
-|    sus    |                    Switch les US                   |
+|    sus    |    Switch les US ou choisit leur état (on/off)     |
 |     f     |                 Check le mouvement                 |
 |    ?xyo   |               Position + Orientation               |
 |     d     |                  Translate de x mm                 |
