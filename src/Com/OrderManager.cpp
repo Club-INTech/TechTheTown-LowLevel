@@ -102,22 +102,6 @@ void OrderManager::execute(const char* orderToExecute)
         {
             HLWaiting = true;
         }
-        else if (!strcmp(order, "sus"))		//Switch d'envois périodiques de données des capteurs
-        {
-            highLevel.log("Activation US");
-            if(n_param == 0)
-            {
-                isSendingUS = !isSendingUS;
-            }
-            else if(n_param == 1)
-            {
-                isSendingUS = !strcmp(orderData.at(1), "on");
-            }
-            else
-            {
-                highLevel.log("ERREUR::Paramètres incorrects");
-            }
-        }
         else if (!strcmp(order, "f"))
         {
             highLevel.println(motionControlSystem.isMoving());
@@ -809,7 +793,31 @@ void OrderManager::execute(const char* orderToExecute)
             *		   *|			  Capteurs            |*
             *    	   *|_________________________________|*
             */
-
+            
+        else if (!strcmp(order, "sus"))		//Switch d'envois périodiques de données des capteurs
+        {
+            if(isSendingUS)
+            {
+                highLevel.log("Désactivation US");
+            }
+            else
+            {
+                highLevel.log("Activation US");
+            }
+            if(n_param == 0)
+            {
+                isSendingUS = !isSendingUS;
+            }
+            else if(n_param == 1)
+            {
+                isSendingUS = !strcmp(orderData.at(1), "on");
+            }
+            else
+            {
+                highLevel.log("ERREUR::Paramètres incorrects");
+                highLevel.log("Pas de changement");
+            }
+        }
         else if(!strcmp(order, "ccAv"))
         {
             sensorMgr.checkCubeAV();
