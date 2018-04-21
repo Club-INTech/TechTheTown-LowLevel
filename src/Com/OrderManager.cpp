@@ -178,6 +178,25 @@ void OrderManager::execute(const char* orderToExecute)
             motionControlSystem.stop();
             highLevel.log("A priori, je m'arrête");
         }
+        else if(!strcmp(order, "emergencyStop"))
+        {
+            motionControlSystem.enableTranslationControl(false);
+            motionControlSystem.enableRotationControl(false);
+            motionControlSystem.enableSpeedControl(false);
+
+            motionControlSystem.setRawNullSpeed();
+
+            highLevel.log("ARRET D'URGENCE EN COURS, DESACTIVATION ASSERV");
+        }
+        else if(!strcmp(order, "resumeEmergencyStop"))
+        {
+            motionControlSystem.stop();
+            motionControlSystem.enableTranslationControl(true);
+            motionControlSystem.enableRotationControl(true);
+            motionControlSystem.enableSpeedControl(true);
+
+            highLevel.log("REACTIVATION DE L'ASSERV APRES ARRET D'URGENCES");
+        }
 
             /*			 __________________
             * 		   *|                  |*
