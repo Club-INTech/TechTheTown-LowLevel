@@ -139,6 +139,8 @@ private:
 	ActuatorsMgr &actuatorsMgr;
 	HookList hookList;
 	OrderData orderData;
+	bool basicDetectionTriggeredSent;
+	bool basicDetectionFinishedSent;
 	char readMessage[RX_BUFFER_SIZE];
 	bool HLWaiting;
 

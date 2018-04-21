@@ -79,11 +79,11 @@ void SensorMgr::refreshUS(MOVING_DIRECTION dir)
 			 */
 
 			if(currentDistance <= BASIC_DETECTION_DISTANCE && currentDistance != 0
-			   && measure_direction != MOVING_DIRECTION::NONE && isBasicDetectionOn && basicBlocked < 1)
+			   && measure_direction != MOVING_DIRECTION::NONE && isBasicDetectionOn && basicBlocked == 0)
             {
-                basicBlocked++;
+                basicBlocked=1;
             }
-			else if(basicBlocked > 1)
+			else
 			{
 				for(int i=0;i<NBR_OF_US_SENSOR;i++)
 				{
@@ -93,7 +93,7 @@ void SensorMgr::refreshUS(MOVING_DIRECTION dir)
 					}
 					if(i==3)
 					{
-						basicBlocked = -1;
+						basicBlocked = 0;
 					}
 				}
 			}
@@ -182,17 +182,7 @@ void SensorMgr::enableBasicDetection(bool newStatus)
 
 int8_t SensorMgr::isBasicBlocked()
 {
-	if(basicBlocked == 1)
-	{
-		basicBlocked ++;
-		return(1);
-	}
-	else if(basicBlocked == -1)
-	{
-		resetBasicBlocked();
-		return(-1);
-	}
-	return(0);
+	return basicBlocked;
 }
 
 void SensorMgr::resetBasicBlocked()

@@ -20,6 +20,8 @@ OrderManager::OrderManager():
     isSendingUS = true;
     hooksEnabled = true;
     HLWaiting = false;
+    basicDetectionTriggeredSent = false;
+    basicDetectionFinishedSent = false;
     highLevel.log("Communications ready");
 }
 
@@ -46,10 +48,19 @@ void OrderManager::communicate() {
         }
         int8_t basicDetectionCheck = sensorMgr.isBasicBlocked();
         if(basicDetectionCheck == 1) {
-            highLevel.sendEvent("basicDetectionTriggered");
+            if (!basicDetectionTriggeredSent) {
+                highLevel.sendEvent("basicDetectionTriggered");
+                basicDetectionTriggeredSent = true;
+                basicDetectionFinishedSent = false;
+            }
         }
-        else if(basicDetectionCheck == -1) {
-            highLevel.sendEvent("basicDetectionFinished");
+        else if(basicDetectionCheck == 0) {
+            if (!basicDetectionFinishedSent) {
+                highLevel.sendEvent("basicDetectionFinished");
+                basicDetectionTriggeredSent = false;
+                basicDetectionFinishedSent = true;
+            }
+
         }
     }
 
