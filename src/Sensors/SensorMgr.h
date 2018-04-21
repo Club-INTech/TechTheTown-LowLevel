@@ -46,7 +46,7 @@ private:
 
 	bool jumperPlugged;
     bool isBasicDetectionOn;
-	unsigned int basicBlocked;
+	int8_t basicBlocked;
 public:
 
 	SensorMgr();
@@ -60,7 +60,7 @@ public:
 	bool isCont1Engaged();
 
     void enableBasicDetection(bool);
-	bool isBasicBlocked();
+	int8_t isBasicBlocked();
 	void resetBasicBlocked();
 };
 

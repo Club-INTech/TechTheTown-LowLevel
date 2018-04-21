@@ -68,11 +68,36 @@ void SensorMgr::refreshUS(MOVING_DIRECTION dir)
 		{
             uint16_t currentDistance = US[currentMeasuringUS]->getDistance();
 			distances[currentMeasuringUS].add(currentDistance);
-            if(currentDistance <= BASIC_DETECTION_DISTANCE && currentDistance != 0
+
+			/*
+			 * Gestion des fronts pour la basic detection
+			 * On check les fronts montants (Ennemi qui arrive dans la zone) uniquement si on se déplace,
+			 * si on est en basicDetection (Obviously) et qu'on a rien détecté précédemment.
+			 *
+			 * On test le front descendant à partir du moment où on a eu un front montant (Obviously).
+			 * Il n'est validé que si toutes les valeur mesurées sont passées au dessus du seuil
+			 */
+
+			if(currentDistance <= BASIC_DETECTION_DISTANCE && currentDistance != 0
 			   && measure_direction != MOVING_DIRECTION::NONE && isBasicDetectionOn && basicBlocked < 1)
             {
                 basicBlocked++;
             }
+			else if(basicBlocked > 1)
+			{
+				for(int i=0;i<NBR_OF_US_SENSOR;i++)
+				{
+					if(US[i]->getDistance()<BASIC_DETECTION_DISTANCE && US[i]->getDistance() != 0)
+					{
+						break;
+					}
+					if(i==3)
+					{
+						basicBlocked = -1;
+					}
+				}
+			}
+
 			isMeasuring=false;
 			if( measure_direction == MOVING_DIRECTION::FORWARD )
 			{
@@ -98,9 +123,13 @@ void SensorMgr::refreshUS(MOVING_DIRECTION dir)
 void SensorMgr::checkCubeAV()
 {
 	if( sensorCubeAV.readRangeSingle() < CUBE_AV_DETECTION_RANGE_MM )
+	{
 		highLevel.sendEvent("cubeDetectedAV");
+	}
 	else
+	{
 		highLevel.sendEvent("noCubeDetectedAV");
+	}
 }
 
 void SensorMgr::checkCubeAR()
@@ -151,14 +180,19 @@ void SensorMgr::enableBasicDetection(bool newStatus)
     isBasicDetectionOn = newStatus;
 }
 
-bool SensorMgr::isBasicBlocked()
+int8_t SensorMgr::isBasicBlocked()
 {
 	if(basicBlocked == 1)
 	{
 		basicBlocked ++;
-		return(true);
+		return(1);
 	}
-	return(false);
+	else if(basicBlocked == -1)
+	{
+		resetBasicBlocked();
+		return(-1);
+	}
+	return(0);
 }
 
 void SensorMgr::resetBasicBlocked()
