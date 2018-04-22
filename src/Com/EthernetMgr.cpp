@@ -133,6 +133,7 @@ void EthernetMgr::printf(const char *message, ...) {
 	vsnprintf(formattedMessage, HEADER_LENGTH+64, data, args);
 
 	client.print(formattedMessage);
+	log(formattedMessage);
 
 	va_end(args);
 }
@@ -170,7 +171,7 @@ void EthernetMgr::sendUS(const std::vector<Average<uint16_t,AVERAGE_US_SIZE>>& d
 
 	//printfln(valueString.c_str());
 	client.println(valueString);
-	log("%s",valueString);
+	log(valueString.c_str());
 }
 
 /**
@@ -183,7 +184,7 @@ void EthernetMgr::sendEvent(const char* event)
 	valueString.append(EVENT_HEADER[1]);
 	valueString.append(event);
 	println(valueString);
-	log("%s",valueString);
+	log(valueString.c_str());
 }
 
 
@@ -200,7 +201,7 @@ void EthernetMgr::sendPosition(const float* pos)
 		valueString.append(" ");
 	}
 	println(valueString);
-	log("%s",valueString);
+	log(valueString.c_str());
 }
 
 /**
