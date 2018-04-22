@@ -217,3 +217,22 @@ void EthernetMgr::log(const char* message, ...) {
 	client.println(formattedData);
 	va_end(args);
 }
+
+/**
+ * Envoie une chaine de caracteres commencant par 2 headers acknowledge, puis l'acknowledgement
+ */
+void EthernetMgr::acknowledge(const char* message, ...) {
+	char data[HEADER_LENGTH + 64];
+	memcpy(data,ACK_HEADER,HEADER_LENGTH);
+	data[HEADER_LENGTH] = '\0';
+
+    char formattedData[HEADER_LENGTH+64];
+	strcat(data, message);
+
+	va_list args;
+	va_start(args, message);
+
+    vsnprintf(formattedData,HEADER_LENGTH+64,data, args);
+	client.println(formattedData);
+	va_end(args);
+}

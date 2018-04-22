@@ -98,7 +98,7 @@ void OrderManager::execute(const char* orderToExecute)
 //    #endif                        \*m'voyez
     char orderBuffer[RX_BUFFER_SIZE];
     strcpy(orderBuffer, orderToExecute);
-    highLevel.log("Message recu: %s", orderBuffer);
+    highLevel.acknowledge(orderBuffer);
 
     int8_t n_param = split(orderBuffer, orderData, SEPARATOR);		//Sépare l'ordre en plusieurs mots, n_param=nombre de paramètres
 
@@ -119,15 +119,15 @@ void OrderManager::execute(const char* orderToExecute)
         }
         else if (!strcmp(order, "f"))
         {
-            highLevel.println(motionControlSystem.isMoving());
-            highLevel.println(motionControlSystem.isMoveAbnormal());
+            highLevel.printfln("%d",motionControlSystem.isMoving());
+            highLevel.printfln("%d",motionControlSystem.isMoveAbnormal());
         }
         else if (!strcmp(order, "?xyo"))		//Renvoie la position du robot (en mm et radians)
         {
             //highLevel.printfln("%f,%f,%f", motionControlSystem.getX(), motionControlSystem.getY(), motionControlSystem.getAngleRadian());
-            highLevel.println(motionControlSystem.getX());
-            highLevel.println(motionControlSystem.getY());
-            highLevel.println(motionControlSystem.getAngleRadian());
+            highLevel.printfln("%f",motionControlSystem.getX());
+            highLevel.printfln("%f",motionControlSystem.getY());
+            highLevel.printfln("%f",motionControlSystem.getAngleRadian());
         }
         else if (!strcmp(order, "d"))		//Ordre de déplacement rectiligne (en mm)
         {

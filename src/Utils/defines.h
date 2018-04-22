@@ -24,6 +24,7 @@ constexpr char DEBUG_HEADER[2] = {0x02,0x20};
 constexpr char EVENT_HEADER[2] = {0x14,0x17};
 constexpr char SENSOR_HEADER[2] = {0x01,0x06};
 constexpr char POSITION_HEADER[2] = {0x07,0x05};
+constexpr char ACK_HEADER[2] = {0x06,0x1A};
 
 
 // Séparateurs des mots d'ordres

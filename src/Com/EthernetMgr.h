@@ -62,6 +62,7 @@ public:
 	void sendEvent(const char*);
 	void sendPosition(const float*);
     void log(const char*, ...) __attribute__((format(printf, 2, 3)));
+    void acknowledge(const char*, ...) __attribute__((format(printf, 2, 3)));
 
 	void printf(const char *, ...) __attribute__((format(printf, 2, 3)));
 	void printfln(const char*, ...) __attribute__((format(printf, 2, 3)));
