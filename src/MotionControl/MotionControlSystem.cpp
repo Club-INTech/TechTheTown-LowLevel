@@ -478,6 +478,7 @@ void MotionControlSystem::setRawNegativeRotationSpeed() {
 }
 
 void MotionControlSystem::setRawNullSpeed() {
+	moving = false;
 	rotationSpeed = 0;
 	translationSpeed = 0;
 }

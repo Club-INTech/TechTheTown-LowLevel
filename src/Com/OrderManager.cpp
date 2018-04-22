@@ -190,12 +190,11 @@ void OrderManager::execute(const char* orderToExecute)
         }
         else if(!strcmp(order, "resumeEmergencyStop"))
         {
-            motionControlSystem.stop();
+            motionControlSystem.stop();                             // On évite de revenir en arrière violamment
             motionControlSystem.enableTranslationControl(true);
             motionControlSystem.enableRotationControl(true);
-            motionControlSystem.enableSpeedControl(true);
 
-            highLevel.log("REACTIVATION DE L'ASSERV APRES ARRET D'URGENCES");
+            highLevel.log("REACTIVATION DE L'ASSERV APRES ARRET D'URGENCE");
         }
 
             /*			 __________________
