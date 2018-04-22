@@ -37,6 +37,7 @@ SensorMgr::SensorMgr()
 	sensorCubeAR.configureDefault();
 
 	jumperPlugged = isJumperEngaged();
+	basicBlocked = false;
 }
 
 void SensorMgr::sendUS()
@@ -79,9 +80,9 @@ void SensorMgr::refreshUS(MOVING_DIRECTION dir)
 			 */
 
 			if(currentDistance <= BASIC_DETECTION_DISTANCE && currentDistance != 0
-			   && measure_direction != MOVING_DIRECTION::NONE && isBasicDetectionOn && basicBlocked == 0)
+			   && measure_direction != MOVING_DIRECTION::NONE && isBasicDetectionOn && !basicBlocked)
             {
-                basicBlocked=1;
+                basicBlocked=true;
             }
 			else
 			{
@@ -93,7 +94,7 @@ void SensorMgr::refreshUS(MOVING_DIRECTION dir)
 					}
 					if(i==3)
 					{
-						basicBlocked = 0;
+						basicBlocked = false;
 					}
 				}
 			}
@@ -187,5 +188,5 @@ int8_t SensorMgr::isBasicBlocked()
 
 void SensorMgr::resetBasicBlocked()
 {
-	basicBlocked = 0;
+	basicBlocked = false;
 }

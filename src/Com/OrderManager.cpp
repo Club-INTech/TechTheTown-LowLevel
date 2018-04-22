@@ -47,15 +47,15 @@ void OrderManager::communicate() {
             motionControlSystem.setMoveAbnormalSent(false);
         }
         int8_t basicDetectionCheck = sensorMgr.isBasicBlocked();
-        if(basicDetectionCheck == 1) {
+        if(basicDetectionCheck) {
             if (!basicDetectionTriggeredSent) {
                 highLevel.sendEvent("basicDetectionTriggered");
                 basicDetectionTriggeredSent = true;
                 basicDetectionFinishedSent = false;
             }
         }
-        else if(basicDetectionCheck == 0) {
-            if (!basicDetectionFinishedSent) {
+        else if(!basicDetectionCheck) {
+            if (!basicDetectionFinishedSent && basicDetectionTriggeredSent) {
                 highLevel.sendEvent("basicDetectionFinished");
                 basicDetectionTriggeredSent = false;
                 basicDetectionFinishedSent = true;

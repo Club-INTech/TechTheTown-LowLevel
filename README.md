@@ -65,7 +65,7 @@ Au boulot les 1As !
 |     nh    | Créé un nouveau hook (id,x,y,r,α,tolerance,action) |
 |     eh    |                   Active le hook                   |
 |     dh    |                  Désactive le hook                 |
-|     emergencyStop     |  Arrète brutalement le robot et DESACTIVE l'asserv |
+|     emergencyStop     |  Arrète brutalement le robot et ***DESACTIVE*** l'asserv |
 |  resumeEmergencyStop  |     Redemarre l'asserv après un emergencyStop      |
 
 #### ORDRES DE CONTRÔLE D'ACTION
