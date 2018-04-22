@@ -182,7 +182,6 @@ void OrderManager::execute(const char* orderToExecute)
         {
             motionControlSystem.enableTranslationControl(false);
             motionControlSystem.enableRotationControl(false);
-            motionControlSystem.enableSpeedControl(false);
 
             motionControlSystem.setRawNullSpeed();
 
