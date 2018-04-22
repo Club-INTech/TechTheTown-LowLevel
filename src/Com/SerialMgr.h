@@ -9,7 +9,7 @@
 #include "Utils/stdarg.h"
 #include "Utils/defines.h"
 #include "Utils/average.hpp"
-
+#include "SDLog.h"
 
 
 class SerialMgr : public Singleton<SerialMgr>
@@ -28,6 +28,7 @@ public:
 	/* ENVOI */
 	void sendUS(const std::vector<Average<uint16_t,AVERAGE_US_SIZE>>&);
 	void sendEvent(const char*);
+    void sendPosition(const float *pos);
 
 	template<typename T>
 	void print(T value) {
@@ -41,12 +42,13 @@ public:
 	void print(const char*, ...) __attribute__((format(printf, 2, 3)));
 	void printfln(const char*, ...) __attribute__((format(printf, 2, 3)));
 	void log(const char*, ...) __attribute__((format(printf, 2, 3)));
+    void acknowledge(const char*, ...) __attribute__((format(printf, 2, 3)));
 
 private:
 	bool read_char(char &);
 	String data;
 	uint8_t available();
 
-    void sendPosition(const float *pos);
+	SDLog sdLogger;
 };
 #endif

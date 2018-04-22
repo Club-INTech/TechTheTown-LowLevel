@@ -28,6 +28,8 @@ EthernetMgr::EthernetMgr():server{ PORT }
     if (client.connected()) {
         client.println("CONNECTED");
     }
+
+    sdLogger = SDLog();
 }
 
 void EthernetMgr::resetCard() {
@@ -134,6 +136,7 @@ void EthernetMgr::printf(const char *message, ...) {
 
 	client.print(formattedMessage);
 	log(formattedMessage);
+    sdLogger.logWrite(formattedMessage);
 
 	va_end(args);
 }
@@ -152,6 +155,7 @@ void EthernetMgr::printfln(const char* message, ...) {
 
 	client.println(formattedMessage);
 	log(formattedMessage);
+    sdLogger.logWrite(formattedMessage);
 
     va_end(args);
 }
@@ -172,6 +176,7 @@ void EthernetMgr::sendUS(const std::vector<Average<uint16_t,AVERAGE_US_SIZE>>& d
 	//printfln(valueString.c_str());
 	client.println(valueString);
 	log(valueString.c_str());
+    sdLogger.logWrite(valueString);
 }
 
 /**
@@ -185,6 +190,7 @@ void EthernetMgr::sendEvent(const char* event)
 	valueString.append(event);
 	println(valueString);
 	log(valueString.c_str());
+    sdLogger.logWrite(valueString);
 }
 
 
@@ -202,6 +208,7 @@ void EthernetMgr::sendPosition(const float* pos)
 	}
 	println(valueString);
 	log(valueString.c_str());
+    sdLogger.logWrite(valueString);
 }
 
 /**
@@ -220,6 +227,7 @@ void EthernetMgr::log(const char* message, ...) {
 
     vsnprintf(formattedData,HEADER_LENGTH+64,data, args);
 	client.println(formattedData);
+    sdLogger.logWrite(formattedData);
 	va_end(args);
 }
 
@@ -240,5 +248,6 @@ void EthernetMgr::acknowledge(const char* message, ...) {
     vsnprintf(formattedData,HEADER_LENGTH+64,data, args);
 	client.println(formattedData);
 	log(formattedData);
-	va_end(args);
+    sdLogger.logWrite(formattedData);
+    va_end(args);
 }

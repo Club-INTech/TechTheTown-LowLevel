@@ -22,6 +22,7 @@ MOSI	11/11
 #include <Ethernet.h>
 #include "MotionControl/MotionControlSystem.h"
 #include "Utils/pin_mapping.h"
+#include "SDLog.h"
 
 #define PORT 23500
 
@@ -45,6 +46,8 @@ private:
 
 	EthernetServer server;
 	EthernetClient client;
+	
+	SDLog sdLogger;
 
 public:
 	EthernetMgr();

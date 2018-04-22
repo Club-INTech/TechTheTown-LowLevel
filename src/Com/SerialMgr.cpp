@@ -10,6 +10,7 @@
 
 SerialMgr::SerialMgr()
 {
+	sdLogger = SDLog();
 }
 
 bool inline SerialMgr::read_char(char & buffer)
@@ -96,6 +97,7 @@ void SerialMgr::sendUS(const std::vector<Average<uint16_t,AVERAGE_US_SIZE>>& dis
 		data.append(" ");
 	}
 	Serial.println(data);
+	sdLogger.logWrite(data);
 }
 
 void SerialMgr::sendEvent(const char* event)
@@ -105,17 +107,20 @@ void SerialMgr::sendEvent(const char* event)
 	data.append(EVENT_HEADER[1]);
 	data.append(event);
 	Serial.println(data);
+	sdLogger.logWrite(data);
 }
 
 void SerialMgr::sendPosition(const float* pos){
-	Serial.print(POSITION_HEADER[0]);
-	Serial.print(POSITION_HEADER[1]);
-	Serial.print(pos[0]);
-	Serial.print(" ");
-	Serial.print(pos[1]);
-	Serial.print(" ");
-	Serial.print(pos[2]);
-	Serial.println();
+	data = "";
+	data.append(POSITION_HEADER[0]);
+	data.append(POSITION_HEADER[1]);
+	data.append(pos[0]);
+	data.append(" ");
+	data.append(pos[1]);
+	data.append(" ");
+	data.append(pos[2]);
+	Serial.println(data);
+	sdLogger.logWrite(data);
 }
 
 
@@ -127,6 +132,7 @@ void SerialMgr::printfln(const char* message, ...) {
 
 	vsnprintf(logToSend, 64, message, args);			//Ajoute dans logToSend de log, en formattant avec les arguments
 	Serial.println(logToSend);
+	sdLogger.logWrite(logToSend);
 
 	va_end(args);
 }
@@ -154,6 +160,25 @@ void SerialMgr::log(const char* log, ...) {
 	char logToSend[HEADER_LENGTH+64];
 	vsnprintf(logToSend, 64, data, args);			//Ajoute dans le buffer log, en formattant les
 	Serial.println(logToSend);
+	sdLogger.logWrite(logToSend);
 
 	va_end(args);
+}
+
+void SerialMgr::acknowledge(const char* message, ...) {
+    char data[HEADER_LENGTH + 64];
+    memcpy(data,ACK_HEADER,HEADER_LENGTH);
+    data[HEADER_LENGTH] = '\0';
+
+    char formattedData[HEADER_LENGTH+64];
+    strcat(data, message);
+
+    va_list args;
+    va_start(args, message);
+
+    vsnprintf(formattedData,HEADER_LENGTH+64,data, args);
+    Serial.println(formattedData);
+    log(formattedData);
+    sdLogger.logWrite(formattedData);
+    va_end(args);
 }
