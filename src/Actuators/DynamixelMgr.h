@@ -1,5 +1,5 @@
 //
-// Created by trotfunky on 18/12/17.
+// Created by Teo-CD on 18/12/17.
 //
 
 #ifndef LL_DYNAMIXELMGR_H
