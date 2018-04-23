@@ -59,9 +59,9 @@ bool SDLog::logWrite(const String message)
             if(message[0] == headerList[i][0] && message[1] == headerList[i][1])
             {
                 if(!logToFile(message.substring(2),fileList[i+2]))      // Permet de garder le fichier général
-                {                                                       // en indice 0, pour éventuellement rajouter
-                    return(false);                                      // d'autres canaux en changeant le minimum
-                }
+                {                                                       // en indice 0 et la lecture en indice 1,
+                    return(false);                                      // pour éventuellement rajouter
+                }                                                       // d'autres canaux en changeant le minimum
                 return(logToFile(message.substring(2),fileList[0]));
             }
         }
@@ -75,6 +75,12 @@ bool SDLog::logWrite(const char* message)
 }
 
 bool SDLog::logWriteReception(const char* message)
+/**
+ * Permet d'écrire dans le fichier "input.txt" et le fichier général les messages
+ * reçus, en ajoutant un indicateur de la réception
+ * @param message : Message reçu a logger
+ * @return Vrai si l'écriture a réussi
+ **/
 {
     String receptionMessage = String("Reçu: ").append(message);
     if(!logToFile(receptionMessage,fileList[1]))
