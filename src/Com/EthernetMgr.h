@@ -79,6 +79,7 @@ public:
         client.println(value);
     }
 
+	void startMatch();
 };
 
 template void EthernetMgr::print<int8_t>(int8_t value);

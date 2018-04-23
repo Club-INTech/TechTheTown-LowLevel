@@ -44,6 +44,7 @@ public:
 	void log(const char*, ...) __attribute__((format(printf, 2, 3)));
     void acknowledge(const char*, ...) __attribute__((format(printf, 2, 3)));
 
+    void startMatch();
 private:
 	bool read_char(char &);
 	String data;

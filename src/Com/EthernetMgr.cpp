@@ -61,7 +61,7 @@ bool inline EthernetMgr::read_char(char & buffer)
 inline bool EthernetMgr::read(char* order)
 {
 	EthernetClient newClient = server.available();
-	if (newClient) {							//Si on est connectes et il ya des choses a lire
+	if (newClient.available()) {							//Si on est connectes et il ya des choses a lire
 		client=newClient;
 		char readChar;
 		int i = 0;
@@ -70,6 +70,7 @@ inline bool EthernetMgr::read(char* order)
 			order[i] = readChar;
 			i++;												//Au cas ou on ne recoit jamais de terminaison, on limite le nombre de chars
 		}
+        sdLogger.logWriteReception(order);
 		return (strcmp(order, ""));
 	}
 	else {
@@ -250,4 +251,10 @@ void EthernetMgr::acknowledge(const char* message, ...) {
 	log(formattedData);
     sdLogger.logWrite(formattedData);
     va_end(args);
+}
+
+void EthernetMgr::startMatch()
+{
+    sendEvent("BLITZKRIEG");
+    sdLogger.setStartingTime();
 }

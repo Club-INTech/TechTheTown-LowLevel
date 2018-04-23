@@ -15,10 +15,15 @@ public:
 
     bool logWrite(String);
     bool logWrite(const char*);
+    bool logWriteReception(const char*);
+
+    void setStartingTime();
 
 private:
     const char* headerList[6]{STD_HEADER,DEBUG_HEADER,EVENT_HEADER,SENSOR_HEADER,POSITION_HEADER,ACK_HEADER};
-    const char* fileList[7]{"/full.txt","/standard.txt","/debug.txt","/event.txt","/sensor.txt","/position.txt","/ack.txt"};
+    const char* fileList[8]{"/full.txt","/input.txt","/standard.txt","/debug.txt","/event.txt","/sensor.txt","/position.txt","/ack.txt"};
+
+    uint32_t startingTime;
 
     bool logToFile(const String&,const char*);
 };

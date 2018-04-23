@@ -32,6 +32,7 @@ bool SerialMgr::read(char* order)
 		if (Serial.peek()==10) {
 			read_char(readChar);								//On �limine le \n
 		}
+        sdLogger.logWriteReception(order);
 		return (strcmp(order, ""));
 	}
 	else {
@@ -181,4 +182,10 @@ void SerialMgr::acknowledge(const char* message, ...) {
     log(formattedData);
     sdLogger.logWrite(formattedData);
     va_end(args);
+}
+
+void SerialMgr::startMatch()
+{
+    sendEvent("BLITZKRIEG");
+    sdLogger.setStartingTime();
 }

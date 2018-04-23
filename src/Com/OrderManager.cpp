@@ -1021,7 +1021,7 @@ bool OrderManager::isHLWaiting() {
 void OrderManager::checkJumper() {
     if(sensorMgr.isReadyToGo() && HLWaiting)
     {
-        highLevel.sendEvent("BLITZKRIEG");
+        highLevel.startMatch();
         HLWaiting = false;
     }
 }

@@ -30,6 +30,8 @@ SDLog::SDLog()
         }
     }
     Serial.println("SD card ready");
+
+    startingTime = 0;
 }
 
 bool SDLog::logWrite(const String message)
@@ -40,13 +42,23 @@ bool SDLog::logWrite(const String message)
  * @return Vrai si on a bien réussi à écrire
  **/
 {
+    if(message.length() >= 6)
+    {
+        if(message.substring(0,5).equals("Reçu: "))
+        {
+            if(!logToFile(message,fileList[1]))
+            {
+                return(false);
+            }
+        }
+    }
     if(message.length() >= 2)
     {
         for(int i = 0;i<6;i++)
         {
             if(message[0] == headerList[i][0] && message[1] == headerList[i][1])
             {
-                if(!logToFile(message.substring(2),fileList[i+1]))      // Permet de garder le fichier général
+                if(!logToFile(message.substring(2),fileList[i+2]))      // Permet de garder le fichier général
                 {                                                       // en indice 0, pour éventuellement rajouter
                     return(false);                                      // d'autres canaux en changeant le minimum
                 }
@@ -60,6 +72,16 @@ bool SDLog::logWrite(const String message)
 bool SDLog::logWrite(const char* message)
 {
     return(logWrite(String(message)));
+}
+
+bool SDLog::logWriteReception(const char* message)
+{
+    String receptionMessage = String("Reçu: ").append(message);
+    if(!logToFile(receptionMessage,fileList[1]))
+    {
+        return(false);
+    }
+    logToFile(receptionMessage,fileList[0]);
 }
 
 bool SDLog::logToFile(const String &message,const char* logFile)
@@ -77,8 +99,13 @@ bool SDLog::logToFile(const String &message,const char* logFile)
         Serial.printf("ERROR::SDCARD::Could not open file %s\n",logFile);
         return(false);
     }
-    outputFile.printf("[Time: %lu] ",millis());
+    outputFile.printf("[Time: %lu] ",millis()-startingTime);
     outputFile.println(message);
     outputFile.close();
     return(true);
+}
+
+void SDLog::setStartingTime()
+{
+    startingTime = millis();
 }
