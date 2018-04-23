@@ -90,7 +90,7 @@ void loop(){
 		orderMgr.refreshUS();
         orderMgr.isHLWaiting() ? orderMgr.checkJumper() : void();
         USSend.check() ? orderMgr.sendUS() : void();
-	}
+    }
 }
 
 /*

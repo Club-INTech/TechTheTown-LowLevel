@@ -85,6 +85,19 @@ class VL6180X
       I2C_SLAVE__DEVICE_ADDRESS             = 0x212,
       INTERLEAVED_MODE__ENABLE              = 0x2A3,
     };
+
+    static enum ALS_GAIN
+    {
+        G1      = 0x46,
+        G1_25   = 0x45,
+        G1_67   = 0x44,
+        G2_5    = 0x43,
+        G5      = 0x42,
+        G10     = 0x41,
+        G20     = 0x40,
+        G40     = 0x47
+    }Als_Gain;
+
     static constexpr uint8_t ADDRESS_DEFAULT = 0x29;
 
     uint8_t last_status; // status of last I2C transmission
@@ -107,11 +120,14 @@ class VL6180X
     void setScaling(uint8_t new_scaling);
     inline uint8_t getScaling(void) { return scaling; }
 
+    inline void setAmbiantGain(ALS_GAIN _gain) { writeReg(SYSALS__ANALOGUE_GAIN,_gain);als_gain=_gain; }
+    float getAmbiantGain();
     inline void setSoftwareOffset(int8_t offset){ software_offset=offset; }
 
     uint8_t readRangeSingle(void);
     inline uint16_t readRangeSingleMillimeters(void) { return (uint16_t)scaling * readRangeSingle(); }
     uint16_t readAmbientSingle(void);
+    inline float readAmbientSingleLux(void) { return 0.32*readAmbientSingle()/getAmbiantGain(); }
 
     void startRangeContinuous(uint16_t period = 100);
     void startAmbientContinuous(uint16_t period = 500);
@@ -137,6 +153,7 @@ class VL6180X
     uint8_t ptp_offset;
     int8_t software_offset;
     uint16_t io_timeout;
+    ALS_GAIN als_gain = ALS_GAIN::G1;
     bool did_timeout;
 };
 

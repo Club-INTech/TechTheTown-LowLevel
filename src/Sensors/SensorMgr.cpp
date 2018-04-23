@@ -28,6 +28,7 @@ SensorMgr::SensorMgr()
 	sensorCubeAV.init();
 	sensorCubeAV.setAddress(CUBE_AV_DETECTION_ADDR);
 	sensorCubeAV.configureDefault();
+	sensorCubeAV.setAmbiantGain(VL6180X::ALS_GAIN::G40);
 	delay(50);
 	//wake up sensorcubeAR
 	digitalWrite(PIN_CUBE_AR_DETECTION_SLEEP,HIGH);
@@ -35,6 +36,7 @@ SensorMgr::SensorMgr()
 	//init sensorCubeAR at defaultAddress
 	sensorCubeAR.init();
 	sensorCubeAR.configureDefault();
+    sensorCubeAR.setAmbiantGain(VL6180X::ALS_GAIN::G40);
 
 	jumperPlugged = isJumperEngaged();
 	basicBlocked = false;
@@ -123,7 +125,7 @@ void SensorMgr::refreshUS(MOVING_DIRECTION dir)
 
 void SensorMgr::checkCubeAV()
 {
-	if( sensorCubeAV.readRangeSingle() < CUBE_AV_DETECTION_RANGE_MM )
+	if( sensorCubeAV.readRangeSingle() < CUBE_AV_DETECTION_RANGE_MM || sensorCubeAV.readAmbientSingleLux() < CUBE_AV_DETECTION_AMBIANT_LUX )
 	{
 		highLevel.sendEvent("cubeDetectedAV");
 	}
@@ -135,7 +137,7 @@ void SensorMgr::checkCubeAV()
 
 void SensorMgr::checkCubeAR()
 {
-	if( sensorCubeAR.readRangeSingle() < CUBE_AR_DETECTION_RANGE_MM )
+	if( sensorCubeAR.readRangeSingle() < CUBE_AR_DETECTION_RANGE_MM || sensorCubeAR.readAmbientSingleLux() < CUBE_AR_DETECTION_AMBIANT_LUX )
 	{
 		highLevel.sendEvent("cubeDetectedAR");
 	}
