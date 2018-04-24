@@ -26,11 +26,11 @@ class SensorMgr : public Singleton<SensorMgr>
 
 
 private:
-	#if DEBUG
-	 SerialMgr &highLevel = SerialMgr::Instance();
-	#else
-	 EthernetMgr &highLevel = EthernetMgr::Instance();
-	#endif
+#if DEBUG
+	 SerialMgr &highLevel;
+#else
+	 EthernetMgr &highLevel;
+#endif
 
 
 	SRF10* US[NBR_OF_US_SENSOR];

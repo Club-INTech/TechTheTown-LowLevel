@@ -260,6 +260,24 @@ void VL6180X::setScaling(uint8_t new_scaling)
   writeReg(VL6180X::SYSRANGE__RANGE_CHECK_ENABLES, (rce & 0xFE) | (scaling == 1));
 }
 
+float VL6180X::getAmbiantGain()
+{
+    float f;
+    switch(als_gain)
+    {
+        case ALS_GAIN::G1 :     f=1;    break;
+        case ALS_GAIN::G1_25 :  f=1.25; break;
+        case ALS_GAIN::G1_67 :  f=1.67; break;
+        case ALS_GAIN::G2_5 :   f=2;    break;
+        case ALS_GAIN::G5 :     f=5;    break;
+        case ALS_GAIN::G10 :    f=10;   break;
+        case ALS_GAIN::G20 :    f=20;   break;
+        case ALS_GAIN::G40 :    f=40;   break;
+        default :               f=1;    break;
+    }
+    return f;
+}
+
 // Performs a single-shot ranging measurement
 uint8_t VL6180X::readRangeSingle()
 {

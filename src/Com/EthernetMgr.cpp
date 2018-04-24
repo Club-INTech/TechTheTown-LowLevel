@@ -28,10 +28,6 @@ EthernetMgr::EthernetMgr():server{ PORT }
     if (client.connected()) {
         client.println("CONNECTED");
     }
-
-    sdLogger = SDLog();
-    eventsToAcknowledge;
-    currentAckID;
 }
 
 void EthernetMgr::resetCard() {
@@ -57,7 +53,7 @@ void EthernetMgr::resetCard() {
 bool inline EthernetMgr::read_char(char & buffer)
 {
     buffer = (char)client.read();
-    return ((buffer != '\r' && buffer != '\n' ) || !buffer == -1);
+	return ((buffer != '\r' && buffer != '\n' ) && buffer != -1);
 }
 
 inline bool EthernetMgr::read(char* order)

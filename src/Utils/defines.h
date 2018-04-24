@@ -63,7 +63,9 @@ constexpr uint8_t   TOLERANCY =                 50;
 */
 constexpr uint8_t   CUBE_AV_DETECTION_ADDR = 0x10;
 constexpr float     CUBE_AV_DETECTION_RANGE_MM = 50;
+constexpr float     CUBE_AV_DETECTION_AMBIANT_LUX = 15;
 constexpr float     CUBE_AR_DETECTION_RANGE_MM = 50;
+constexpr float     CUBE_AR_DETECTION_AMBIANT_LUX = 15;
 
 constexpr uint16_t BASIC_DETECTION_DISTANCE = 30;
 
