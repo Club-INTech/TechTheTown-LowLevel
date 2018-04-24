@@ -55,7 +55,7 @@ void EthernetMgr::resetCard() {
 bool inline EthernetMgr::read_char(char & buffer)
 {
     buffer = (char)client.read();
-	return ((buffer != '\r' && buffer != '\n' ) || !buffer == -1);
+	return ((buffer != '\r' && buffer != '\n' ) && buffer != -1);
 }
 
 inline bool EthernetMgr::read(char* order)
