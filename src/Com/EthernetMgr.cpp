@@ -197,7 +197,7 @@ void EthernetMgr::sendEvent(const char* event)
     valueString.append(strCurrentAckID);
     valueString.append(event);
 
-    addEventsToAcknowledge(strCurrentAckID,event);
+    addEventsToAcknowledge(strCurrentAckID,valueString.c_str());
     currentAckID++;
 
     println(valueString);
