@@ -226,7 +226,7 @@ void EthernetMgr::removeEventsToAcknowledge(const char* ackID)
  */
 void EthernetMgr::sendEventsToAcknowledge()
 {
-    std::map<std::string, int>::iterator it = eventsToAcknowledge.begin();
+    std::map<int, const char*>::iterator it = eventsToAcknowledge.begin();
     while (it != eventsToAcknowledge.end()){
         println(it->second);
         sdLogger.logWrite(it->second);

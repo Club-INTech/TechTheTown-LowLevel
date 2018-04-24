@@ -49,7 +49,7 @@ private:
 	EthernetClient client;
 	
 	SDLog sdLogger;
-	std::map eventsToAcknowledge;
+	std::map<int, const char*> eventsToAcknowledge;
     int currentAckID;
 
 
