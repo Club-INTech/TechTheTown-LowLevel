@@ -20,6 +20,7 @@ MOSI	11/11
 #include "Utils/defines.h"
 #include <SPI.h>
 #include <Ethernet.h>
+#include <map>
 #include "MotionControl/MotionControlSystem.h"
 #include "Utils/pin_mapping.h"
 #include "SDLog.h"
@@ -48,6 +49,9 @@ private:
 	EthernetClient client;
 	
 	SDLog sdLogger;
+	std::map eventsToAcknowledge;
+    int currentAckID;
+
 
 public:
 	EthernetMgr();
@@ -65,7 +69,13 @@ public:
 	void sendEvent(const char*);
 	void sendPosition(const float*);
     void log(const char*, ...) __attribute__((format(printf, 2, 3)));
+
+    /* ACKNOWLEDGEMENT */
     void acknowledge(const char*, ...) __attribute__((format(printf, 2, 3)));
+    void addEventsToAcknowledge(const char*, const char*);
+    void removeEventsToAcknowledge(const char*);
+    bool isInEventsToAcknowledge(const char*);
+    void sendEventsToAcknowledge();
 
 	void printf(const char *, ...) __attribute__((format(printf, 2, 3)));
 	void printfln(const char*, ...) __attribute__((format(printf, 2, 3)));

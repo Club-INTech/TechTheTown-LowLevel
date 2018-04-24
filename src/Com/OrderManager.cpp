@@ -36,6 +36,7 @@ void OrderManager::communicate() {
 
     static Metro checkMovement = Metro(10);
     static Metro checkHooksTimer = Metro(20);
+    static Metro ackEvent = Metro(50);
 
 
     if (checkMovement.check())
@@ -72,6 +73,10 @@ void OrderManager::communicate() {
         executeHooks();
     }
 
+
+    if (ackEvent.check()) {
+        highLevel.sendEventsToAcknowledge();
+    }
 
     //Code compilé seulement si on utilise l'ethernet
 #if !DEBUG
@@ -758,12 +763,21 @@ void OrderManager::execute(const char* orderToExecute)
                     highLevel.log("ERREUR::Activation d'un hook inexistant");
                 }
             }
+                /*			 _________________________________
+                * 		   *|                                 |*
+                 *		   *|	       ACKNOWLEDGEMENT        |*
+                 *    	   *|_________________________________|*
+                */
+            else if (!strcmp(order, "ack")){
+                const char* ackID = orderData.at(1);
+                highLevel.removeEventsToAcknowledge(ackID);
+            }
 
                 /*			 _________________________________
                  * 		   *|                                 |*
                  *		   *|			   RANDOM	          |*
                  *    	   *|_________________________________|*
-                  */
+                 */
 
             else if (!strcmp(order, "demo")) {
                 motionControlSystem.orderTranslation(400);
@@ -787,11 +801,6 @@ void OrderManager::execute(const char* orderToExecute)
                 highLevel.printfln("ordre inconnu");
                 highLevel.log("T'es un déchêt");
             }
-            /*			 __________________
-            * 		   *|                  |*
-            *		   *|  COMM. DE BASE   |*
-            *		   *|__________________|*
-            */
 
         }
     }
