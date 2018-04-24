@@ -10,7 +10,6 @@
 
 SerialMgr::SerialMgr()
 {
-	sdLogger = SDLog();
 }
 
 bool inline SerialMgr::read_char(char & buffer)

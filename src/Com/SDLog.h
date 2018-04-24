@@ -25,6 +25,7 @@ private:
                             "/event.txt","/sensor.txt","/position.txt","/ack.txt"};
 
     uint32_t startingTime;
+    bool sdStatus;
 
     bool logToFile(const String&,const char*);
 };

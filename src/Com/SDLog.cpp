@@ -10,14 +10,17 @@ SDLog::SDLog()
  * Initialise la carte SD:
  * Ouvre la communication avec la carte SD
  * Supprime les fichiers précédents et en crééant de nouveaux, vides
+ * Si l'initialisation échoue, on bloque les écritures
  **/
 {
     if(!SD.begin(BUILTIN_SDCARD))
     {
         Serial.println("ERROR::SDCARD::Could not initialize SD card");
+        sdStatus = false;
     }
     else
     {
+        sdStatus = true;
         for(const char* fileName: fileList)
         {
             SD.remove(fileName);
@@ -39,9 +42,12 @@ bool SDLog::logWrite(const String message)
  * Écrit le message dans le fichier correspondant à son canal et dans
  * le fichier général, ou seulement le fichier général si il n'a pas de header
  * @param message: message à logger
- * @return Vrai si on a bien réussi à écrire
+ * @return Vrai si on a bien réussi à écrire, faux sinon ou si la carte SD n'est pas init
  **/
 {
+    if(!sdStatus)
+        return(false);
+
     if(message.length() >= 6)
     {
         if(message.substring(0,5).equals("Reçu: "))
@@ -82,6 +88,9 @@ bool SDLog::logWriteReception(const char* message)
  * @return Vrai si l'écriture a réussi
  **/
 {
+    if(!sdStatus)
+        return(false);
+
     String receptionMessage = String("Reçu: ").append(message);
     if(!logToFile(receptionMessage,fileList[1]))
     {

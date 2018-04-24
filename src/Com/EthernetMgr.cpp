@@ -28,8 +28,6 @@ EthernetMgr::EthernetMgr():server{ PORT }
     if (client.connected()) {
         client.println("CONNECTED");
     }
-
-    sdLogger = SDLog();
 }
 
 void EthernetMgr::resetCard() {

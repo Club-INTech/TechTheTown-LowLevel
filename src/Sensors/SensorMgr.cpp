@@ -1,6 +1,11 @@
 #include "SensorMgr.h"
 
-SensorMgr::SensorMgr()
+SensorMgr::SensorMgr():
+#if DEBUG
+	highLevel(SerialMgr::Instance())
+#else
+	highLevel(EthernetMgr::Instance())
+#endif
 {
 	Wire.begin();
 
