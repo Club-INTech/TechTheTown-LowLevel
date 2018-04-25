@@ -9,7 +9,6 @@
 #include "../../Utils/stdarg.h"
 #include "../../Utils/defines.h"
 #include "../../Utils/average.hpp"
-#include "../SDLog.h"
 #include "AbstractComInterface.h"
 
 
@@ -33,7 +32,5 @@ private:
 	bool read_char(char &);
 	String data;
 	uint8_t available();
-
-	SDLog sdLogger;
 };
 #endif

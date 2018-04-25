@@ -23,7 +23,6 @@ MOSI	11/11
 #include "../../../../../../.platformio/packages/framework-arduinoteensy/libraries/Ethernet/Ethernet.h"
 #include "../../MotionControl/MotionControlSystem.h"
 #include "../../Utils/pin_mapping.h"
-#include "../SDLog.h"
 #include "AbstractComInterface.h"
 
 #define PORT 23500
