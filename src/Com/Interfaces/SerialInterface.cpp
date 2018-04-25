@@ -31,7 +31,6 @@ bool SerialInterface::read(char* order)
 		if (Serial.peek()==10) {
 			read_char(readChar);								//On �limine le \n
 		}
-        sdLogger.logWriteReception(order);
 		return (strcmp(order, ""));
 	}
 	else {

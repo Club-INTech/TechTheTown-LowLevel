@@ -124,3 +124,8 @@ void SDLog::setStartingTime()
 {
     startingTime = millis();
 }
+
+SDLog::operator bool()
+{
+    return(sdStatus);
+}
