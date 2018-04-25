@@ -108,7 +108,8 @@ void ComMgr::printf(Header header, const char *data, ...)
  */
 void ComMgr::addEventsToAcknowledge(const char* ackID, const char* waitingForAckEvent)
 {
-    eventsToAcknowledge[atoi(ackID)]=waitingForAckEvent;
+    eventsToAcknowledge.insert({atoi(ackID),new char[64]});
+    memcpy(eventsToAcknowledge[atoi(ackID)],waitingForAckEvent,64);
 }
 
 /**
@@ -116,6 +117,7 @@ void ComMgr::addEventsToAcknowledge(const char* ackID, const char* waitingForAck
  */
 void ComMgr::removeEventsToAcknowledge(const char* ackID)
 {
+    delete[] eventsToAcknowledge[atoi(ackID)];
     eventsToAcknowledge.erase(atoi(ackID));
 }
 
@@ -124,7 +126,7 @@ void ComMgr::removeEventsToAcknowledge(const char* ackID)
  */
 void ComMgr::sendEventsToAcknowledge()
 {
-    std::map<int, const char*>::iterator it = eventsToAcknowledge.begin();
+    auto it = eventsToAcknowledge.begin();
     while (it != eventsToAcknowledge.end()){
         printfln(EVENT_HEADER,it->second);
         it++;

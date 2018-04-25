@@ -9,6 +9,7 @@
 #include "Interfaces/EthernetInterface.h"
 #include "Utils/Singleton.hpp"
 #include "Utils/define_com_options.h"
+#include <map>
 
 class ComMgr : public Singleton<ComMgr>
 {
@@ -45,7 +46,7 @@ private:
     AbstractComInterface*    ethernet = nullptr;
     AbstractComInterface*      serial = nullptr;
     SDLog sdlog;
-    std::map<int, const char*> eventsToAcknowledge;
+    std::map<int, char*> eventsToAcknowledge;
     int volatile currentAckID;
 
     void addEventsToAcknowledge(const char *ackID, const char *waitingForAckEvent);
