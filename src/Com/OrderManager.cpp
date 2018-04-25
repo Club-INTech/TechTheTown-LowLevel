@@ -7,24 +7,19 @@ OrderManager::OrderManager():
         actuatorsMgr(ActuatorsMgr::Instance()),
         hookList(HookList()),
         orderData(OrderData()),
-#if DEBUG
-        highLevel(SerialMgr::Instance())
-#else
-        highLevel(EthernetMgr::Instance())
-#endif
+        highLevel(ComMgr::Instance())
 {
-#if DEBUG
-    pinMode(LED_BUILTIN,OUTPUT);
-#endif
+
     memset(readMessage, 0, RX_BUFFER_SIZE);
     isSendingUS = true;
     hooksEnabled = true;
     HLWaiting = false;
     basicDetectionTriggeredSent = false;
     basicDetectionFinishedSent = false;
-    highLevel.log("Communications ready");
-}
 
+    highLevel.printfln(DEBUG_HEADER,"Communications ready");
+
+}
 void OrderManager::communicate() {
 
     if (highLevel.read(readMessage)) {
@@ -72,10 +67,8 @@ void OrderManager::communicate() {
     }
 
 
-    //Code compilé seulement si on utilise l'ethernet
-#if !DEBUG
     static Metro sendPos = Metro(50);
-    if (sendPos.check()) {
+    if (com_options & COM_OPTIONS::ETHERNET_W && sendPos.check()) {
         if (motionControlSystem.isMoving()) {
             float posToSend[3]={motionControlSystem.getX(), motionControlSystem.getY(), motionControlSystem.getAngleRadian()};
             highLevel.sendPosition(posToSend);
@@ -86,7 +79,6 @@ void OrderManager::communicate() {
             }
         }
     }
-#endif
 }
 
 void OrderManager::execute(const char* orderToExecute)
@@ -111,7 +103,7 @@ void OrderManager::execute(const char* orderToExecute)
 
         if (!strcmp(order, "?"))			//Ping
         {
-            highLevel.printfln("0");
+            highLevel.printfln(STD_HEADER,"0");
         }
         else if (!strcmp(order, "j"))       //Le HL attend l'activation du Jumper
         {
@@ -119,26 +111,26 @@ void OrderManager::execute(const char* orderToExecute)
         }
         else if (!strcmp(order, "f"))
         {
-            highLevel.printfln("%d",motionControlSystem.isMoving());
-            highLevel.printfln("%d",motionControlSystem.isMoveAbnormal());
+            highLevel.printfln(STD_HEADER,"%d",motionControlSystem.isMoving());
+            highLevel.printfln(STD_HEADER,"%d",motionControlSystem.isMoveAbnormal());
         }
         else if (!strcmp(order, "?xyo"))		//Renvoie la position du robot (en mm et radians)
         {
-            //highLevel.printfln("%f,%f,%f", motionControlSystem.getX(), motionControlSystem.getY(), motionControlSystem.getAngleRadian());
-            highLevel.printfln("%f",motionControlSystem.getX());
-            highLevel.printfln("%f",motionControlSystem.getY());
-            highLevel.printfln("%f",motionControlSystem.getAngleRadian());
+            //highLevel.printfln(STD_HEADER,"%f,%f,%f", motionControlSystem.getX(), motionControlSystem.getY(), motionControlSystem.getAngleRadian());
+            highLevel.printfln(STD_HEADER,"%f",motionControlSystem.getX());
+            highLevel.printfln(STD_HEADER,"%f",motionControlSystem.getY());
+            highLevel.printfln(STD_HEADER,"%f",motionControlSystem.getAngleRadian());
         }
         else if (!strcmp(order, "d"))		//Ordre de déplacement rectiligne (en mm)
         {
             if (n_param == 1) {
                 int16_t deplacement = strtod(orderData.at(1), nullptr);
-                highLevel.log("distance : %d", deplacement);
+                highLevel.printfln(DEBUG_HEADER,"distance : %d",deplacement);
                 motionControlSystem.orderTranslation(deplacement);
                 sensorMgr.resetBasicBlocked();
             }
             else {
-                highLevel.log("ERREUR::Paramètres incorrects");
+                highLevel.printfln(DEBUG_HEADER,"ERREUR::Paramètres incorrects");
             }
         }
         else if (!strcmp(order, "t"))
@@ -153,7 +145,7 @@ void OrderManager::execute(const char* orderToExecute)
                 {
                     angle = strtof(orderData.at(1),nullptr);
                 }
-                highLevel.log("angle : %f", angle);
+                highLevel.printfln(DEBUG_HEADER,"angle : %f", angle);
                 MotionControlSystem::RotationWay rotationWay = MotionControlSystem::FREE;
                 if(n_param == 2)
                 {
@@ -170,13 +162,13 @@ void OrderManager::execute(const char* orderToExecute)
                 sensorMgr.resetBasicBlocked();
             }
             else {
-                highLevel.log("ERREUR::Paramètres incorrects");
+                highLevel.printfln(DEBUG_HEADER,"ERREUR::Paramètres incorrects");
             }
         }
         else if (!strcmp(order, "stop"))
         {
             motionControlSystem.stop();
-            highLevel.log("A priori, je m'arrête");
+            highLevel.printfln(DEBUG_HEADER,"A priori, je m'arrête");
         }
         else if(!strcmp(order, "emergencyStop"))
         {
@@ -185,7 +177,7 @@ void OrderManager::execute(const char* orderToExecute)
 
             motionControlSystem.setRawNullSpeed();
 
-            highLevel.log("ARRET D'URGENCE EN COURS, DESACTIVATION ASSERV");
+            highLevel.printfln(DEBUG_HEADER,"ARRET D'URGENCE EN COURS, DESACTIVATION ASSERV");
         }
         else if(!strcmp(order, "resumeEmergencyStop"))
         {
@@ -193,7 +185,7 @@ void OrderManager::execute(const char* orderToExecute)
             motionControlSystem.enableTranslationControl(true);
             motionControlSystem.enableRotationControl(true);
 
-            highLevel.log("REACTIVATION DE L'ASSERV APRES ARRET D'URGENCE");
+            highLevel.printfln(DEBUG_HEADER,"REACTIVATION DE L'ASSERV APRES ARRET D'URGENCE");
         }
 
             /*			 __________________
@@ -209,7 +201,7 @@ void OrderManager::execute(const char* orderToExecute)
                 motionControlSystem.setX(x);
             }
             else {
-                highLevel.log("ERREUR::Paramètres incorrects");
+                highLevel.printfln(DEBUG_HEADER,"ERREUR::Paramètres incorrects");
             }
 
         }
@@ -220,7 +212,7 @@ void OrderManager::execute(const char* orderToExecute)
                 motionControlSystem.setY(y);
             }
             else {
-                highLevel.log("ERREUR::Paramètres incorrects");
+                highLevel.printfln(DEBUG_HEADER,"ERREUR::Paramètres incorrects");
             }
         }
         else if (!strcmp(order, "co"))
@@ -230,7 +222,7 @@ void OrderManager::execute(const char* orderToExecute)
                 motionControlSystem.setOriginalAngle(o);
             }
             else {
-                highLevel.log("ERREUR::Paramètres incorrects");
+                highLevel.printfln(DEBUG_HEADER,"ERREUR::Paramètres incorrects");
             }
         }
         else if (!strcmp(order, "cxyo"))
@@ -245,7 +237,7 @@ void OrderManager::execute(const char* orderToExecute)
                 motionControlSystem.setOriginalAngle(o);
             }
             else {
-                highLevel.log("ERREUR::Paramètres incorrects");
+                highLevel.printfln(DEBUG_HEADER,"ERREUR::Paramètres incorrects");
             }
 
         }
@@ -256,7 +248,7 @@ void OrderManager::execute(const char* orderToExecute)
                 motionControlSystem.setTranslationSpeed(speed);
             }
             else {
-                highLevel.log("ERREUR::Paramètres incorrects");
+                highLevel.printfln(DEBUG_HEADER,"ERREUR::Paramètres incorrects");
             }
 
         }
@@ -267,7 +259,7 @@ void OrderManager::execute(const char* orderToExecute)
                 motionControlSystem.setRotationSpeed(speed);
             }
             else {
-                highLevel.log("ERREUR::Paramètres incorrects");
+                highLevel.printfln(DEBUG_HEADER,"ERREUR::Paramètres incorrects");
             }
 
         }
@@ -280,7 +272,7 @@ void OrderManager::execute(const char* orderToExecute)
                 motionControlSystem.setRotationSpeed(rotspeed);
             }
             else {
-                highLevel.log("ERREUR::Paramètres incorrects");
+                highLevel.printfln(DEBUG_HEADER,"ERREUR::Paramètres incorrects");
             }
 
         }
@@ -303,32 +295,32 @@ void OrderManager::execute(const char* orderToExecute)
         else if (!strcmp(order, "ct0"))		//Désactiver l'asservissement en translation
         {
             motionControlSystem.enableTranslationControl(false);
-            highLevel.log("non asservi en translation");
+            highLevel.printfln(DEBUG_HEADER,"non asservi en translation");
         }
         else if (!strcmp(order, "ct1"))		//Activer l'asservissement en translation
         {
             motionControlSystem.enableTranslationControl(true);
-            highLevel.log("asservi en translation");
+            highLevel.printfln(DEBUG_HEADER,"asservi en translation");
         }
         else if (!strcmp(order, "cr0"))		//Désactiver l'asservissement en rotation
         {
             motionControlSystem.enableRotationControl(false);
-            highLevel.log("non asservi en rotation");
+            highLevel.printfln(DEBUG_HEADER,"non asservi en rotation");
         }
         else if (!strcmp(order, "cr1"))		//Activer l'asservissement en rotation
         {
             motionControlSystem.enableRotationControl(true);
-            highLevel.log("asservi en rotation");
+            highLevel.printfln(DEBUG_HEADER,"asservi en rotation");
         }
         else if (!strcmp(order, "cv0"))		//Désactiver l'asservissement en vitesse
         {
             motionControlSystem.enableSpeedControl(false);
-            highLevel.log("non asservi en vitesse");
+            highLevel.printfln(DEBUG_HEADER,"non asservi en vitesse");
         }
         else if (!strcmp(order, "cv1"))		//Activer l'asservissement en vitesse
         {
             motionControlSystem.enableSpeedControl(true);
-            highLevel.log("asservi en vitesse");
+            highLevel.printfln(DEBUG_HEADER,"asservi en vitesse");
         }
 
             /*			 _________________________________
@@ -351,18 +343,18 @@ void OrderManager::execute(const char* orderToExecute)
             */
 
         else if (!strcmp(order, "cod")) {
-            highLevel.log("Gauche:");
-            highLevel.log("%ld", motionControlSystem.getLeftTick());
-            highLevel.log("Droite:");
-            highLevel.log("%ld", motionControlSystem.getRightTick());
+            highLevel.printfln(DEBUG_HEADER,"Gauche:");
+            highLevel.printfln(DEBUG_HEADER,"%ld", motionControlSystem.getLeftTick());
+            highLevel.printfln(DEBUG_HEADER,"Droite:");
+            highLevel.printfln(DEBUG_HEADER,"%ld", motionControlSystem.getRightTick());
         }
         else if (!strcmp(order, "pfdebug"))
         {
-            //highLevel.printfln("%d", (int)motionControlSystem.getRightSpeed());
-            //highLevel.printfln("%d", (int)motionControlSystem.getRightMotorDir());
-            //highLevel.printfln("%d", (int)motionControlSystem.getRightSetPoint());
-            //highLevel.printfln("%d", (int)motionControlSystem.getRightMotorPWM());
-            //highLevel.printfln("%d", (int)motionControlSystem.getCodD());
+            //highLevel.printfln(STD_HEADER,"%d", (int)motionControlSystem.getRightSpeed());
+            //highLevel.printfln(STD_HEADER,"%d", (int)motionControlSystem.getRightMotorDir());
+            //highLevel.printfln(STD_HEADER,"%d", (int)motionControlSystem.getRightSetPoint());
+            //highLevel.printfln(STD_HEADER,"%d", (int)motionControlSystem.getRightMotorPWM());
+            //highLevel.printfln(STD_HEADER,"%d", (int)motionControlSystem.getCodD());
         }
         else if (!strcmp(order, "rawpwm"))
         {
@@ -377,22 +369,22 @@ void OrderManager::execute(const char* orderToExecute)
         else if (!strcmp(order, "getpwm")) {
             int32_t left, right;
             motionControlSystem.getPWMS(left, right);
-            highLevel.log("PWMS: %d - %d", left, right);
+            highLevel.printfln(DEBUG_HEADER,"PWMS: %ld - %ld", left, right);
         }
         else if (!strcmp(order, "errors")) {
             float leftProp, leftDer, leftInt, rightProp, rightDer, rightInt;
             motionControlSystem.getSpeedErrors(leftProp, leftInt, leftDer, rightProp, rightInt, rightDer);
-            highLevel.log("Prop: %f - %f", leftProp, rightProp);
-            highLevel.log("Deriv: %f - %f", leftDer, rightDer);
-            highLevel.log("Integ: %f - %f", leftInt, rightInt);
+            highLevel.printfln(DEBUG_HEADER,"Prop: %f - %f", leftProp, rightProp);
+            highLevel.printfln(DEBUG_HEADER,"Deriv: %f - %f", leftDer, rightDer);
+            highLevel.printfln(DEBUG_HEADER,"Integ: %f - %f", leftInt, rightInt);
         }
         else if (!strcmp(order, "rawspeed")) {
             int32_t leftsetpoint, rightsetpoint;
 
             //motionControlSystem.rawWheelSpeed(parseInt(orderData.at(1)), leftsetpoint, rightsetpoint);
-            highLevel.log("Speed set");
+            highLevel.printfln(DEBUG_HEADER,"Speed set");
             motionControlSystem.getSpeedSetpoints(leftsetpoint, rightsetpoint);
-            highLevel.log("speed setpoints: %ld - %ld", leftsetpoint, rightsetpoint);
+            highLevel.printfln(DEBUG_HEADER,"speed setpoints: %ld - %ld", leftsetpoint, rightsetpoint);
         }
         else if (!strcmp(order, "rawposdata"))
         {
@@ -442,7 +434,7 @@ void OrderManager::execute(const char* orderToExecute)
         else if (!strcmp(order, "rc"))
         {
             motionControlSystem.setRawNegativeTranslationSpeed();  // definit la consigne max de vitesse de translation envoi�e au PID (trap�ze)
-            // déplacement vers l'arrière avec asservissement
+            // déplacement vers l'arfrière avec asservissement
         }
 
         else if (!strcmp(order, "td"))
@@ -472,9 +464,9 @@ void OrderManager::execute(const char* orderToExecute)
         {
             motionControlSystem.translation = !motionControlSystem.translation;   //Bascule entre le réglage d'asserv en translation et en rotation
             if (motionControlSystem.translation)
-                highLevel.log("reglage de la translation");
+                highLevel.printfln(DEBUG_HEADER,"reglage de la translation");
             else
-                highLevel.log("reglage de la rotation");
+                highLevel.printfln(DEBUG_HEADER,"reglage de la rotation");
         }
         else if (!strcmp(order, "display")) //affiche les paramètres des PID des différentes asserv (translation, rotation, vitesse à droite, vitesse à gauche)
         {
@@ -487,55 +479,55 @@ void OrderManager::execute(const char* orderToExecute)
             motionControlSystem.getRotationTunings(kp_r, ki_r, kd_r);
             motionControlSystem.getLeftSpeedTunings(kp_g, ki_g, kd_g);
             motionControlSystem.getRightSpeedTunings(kp_d, ki_d, kd_d);
-            highLevel.log("trans : kp= %g ; ki= %g ; kd= %g", kp_t, ki_t, kd_t);
-            highLevel.log("rot   : kp= %g ; ki= %g ; kd= %g", kp_r, ki_r, kd_r);
-            highLevel.log("gauche: kp= %g ; ki= %g ; kd= %g", kp_g, ki_g, kd_g);
-            highLevel.log("droite: kp= %g ; ki= %g ; kd= %g", kp_d, ki_d, kd_d);
+            highLevel.printfln(DEBUG_HEADER,"trans : kp= %g ; ki= %g ; kd= %g", kp_t, ki_t, kd_t);
+            highLevel.printfln(DEBUG_HEADER,"rot   : kp= %g ; ki= %g ; kd= %g", kp_r, ki_r, kd_r);
+            highLevel.printfln(DEBUG_HEADER,"gauche: kp= %g ; ki= %g ; kd= %g", kp_g, ki_g, kd_g);
+            highLevel.printfln(DEBUG_HEADER,"droite: kp= %g ; ki= %g ; kd= %g", kp_d, ki_d, kd_d);
         }
             // ***********  Paramètres du PID pour l'asserv en position (TRANSLATION)  ***********
         else if (!strcmp(order, "kpt"))
         {
             if (n_param == 1) {
                 float kp, ki, kd;
-                highLevel.printfln("kp_trans ?");
+                highLevel.printfln(STD_HEADER,"kp_trans ?");
                 motionControlSystem.getTranslationTunings(kp, ki, kd);
                 kp = parseFloat(orderData.at(1));
 
                 motionControlSystem.setTranslationTunings(kp, ki, kd);
-                highLevel.log("kp_trans = %g", kp);
+                highLevel.printfln(DEBUG_HEADER,"kp_trans = %g", kp);
             }
             else {
-                highLevel.log("ERREUR::Paramètres incorrects");
+                highLevel.printfln(DEBUG_HEADER,"ERREUR::Paramètres incorrects");
             }
         }
         else if (!strcmp(order, "kdt"))
         {
             if (n_param == 1) {
                 float kp, ki, kd;
-                highLevel.printfln("kd_trans ?");
+                highLevel.printfln(STD_HEADER,"kd_trans ?");
                 motionControlSystem.getTranslationTunings(kp, ki, kd);
                 kd = parseFloat(orderData.at(1));
 
                 motionControlSystem.setTranslationTunings(kp, ki, kd);
-                highLevel.log("kd_trans = %g", kd);
+                highLevel.printfln(DEBUG_HEADER,"kd_trans = %g", kd);
             }
             else {
-                highLevel.log("ERREUR::Paramètres incorrects");
+                highLevel.printfln(DEBUG_HEADER,"ERREUR::Paramètres incorrects");
             }
         }
         else if (!strcmp(order, "kit"))
         {
             if (n_param == 1) {
                 float kp, ki, kd;
-                highLevel.printfln("ki_trans ?");
+                highLevel.printfln(STD_HEADER,"ki_trans ?");
                 motionControlSystem.getTranslationTunings(kp, ki, kd);
                 ki = parseFloat(orderData.at(1));
 
                 motionControlSystem.setTranslationTunings(kp, ki, kd);
-                highLevel.log("ki_trans = %g", ki);
+                highLevel.printfln(DEBUG_HEADER,"ki_trans = %g", ki);
             }
             else {
-                highLevel.log("ERREUR::Paramètres incorrects");
+                highLevel.printfln(DEBUG_HEADER,"ERREUR::Paramètres incorrects");
             }
         }
 
@@ -544,45 +536,45 @@ void OrderManager::execute(const char* orderToExecute)
         {
             if (n_param == 1) {
                 float kp, ki, kd;
-                highLevel.printfln("kp_rot ?");
+                highLevel.printfln(STD_HEADER,"kp_rot ?");
                 motionControlSystem.getRotationTunings(kp, ki, kd);
                 kp = parseFloat(orderData.at(1));
 
                 motionControlSystem.setRotationTunings(kp, ki, kd);
-                highLevel.log("kp_rot = %g", kp);
+                highLevel.printfln(DEBUG_HEADER,"kp_rot = %g", kp);
             }
             else {
-                highLevel.log("ERREUR::Paramètres incorrects");
+                highLevel.printfln(DEBUG_HEADER,"ERREUR::Paramètres incorrects");
             }
         }
         else if (!strcmp(order, "kir"))
         {
             if (n_param == 1) {
                 float kp, ki, kd;
-                highLevel.printfln("ki_rot ?");
+                highLevel.printfln(STD_HEADER,"ki_rot ?");
                 motionControlSystem.getRotationTunings(kp, ki, kd);
                 ki = parseFloat(orderData.at(1));
 
                 motionControlSystem.setRotationTunings(kp, ki, kd);
-                highLevel.log("ki_rot = %g", ki);
+                highLevel.printfln(DEBUG_HEADER,"ki_rot = %g", ki);
             }
             else {
-                highLevel.log("ERREUR::Paramètres incorrects");
+                highLevel.printfln(DEBUG_HEADER,"ERREUR::Paramètres incorrects");
             }
         }
         else if (!strcmp(order, "kdr"))
         {
             if (n_param == 1) {
                 float kp, ki, kd;
-                highLevel.printfln("kd_rot ?");
+                highLevel.printfln(STD_HEADER,"kd_rot ?");
                 motionControlSystem.getRotationTunings(kp, ki, kd);
                 kd = parseFloat(orderData.at(1));
 
                 motionControlSystem.setRotationTunings(kp, ki, kd);
-                highLevel.log("kd_rot = %g", kd);
+                highLevel.printfln(DEBUG_HEADER,"kd_rot = %g", kd);
             }
             else {
-                highLevel.log("ERREUR::Paramètres incorrects");
+                highLevel.printfln(DEBUG_HEADER,"ERREUR::Paramètres incorrects");
             }
         }
 
@@ -591,45 +583,45 @@ void OrderManager::execute(const char* orderToExecute)
         {
             if (n_param == 1) {
                 float kp, ki, kd;
-                highLevel.printfln("kp_gauche ?");
+                highLevel.printfln(STD_HEADER,"kp_gauche ?");
                 motionControlSystem.getLeftSpeedTunings(kp, ki, kd);
                 kp = parseFloat(orderData.at(1));
 
                 motionControlSystem.setLeftSpeedTunings(kp, ki, kd);
-                highLevel.log("kp_gauche = %g", kp);
+                highLevel.printfln(DEBUG_HEADER,"kp_gauche = %g", kp);
             }
             else {
-                highLevel.log("ERREUR::Paramètres incorrects");
+                highLevel.printfln(DEBUG_HEADER,"ERREUR::Paramètres incorrects");
             }
         }
         else if (!strcmp(order, "kig"))
         {
             if (n_param == 1) {
                 float kp, ki, kd;
-                highLevel.printfln("ki_gauche ?");
+                highLevel.printfln(STD_HEADER,"ki_gauche ?");
                 motionControlSystem.getLeftSpeedTunings(kp, ki, kd);
                 ki = parseFloat(orderData.at(1));
 
                 motionControlSystem.setLeftSpeedTunings(kp, ki, kd);
-                highLevel.log("ki_gauche = %g", ki);
+                highLevel.printfln(DEBUG_HEADER,"ki_gauche = %g", ki);
             }
             else {
-                highLevel.log("ERREUR::Paramètres incorrects");
+                highLevel.printfln(DEBUG_HEADER,"ERREUR::Paramètres incorrects");
             }
         }
         else if (!strcmp(order, "kdg"))
         {
             if (n_param == 1) {
                 float kp, ki, kd;
-                highLevel.printfln("kd_gauche ?");
+                highLevel.printfln(STD_HEADER,"kd_gauche ?");
                 motionControlSystem.getLeftSpeedTunings(kp, ki, kd);
                 kd = parseFloat(orderData.at(1));
 
                 motionControlSystem.setLeftSpeedTunings(kp, ki, kd);
-                highLevel.log("kd_gauche = %g", kd);
+                highLevel.printfln(DEBUG_HEADER,"kd_gauche = %g", kd);
             }
             else {
-                highLevel.log("ERREUR::Paramètres incorrects");
+                highLevel.printfln(DEBUG_HEADER,"ERREUR::Paramètres incorrects");
             }
         }
 
@@ -638,45 +630,45 @@ void OrderManager::execute(const char* orderToExecute)
         {
             if (n_param == 1) {
                 float kp, ki, kd;
-                highLevel.printfln("kp_droite ?");
+                highLevel.printfln(STD_HEADER,"kp_droite ?");
                 motionControlSystem.getRightSpeedTunings(kp, ki, kd);
                 kp = parseFloat(orderData.at(1));
 
                 motionControlSystem.setRightSpeedTunings(kp, ki, kd);
-                highLevel.log("kp_droite = %g", kp);
+                highLevel.printfln(DEBUG_HEADER,"kp_droite = %g", kp);
             }
             else {
-                highLevel.log("ERREUR::Paramètres incorrects");
+                highLevel.printfln(DEBUG_HEADER,"ERREUR::Paramètres incorrects");
             }
         }
         else if (!strcmp(order, "kid"))
         {
             if (n_param == 1) {
                 float kp, ki, kd;
-                highLevel.printfln("ki_droite ?");
+                highLevel.printfln(STD_HEADER,"ki_droite ?");
                 motionControlSystem.getRightSpeedTunings(kp, ki, kd);
                 ki = parseFloat(orderData.at(1));
 
                 motionControlSystem.setRightSpeedTunings(kp, ki, kd);
-                highLevel.log("ki_droite = %g", ki);
+                highLevel.printfln(DEBUG_HEADER,"ki_droite = %g", ki);
             }
             else {
-                highLevel.log("ERREUR::Paramètres incorrects");
+                highLevel.printfln(DEBUG_HEADER,"ERREUR::Paramètres incorrects");
             }
         }
         else if (!strcmp(order, "kdd"))
         {
             if (n_param == 1) {
                 float kp, ki, kd;
-                highLevel.printfln("kd_droite ?");
+                highLevel.printfln(STD_HEADER,"kd_droite ?");
                 motionControlSystem.getRightSpeedTunings(kp, ki, kd);
                 kd = parseFloat(orderData.at(1));
 
                 motionControlSystem.setRightSpeedTunings(kp, ki, kd);
-                highLevel.log("kd_droite = %g", kd);
+                highLevel.printfln(DEBUG_HEADER,"kd_droite = %g", kd);
             }
             else {
-                highLevel.log("ERREUR::Paramètres incorrects");
+                highLevel.printfln(DEBUG_HEADER,"ERREUR::Paramètres incorrects");
             }
         }
 
@@ -694,7 +686,7 @@ void OrderManager::execute(const char* orderToExecute)
             }
             else
             {
-                highLevel.log("ERREUR::Paramètres incorrects");
+                highLevel.printfln(DEBUG_HEADER,"ERREUR::Paramètres incorrects");
             }
         }
         else if (!strcmp(order, "AXGm"))
@@ -705,7 +697,7 @@ void OrderManager::execute(const char* orderToExecute)
             }
             else
             {
-                highLevel.log("ERREUR::Paramètres incorrects");
+                highLevel.printfln(DEBUG_HEADER,"ERREUR::Paramètres incorrects");
             }
         }
         else if (!strcmp(order, "AXs"))
@@ -716,7 +708,7 @@ void OrderManager::execute(const char* orderToExecute)
             }
             else
             {
-                highLevel.log("ERREUR::Paramètres incorrects");
+                highLevel.printfln(DEBUG_HEADER,"ERREUR::Paramètres incorrects");
             }
         }
         else if (!strcmp(order, "AXGs"))
@@ -727,7 +719,7 @@ void OrderManager::execute(const char* orderToExecute)
             }
             else
             {
-                highLevel.log("ERREUR::Paramètres incorrects");
+                highLevel.printfln(DEBUG_HEADER,"ERREUR::Paramètres incorrects");
             }
         }
             /*			 _________________________________
@@ -830,11 +822,11 @@ void OrderManager::execute(const char* orderToExecute)
         {
             if(isSendingUS)
             {
-                highLevel.log("Désactivation US");
+                highLevel.printfln(DEBUG_HEADER,"Désactivation US");
             }
             else
             {
-                highLevel.log("Activation US");
+                highLevel.printfln(DEBUG_HEADER,"Activation US");
             }
             if(n_param == 0)
             {
@@ -846,8 +838,8 @@ void OrderManager::execute(const char* orderToExecute)
             }
             else
             {
-                highLevel.log("ERREUR::Paramètres incorrects");
-                highLevel.log("Pas de changement");
+                highLevel.printfln(DEBUG_HEADER,"ERREUR::Paramètres incorrects");
+                highLevel.printfln(DEBUG_HEADER,"Pas de changement");
             }
         }
         else if(!strcmp(order, "ccAv"))
@@ -882,7 +874,7 @@ void OrderManager::execute(const char* orderToExecute)
 
             if (n_param < 7)
             {
-                highLevel.log("ERREUR::Paramètres incorrects");
+                highLevel.printfln(DEBUG_HEADER,"ERREUR::Paramètres incorrects");
             }
             if (n_param >=7)
             {
@@ -921,7 +913,7 @@ void OrderManager::execute(const char* orderToExecute)
             }
             else
             {
-                highLevel.log("ERREUR::Activation d'un hook inexistant");
+                highLevel.printfln(DEBUG_HEADER,"ERREUR::Activation d'un hook inexistant");
             }
 
         }
@@ -934,7 +926,7 @@ void OrderManager::execute(const char* orderToExecute)
             }
             else
             {
-                highLevel.log("ERREUR::Activation d'un hook inexistant");
+                highLevel.printfln(DEBUG_HEADER,"ERREUR::Activation d'un hook inexistant");
             }
         }
 
@@ -967,8 +959,8 @@ void OrderManager::execute(const char* orderToExecute)
 
         else
         {
-            highLevel.printfln("ordre inconnu");
-            highLevel.log("T'es un déchêt");
+            highLevel.printfln(STD_HEADER,"ordre inconnu");
+            highLevel.printfln(DEBUG_HEADER,"T'es un déchêt");
         }
         /*			 __________________
         * 		   *|                  |*

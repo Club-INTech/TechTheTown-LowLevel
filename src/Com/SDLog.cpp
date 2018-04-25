@@ -96,7 +96,7 @@ bool SDLog::logWriteReception(const char* message)
     {
         return(false);
     }
-    logToFile(receptionMessage,fileList[0]);
+    return logToFile(receptionMessage,fileList[0]);
 }
 
 bool SDLog::logToFile(const String &message,const char* logFile)

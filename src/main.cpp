@@ -9,8 +9,9 @@
 
 
 void setup() {
+
 	/* Série */
-	Serial.begin(115200);
+	Serial.begin(9600);
     Serial.flush();
 	Serial.println("Série OK");
 	delay(250);
@@ -60,6 +61,7 @@ void test()
  */
 
 void loop(){
+
 	OrderManager& orderMgr = OrderManager::Instance();
 
     /* AX12 initialisation */
@@ -78,13 +80,9 @@ void loop(){
 
 
 	delay(1500);//Laisse le temps aux capteurs de clignotter leur ID
-#if DEBUG
-	IntervalTimer blinkTim;
-	blinkTim.priority(254);
-	blinkTim.begin(blink,500000);
-#endif
 
     static Metro USSend = Metro(100);
+
     while (true) {
         orderMgr.communicate();
 		orderMgr.refreshUS();

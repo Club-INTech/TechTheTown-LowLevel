@@ -8,7 +8,7 @@
 class SRF10 : public AbstractI2CSensorUS
 {
 private:
-    uint8_t real_addr = BASE_OFFSET_ADDRESS;
+    uint16_t real_addr = BASE_OFFSET_ADDRESS;
     uint16_t last_distance_measured = 0xFFFF;
     bool waitingMeasure = false;
 

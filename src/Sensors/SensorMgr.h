@@ -14,8 +14,7 @@
 #include "Utils/pin_mapping.h"
 #include "MotionControl/MotionControlSystem.h"
 #include "Utils/pin_mapping.h"
-#include "Com/EthernetMgr.h"
-#include "Com/SerialMgr.h"
+#include "Com/ComMgr.h"
 #include "SRF10.h"
 #include "VL6180X.h"
 #include "AbstractSensorUS.h"
@@ -26,12 +25,8 @@ class SensorMgr : public Singleton<SensorMgr>
 
 
 private:
-#if DEBUG
-	 SerialMgr &highLevel;
-#else
-	 EthernetMgr &highLevel;
-#endif
 
+	ComMgr& highLevel;
 
 	SRF10* US[NBR_OF_US_SENSOR];
 	VL6180X sensorCubeAV;
