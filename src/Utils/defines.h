@@ -4,7 +4,7 @@
 #define _DEFINES_h
 
 #include <Arduino.h>
-#include "define_debug.h"
+#include "define_com_options.h"
 
 /**
 *COMMUNICATION
@@ -19,12 +19,13 @@ constexpr uint8_t NBR_OF_US_SENSOR = 4;
 // Divers headers de communication pour l'éthernet
 constexpr uint8_t HEADER_LENGTH = 2;
 
-constexpr char STD_HEADER[2] = {0x40,0x40};
-constexpr char DEBUG_HEADER[2] = {0x02,0x20};
-constexpr char EVENT_HEADER[2] = {0x14,0x17};
-constexpr char SENSOR_HEADER[2] = {0x01,0x06};
-constexpr char POSITION_HEADER[2] = {0x07,0x05};
-constexpr char ACK_HEADER[2] = {0x06,0x1A};
+using Header = const char[HEADER_LENGTH];
+Header STD_HEADER = {0x40,0x40};
+Header DEBUG_HEADER = {0x02,0x20};
+Header EVENT_HEADER = {0x14,0x17};
+Header SENSOR_HEADER = {0x01,0x06};
+Header POSITION_HEADER = {0x07,0x05};
+Header ACK_HEADER = {0x06,0x1A};
 
 
 // Séparateurs des mots d'ordres

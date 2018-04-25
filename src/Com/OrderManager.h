@@ -20,8 +20,9 @@
 #include "Utils/Singleton.hpp"
 #include "MotionControl/MotionControlSystem.h"
 #include "Sensors/SensorMgr.h"
-#include "SerialMgr.h"
-#include "Com/EthernetMgr.h"
+//#include "SerialInterface.h"
+//#include "Com/EthernetInterface.h"
+#include "ComMgr.h"
 #include "Actuators/ActuatorsMgr.h"
 #include "Utils/defines.h"
 #include "Utils/utils.h"
@@ -149,11 +150,8 @@ private:
 	bool isSendingUS;
 
 public:
-	#if DEBUG
-    SerialMgr &highLevel;
-	#else
-    EthernetMgr &highLevel;
-	#endif
+
+	ComMgr& highLevel;
 
     OrderManager();
 
