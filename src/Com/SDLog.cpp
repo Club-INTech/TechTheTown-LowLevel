@@ -96,11 +96,7 @@ bool SDLog::logWriteReception(const char* message)
     {
         return(false);
     }
-<<<<<<< HEAD
     return logToFile(receptionMessage,fileList[0]);
-=======
-    return(logToFile(receptionMessage,fileList[0]));
->>>>>>> 2e598af16f51bf28fb177801e35dcec9d87504e4
 }
 
 bool SDLog::logToFile(const String &message,const char* logFile)
