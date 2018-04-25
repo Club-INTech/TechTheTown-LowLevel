@@ -26,7 +26,9 @@ void ComMgr::sendEvent(const char * data)
     sprintf(strCurrentAckID,"%4d",currentAckID);
 
     char formatted[64];
-    snprintf(formatted,64,strCurrentAckID,data);
+    memcpy(formatted,strCurrentAckID,4);
+    formatted[4]='\0';
+    strcat(formatted+4,data);
 
     printfln(EVENT_HEADER,formatted);
     addEventsToAcknowledge(strCurrentAckID,formatted);
@@ -124,7 +126,7 @@ void ComMgr::sendEventsToAcknowledge()
 {
     std::map<int, const char*>::iterator it = eventsToAcknowledge.begin();
     while (it != eventsToAcknowledge.end()){
-        ethernet->printfln(it->second);
+        printfln(EVENT_HEADER,it->second);
         it++;
     }
 }
