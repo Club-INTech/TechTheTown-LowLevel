@@ -12,16 +12,16 @@ MOSI	11/11
 #ifndef _ETHERNETMGR_h
 #define _ETHERNETMGR_h
 
-#include "../../../../../../.platformio/packages/framework-arduinoteensy/cores/teensy3/Arduino.h"
-#include "../../../../../../.platformio/packages/toolchain-gccarmnoneeabi/arm-none-eabi/include/c++/5.4.1/vector"
-#include "../../Utils/Singleton.hpp"
-#include "../../Utils/stdarg.h"
-#include "../../../../../../.platformio/packages/framework-arduinoteensy/cores/teensy3/WString.h"
-#include "../../Utils/defines.h"
-#include "../../../../../../.platformio/packages/framework-arduinoteensy/libraries/SPI/SPI.h"
-#include "../../../../../../.platformio/packages/framework-arduinoteensy/libraries/Ethernet/Ethernet.h"
-#include "../../MotionControl/MotionControlSystem.h"
-#include "../../Utils/pin_mapping.h"
+#include <Arduino.h>
+#include <vector>
+#include "Utils/Singleton.hpp"
+#include "Utils/stdarg.h"
+#include <WString.h>
+#include "Utils/defines.h"
+#include <SPI.h>
+#include <Ethernet.h>
+#include "MotionControl/MotionControlSystem.h"
+#include "Utils/pin_mapping.h"
 #include "AbstractComInterface.h"
 
 #define PORT 23500

@@ -1,14 +1,14 @@
 #ifndef _SERIALHL_h
 #define _SERIALHL_h
 
-#include "../../../../../../.platformio/packages/framework-arduinoteensy/cores/teensy3/Arduino.h"
-#include "../../../../../../.platformio/packages/toolchain-gccarmnoneeabi/arm-none-eabi/include/c++/5.4.1/vector"
-#include "../../../../../../.platformio/packages/toolchain-gccarmnoneeabi/arm-none-eabi/include/c++/5.4.1/string"
+#include <Arduino.h>
+#include <vector>
+#include <string>
 
-#include "../../Utils/Singleton.hpp"
-#include "../../Utils/stdarg.h"
-#include "../../Utils/defines.h"
-#include "../../Utils/average.hpp"
+#include "Utils/Singleton.hpp"
+#include "Utils/stdarg.h"
+#include "Utils/defines.h"
+#include "Utils/average.hpp"
 #include "AbstractComInterface.h"
 
 
