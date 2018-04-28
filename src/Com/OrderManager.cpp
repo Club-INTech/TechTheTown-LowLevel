@@ -17,7 +17,7 @@ OrderManager::OrderManager():
     basicDetectionTriggeredSent = false;
     basicDetectionFinishedSent = false;
 
-    charIDLastMessage = 'A';
+    charIDLastMessage = 'Z';
     highLevel.printfln(DEBUG_HEADER,"Communications ready");
 }
 
