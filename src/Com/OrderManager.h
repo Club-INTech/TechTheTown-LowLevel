@@ -143,6 +143,7 @@ private:
 	bool basicDetectionTriggeredSent;
 	bool basicDetectionFinishedSent;
 	char readMessage[RX_BUFFER_SIZE];
+    char charIDLastMessage;
 	bool HLWaiting;
 
 	//Variables booleennes pour envoi de données au HL

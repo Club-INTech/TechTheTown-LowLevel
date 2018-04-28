@@ -9,6 +9,7 @@
 #include "Interfaces/EthernetInterface.h"
 #include "Utils/Singleton.hpp"
 #include "Utils/define_com_options.h"
+#include <map>
 
 class ComMgr : public Singleton<ComMgr>
 {
@@ -31,7 +32,10 @@ public:
     void sendUS(const std::vector<Average<uint16_t,AVERAGE_US_SIZE>>&);
     void sendEvent(const char*);
     void sendPosition(const float*);
+
     void acknowledge(const char*);
+    void removeEventsToAcknowledge(const char *ackID);
+    void sendEventsToAcknowledge();
 
     void printfln(Header header,const char*, ...) __attribute__((format(printf, 3, 4)));
     void printf(Header header,const char*,...) __attribute__((format(printf, 3, 4)));
@@ -42,6 +46,11 @@ private:
     AbstractComInterface*    ethernet = nullptr;
     AbstractComInterface*      serial = nullptr;
     SDLog sdlog;
+    std::map<int, char*> eventsToAcknowledge;
+    int volatile currentAckID;
+
+    void addEventsToAcknowledge(const char *ackID, const char *waitingForAckEvent);
+
 };
 
 

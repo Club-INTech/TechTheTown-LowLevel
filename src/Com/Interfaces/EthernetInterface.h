@@ -57,7 +57,6 @@ public:
 
 	void printf(const char *);
 	void printfln(const char*);
-
 };
 
 #endif

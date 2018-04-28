@@ -22,7 +22,17 @@ void ComMgr::sendUS(const std::vector<Average<uint16_t, AVERAGE_US_SIZE>> & data
 
 void ComMgr::sendEvent(const char * data)
 {
-   printfln(EVENT_HEADER,data);
+    char strCurrentAckID[4];
+    sprintf(strCurrentAckID,"%4d",currentAckID);
+
+    char formatted[64];
+    memcpy(formatted,strCurrentAckID,4);
+    formatted[4]='\0';
+    strcat(formatted+4,data);
+
+    printfln(EVENT_HEADER,formatted);
+    addEventsToAcknowledge(strCurrentAckID,formatted);
+    currentAckID++;
 }
 
 void ComMgr::sendPosition(const float * data)
@@ -60,6 +70,7 @@ void ComMgr::printfln(Header header,const char * data,...)
 
     if( memcmp(header,DEBUG_HEADER,HEADER_LENGTH) )
         printfln(DEBUG_HEADER,formatted);
+
     sdlog.logWrite(formatted);
 
     va_end(args);
@@ -85,10 +96,44 @@ void ComMgr::printf(Header header, const char *data, ...)
 
     if( memcmp(header,DEBUG_HEADER,HEADER_LENGTH) )
         printfln(DEBUG_HEADER,formatted);
+
     sdlog.logWrite(formatted);
 
     va_end(args);
 }
+
+
+/**
+ *  Ajoute un event à la liste des events en attente d'acknowledgement
+ */
+void ComMgr::addEventsToAcknowledge(const char* ackID, const char* waitingForAckEvent)
+{
+    eventsToAcknowledge.insert({atoi(ackID),new char[64]});
+    memcpy(eventsToAcknowledge[atoi(ackID)],waitingForAckEvent,64);
+}
+
+/**
+ *  Enlève un event à la liste des events en attente d'acknowledgement
+ */
+void ComMgr::removeEventsToAcknowledge(const char* ackID)
+{
+    delete[] eventsToAcknowledge[atoi(ackID)];
+    eventsToAcknowledge.erase(atoi(ackID));
+}
+
+/**
+ * Renvoie les events qui n'ont pas encore reçu d'acknowledge
+ */
+void ComMgr::sendEventsToAcknowledge()
+{
+    auto it = eventsToAcknowledge.begin();
+    while (it != eventsToAcknowledge.end()){
+        printfln(EVENT_HEADER,it->second);
+        it++;
+    }
+}
+
+
 
 void ComMgr::startMatch()
 {

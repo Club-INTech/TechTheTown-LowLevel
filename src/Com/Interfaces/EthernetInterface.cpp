@@ -28,6 +28,7 @@ EthernetInterface::EthernetInterface():server{ PORT }
     if (client.connected()) {
         client.println("CONNECTED");
     }
+
 }
 
 void EthernetInterface::resetCard() {
