@@ -5,7 +5,7 @@
 
 Hook::Hook(uint8_t id, int32_t x, uint32_t y, uint32_t r, float alpha, float tolerance, const char* o) : hookID(id), zoneX(x), zoneY(y), zoneR(r),angleTarget(alpha),angleTolerance(tolerance), order(o)
 {
-	active = true;
+	active = false;
 	ready = false;
 }
 

@@ -8,52 +8,23 @@
 #ifndef _ORDERMGR_h
 #define _ORDERMGR_h
 
-#include <Metro.h>
-#include <vector>
-
+#include "Metro.h"
 #include <map>
 #include <string>
 #include <cstdlib>
 #include <Arduino.h>
-
-#include "WString.h"
+#include <WString.h>
 #include "Utils/Singleton.hpp"
 #include "MotionControl/MotionControlSystem.h"
 #include "Sensors/SensorMgr.h"
-//#include "SerialInterface.h"
-//#include "Com/EthernetInterface.h"
-#include "ComMgr.h"
+#include "Com/ComMgr.h"
 #include "Actuators/ActuatorsMgr.h"
 #include "Utils/defines.h"
 #include "Utils/utils.h"
 #include "Com/Hook.h"
 #include "Actuators/DynamixelGroup.h"
-
-
-class OrderData {
-
-private:
-	std::vector<String> orderData;
-public:
-	OrderData() : orderData(std::vector<String>()) {}
-	void push_back(const String& s) {
-		orderData.push_back(s);
-	}
-	const char* pop() {
-		const char* buffer = orderData.at(orderData.size()).c_str();
-		orderData.pop_back();
-		return buffer;
-	}
-	const char* at(uint8_t i) {
-		return orderData.at(i).c_str();
-	}
-	void clear() {
-		orderData.clear();
-	}
-	uint8_t size() {
-		return orderData.size();
-	}
-};
+#include "OrderData.h"
+#include "Orders.h"
 
 class HookList
 {
@@ -135,23 +106,22 @@ public:
 class OrderManager : public Singleton<OrderManager>
 {
 private:
-	SensorMgr &sensorMgr;
-	MotionControlSystem& motionControlSystem;
-	ActuatorsMgr &actuatorsMgr;
-	HookList hookList;
-	OrderData orderData;
 	bool basicDetectionTriggeredSent;
 	bool basicDetectionFinishedSent;
 	char readMessage[RX_BUFFER_SIZE];
     char charIDLastMessage;
-	bool HLWaiting;
-
-	//Variables booleennes pour envoi de données au HL
-	bool isSendingUS;
 
 public:
-
+	HookList hookList;
+	OrderData orderData;
+	SensorMgr &sensorMgr;
+	MotionControlSystem& motionControlSystem;
+	ActuatorsMgr &actuatorsMgr;
 	ComMgr& highLevel;
+
+    //Variables booleennes pour envoi de données au HL
+    bool isSendingUS;
+	bool HLWaiting;
 
     OrderManager();
 
