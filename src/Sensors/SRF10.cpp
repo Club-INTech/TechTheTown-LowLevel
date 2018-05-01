@@ -9,6 +9,7 @@ SRF10::SRF10(uint8_t id,uint8_t rangeByte,GAIN gain){
 
 bool SRF10::ping(){
   Wire.beginTransmission(real_addr);
+  Wire.write(REGISTER_REVISION);
   return !Wire.endTransmission(true);
 }
 
@@ -82,23 +83,21 @@ bool SRF10::update(){
   uint16_t data = 42;
   if( ping() )
   {
-    if( Wire.read() != 0xFF )
-    {
       Wire.beginTransmission(real_addr);
       Wire.write(REGISTER_RANGE);
       Wire.endTransmission();
       Wire.requestFrom(real_addr,2);
-      if( Wire.available() == 2)
+      if( Wire.available() >= 2)
       {
         data = Wire.read();
         data = data << 8;
-        data = data + Wire.read();
-        last_distance_measured = data;
+        data = data | Wire.read();
+        if(data)
+            last_distance_measured = data;
         waitingMeasure = false;
         return true;
       }
     }
-  }
   return false;
 }
 
