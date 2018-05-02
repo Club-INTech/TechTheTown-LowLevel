@@ -10,7 +10,7 @@ ComMgr::ComMgr()
     serial = new SerialInterface();
 }
 
-void ComMgr::sendUS(const std::vector<Average<uint16_t, AVERAGE_US_SIZE>> & data)
+void ComMgr::sendUS(const std::vector<Average<uint32_t, AVERAGE_US_SIZE>> & data)
 {
     String tmp = "";
     for(uint8_t i=0;i<data.size();i++){

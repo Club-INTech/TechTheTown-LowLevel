@@ -88,11 +88,6 @@ void loop(){
 		orderMgr.refreshUS();
         orderMgr.isHLWaiting() ? orderMgr.checkJumper() : void();
         USSend.check() ? orderMgr.sendUS() : void();
-		/*srf.request();
-		while( !srf.update() ){
-			Serial.println("rien");
-		}
-		Serial.println(srf.getDistance());*/
 
     }
 }

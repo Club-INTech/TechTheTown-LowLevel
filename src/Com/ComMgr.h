@@ -29,7 +29,7 @@ public:
     }
 
     /* ENVOI */
-    void sendUS(const std::vector<Average<uint16_t,AVERAGE_US_SIZE>>&);
+    void sendUS(const std::vector<Average<uint32_t,AVERAGE_US_SIZE>>&);
     void sendEvent(const char*);
     void sendPosition(const float*);
 

@@ -408,7 +408,6 @@ void MotionControlSystem::orderRawPwm(Side side, int16_t pwm) {
 		rightMotor.run(pwm);
 }
 
-
 void MotionControlSystem::stop() {
 
 	moving = false;
@@ -700,4 +699,11 @@ void MotionControlSystem::printValues() {
 	Serial.print("RightAvg - "); Serial.println(this->averageRightSpeed.value());
 	Serial.print("LeftPwm  - "); Serial.println(this->leftPWM);
 	Serial.print("RightPwm - "); Serial.println(this->rightPWM);
+}
+
+void MotionControlSystem::resetPIDErrors(){
+	leftSpeedPID.resetErrors();
+	rightSpeedPID.resetErrors();
+	translationPID.resetErrors();
+	rotationPID.resetErrors();
 }

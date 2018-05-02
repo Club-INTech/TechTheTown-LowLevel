@@ -92,7 +92,9 @@ bool SRF10::update(){
         data = Wire.read();
         data = data << 8;
         data = data | Wire.read();
-        if(data)
+        if(!data)
+            last_distance_measured = 0xFFFF;
+        else
             last_distance_measured = data;
         waitingMeasure = false;
         return true;

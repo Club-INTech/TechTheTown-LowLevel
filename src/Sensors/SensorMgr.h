@@ -32,7 +32,7 @@ private:
 	VL6180X sensorCubeAV;
 	VL6180X sensorCubeAR;
 
-	std::vector<Average<uint16_t,AVERAGE_US_SIZE>> distances;
+	std::vector<Average<uint32_t ,AVERAGE_US_SIZE>> distances;
 	uint8_t currentMeasuringUS = 0;
 	bool isMeasuring = false;
 	bool firstMeasure = true;

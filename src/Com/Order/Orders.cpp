@@ -59,25 +59,19 @@ void ORDER_T::impl(Args args)
 
 void ORDER_STOP::impl(Args args)
 {
+
     orderManager.motionControlSystem.stop();
     orderManager.highLevel.printfln(DEBUG_HEADER,"A priori, je m'arrête");
 }
 
 void ORDER_EMERGENCYSTOP::impl(Args args)
 {
-    orderManager.motionControlSystem.enableTranslationControl(false);
-    orderManager.motionControlSystem.enableRotationControl(false);
-    orderManager.motionControlSystem.setRawNullSpeed();
-    orderManager.highLevel.printfln(DEBUG_HEADER,"ARRET D'URGENCE EN COURS, DESACTIVATION ASSERV");
+
 }
 
 void ORDER_RESUMEEMERGENCYSTOP::impl(Args args)
 {
-    orderManager.highLevel.printfln(DEBUG_HEADER,"ARRET D'URGENCE EN COURS, DESACTIVATION ASSERV");
-    orderManager.motionControlSystem.stop();                             // On évite de revenir en arrière violamment
-    orderManager.motionControlSystem.enableTranslationControl(true);
-    orderManager.motionControlSystem.enableRotationControl(true);
-    orderManager.highLevel.printfln(DEBUG_HEADER,"REACTIVATION DE L'ASSERV APRES ARRET D'URGENCE");
+
 }
 
 void ORDER_CX::impl(Args args)

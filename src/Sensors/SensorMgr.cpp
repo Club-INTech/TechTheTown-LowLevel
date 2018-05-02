@@ -17,8 +17,8 @@ SensorMgr::SensorMgr()
 
 	for( uint8_t i = 0 ; i < NBR_OF_US_SENSOR ; i++ )
 	{
-		US[i] = new SRF10(i,40,SRF10::GAIN::G120);
-		distances.push_back(Average<uint16_t,AVERAGE_US_SIZE>());
+		US[i] = new SRF10(i,60,SRF10::GAIN::G120);
+		distances.push_back(Average<uint32_t ,AVERAGE_US_SIZE>());
 	}
 
 	 //puts sensorcubeAR in sleep mode

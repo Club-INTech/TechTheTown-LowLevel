@@ -223,6 +223,8 @@ public:
 	void manageStop();
 	void enableForcedMovement(bool);
 
+	void resetPIDErrors();
+
 };
 
 #endif
