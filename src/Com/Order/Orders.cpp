@@ -572,7 +572,7 @@ void ORDER_NH::impl(Args args)
 
         char hookOrder[RX_BUFFER_SIZE] = "";
 
-        for (int i = 6; i < nbr_args + 1; i++) {
+        for (int i = 6; i < nbr_args; i++) {
             strcat(hookOrder, args[i]);
             strcat(hookOrder, " ");
         }
