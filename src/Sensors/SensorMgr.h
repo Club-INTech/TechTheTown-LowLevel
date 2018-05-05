@@ -42,12 +42,15 @@ private:
 	bool jumperPlugged;
     bool isBasicDetectionOn;
 	bool basicBlocked;
+
+	float meanAmbiantLight = CUBE_AVAR_DETECTION_AMBIANT_LUX;
 public:
 
 	SensorMgr();
 	void refreshUS(MOVING_DIRECTION dir);
 	void checkCubeAV();
 	void checkCubeAR();
+	void measureMeanAmbientLight();
 	void sendUS();
 
 	bool isJumperEngaged();

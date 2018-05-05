@@ -61,10 +61,9 @@ void test()
  */
 
 void loop(){
-
 	OrderManager& orderMgr = OrderManager::Instance();
 
-    /* AX12 initialisation */
+    // AX12 initialisation
     orderMgr.execute("rlbAv");
 	orderMgr.execute("rlbAr");
     delay(1000);
@@ -73,10 +72,13 @@ void loop(){
     delay(1000);
 
 
-    /* MotionControlSystem */
+    // MotionControlSystem
     IntervalTimer motionControlInterruptTimer;
     motionControlInterruptTimer.priority(253);
     motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); // Setup de l'interruption d'asservissement
+
+	// Measure Ambient light
+	orderMgr.sensorMgr.measureMeanAmbientLight();
 
 
 	delay(1500);//Laisse le temps aux capteurs de clignotter leur ID
@@ -88,7 +90,6 @@ void loop(){
 		orderMgr.refreshUS();
         orderMgr.isHLWaiting() ? orderMgr.checkJumper() : void();
         USSend.check() ? orderMgr.sendUS() : void();
-
     }
 }
 

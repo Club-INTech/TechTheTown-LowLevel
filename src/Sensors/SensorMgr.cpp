@@ -126,7 +126,7 @@ void SensorMgr::refreshUS(MOVING_DIRECTION dir)
 
 void SensorMgr::checkCubeAV()
 {
-	if( sensorCubeAV.readRangeSingle() < CUBE_AV_DETECTION_RANGE_MM || sensorCubeAV.readAmbientSingleLux() < CUBE_AV_DETECTION_AMBIANT_LUX )
+	if( sensorCubeAV.readRangeSingle() < CUBE_AV_DETECTION_RANGE_MM || sensorCubeAV.readAmbientSingleLux() < meanAmbiantLight/2 )
 	{
 		highLevel.sendEvent("cubeDetectedAV");
 	}
@@ -138,7 +138,7 @@ void SensorMgr::checkCubeAV()
 
 void SensorMgr::checkCubeAR()
 {
-	if( sensorCubeAR.readRangeSingle() < CUBE_AR_DETECTION_RANGE_MM || sensorCubeAR.readAmbientSingleLux() < CUBE_AR_DETECTION_AMBIANT_LUX )
+	if( sensorCubeAR.readRangeSingle() < CUBE_AR_DETECTION_RANGE_MM || sensorCubeAR.readAmbientSingleLux() < meanAmbiantLight/2 )
 	{
 		highLevel.sendEvent("cubeDetectedAR");
 	}
@@ -146,6 +146,11 @@ void SensorMgr::checkCubeAR()
 	{
 		highLevel.sendEvent("noCubeDetectedAR");
 	}
+}
+
+void SensorMgr::measureMeanAmbientLight()
+{
+	meanAmbiantLight = (sensorCubeAV.readAmbientSingleLux() + sensorCubeAR.readAmbientSingleLux())/2;
 }
 
 //Contacteurs et Jumper
