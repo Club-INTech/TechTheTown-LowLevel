@@ -39,7 +39,6 @@ void ORDER_D::impl(Args args)
     int16_t deplacement = strtod(args[0], nullptr);
     orderManager.highLevel.printfln(DEBUG_HEADER,"distance : %d",deplacement);
     orderManager.motionControlSystem.orderTranslation(deplacement);
-    orderManager.sensorMgr.resetBasicBlocked();
 }
 
 void ORDER_T::impl(Args args)
@@ -54,7 +53,6 @@ void ORDER_T::impl(Args args)
     MotionControlSystem::RotationWay rotationWay = MotionControlSystem::FREE;
 
     orderManager.motionControlSystem.orderRotation(angle, rotationWay);
-    orderManager.sensorMgr.resetBasicBlocked();
 }
 
 void ORDER_STOP::impl(Args args)
@@ -547,14 +545,14 @@ void ORDER_CCAR::impl(Args args)
 
 void ORDER_BDE::impl(Args args)
 {
-    orderManager.sensorMgr.enableBasicDetection(true);
-    orderManager.sensorMgr.resetBasicBlocked();
+    //orderManager.sensorMgr.enableBasicDetection(true);
+    //orderManager.sensorMgr.resetBasicBlocked();
 }
 
 void ORDER_BDD::impl(Args args)
 {
-    orderManager.sensorMgr.enableBasicDetection(false);
-    orderManager.sensorMgr.resetBasicBlocked();
+    //orderManager.sensorMgr.enableBasicDetection(false);
+    //orderManager.sensorMgr.resetBasicBlocked();
 }
 
 void ORDER_NH::impl(Args args)

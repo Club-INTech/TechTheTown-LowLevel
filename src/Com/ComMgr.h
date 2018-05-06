@@ -9,7 +9,9 @@
 #include "Interfaces/EthernetInterface.h"
 #include "Utils/Singleton.hpp"
 #include "Utils/define_com_options.h"
+#include "Utils/Median.h"
 #include <map>
+#include <array>
 
 class ComMgr : public Singleton<ComMgr>
 {
@@ -29,7 +31,7 @@ public:
     }
 
     /* ENVOI */
-    void sendUS(const std::vector<Average<uint32_t,AVERAGE_US_SIZE>>&);
+    void sendUS(const std::array<Median<uint16_t,MEDIAN_US_SIZE>,NBR_OF_US_SENSOR>&);
     void sendEvent(const char*);
     void sendPosition(const float*);
 

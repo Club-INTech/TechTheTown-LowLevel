@@ -13,12 +13,10 @@ SensorMgr::SensorMgr()
 	CORE_PIN16_CONFIG = PORT_PCR_MUX(2)|PORT_PCR_ODE|PORT_PCR_SRE|PORT_PCR_DSE;
 	CORE_PIN17_CONFIG = PORT_PCR_MUX(2)|PORT_PCR_ODE|PORT_PCR_SRE|PORT_PCR_DSE;
 
-	distances.reserve(NBR_OF_US_SENSOR);
-
 	for( uint8_t i = 0 ; i < NBR_OF_US_SENSOR ; i++ )
 	{
 		US[i] = new SRF10(i,60,SRF10::GAIN::G80);
-		distances.push_back(Average<uint32_t ,AVERAGE_US_SIZE>());
+		distances[i] = Median<uint16_t ,MEDIAN_US_SIZE>();
 	}
 
 	 //puts sensorcubeAR in sleep mode
@@ -72,35 +70,6 @@ void SensorMgr::refreshUS(MOVING_DIRECTION dir)
 		{
             uint16_t currentDistance = US[currentMeasuringUS]->getDistance();
 			distances[currentMeasuringUS].add(currentDistance);
-
-			/*
-			 * Gestion des fronts pour la basic detection
-			 * On check les fronts montants (Ennemi qui arrive dans la zone) uniquement si on se déplace,
-			 * si on est en basicDetection (Obviously) et qu'on a rien détecté précédemment.
-			 *
-			 * On test le front descendant à partir du moment où on a eu un front montant (Obviously).
-			 * Il n'est validé que si toutes les valeur mesurées sont passées au dessus du seuil
-			 */
-
-			if(currentDistance <= BASIC_DETECTION_DISTANCE && currentDistance != 0
-			   && measure_direction != MOVING_DIRECTION::NONE && isBasicDetectionOn && !basicBlocked)
-            {
-                basicBlocked=true;
-            }
-			else
-			{
-				for(int i=0;i<NBR_OF_US_SENSOR;i++)
-				{
-					if(US[i]->getDistance()<BASIC_DETECTION_DISTANCE && US[i]->getDistance() != 0)
-					{
-						break;
-					}
-					if(i==3)
-					{
-						basicBlocked = false;
-					}
-				}
-			}
 
 			isMeasuring=false;
 			if( measure_direction == MOVING_DIRECTION::FORWARD )
@@ -182,19 +151,4 @@ bool SensorMgr::isReadyToGo()
 bool SensorMgr::isCont1Engaged()
 {
 	return digitalRead(PIN_CONT1);
-}
-
-void SensorMgr::enableBasicDetection(bool newStatus)
-{
-    isBasicDetectionOn = newStatus;
-}
-
-int8_t SensorMgr::isBasicBlocked()
-{
-	return basicBlocked;
-}
-
-void SensorMgr::resetBasicBlocked()
-{
-	basicBlocked = false;
 }

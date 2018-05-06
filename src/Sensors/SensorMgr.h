@@ -4,12 +4,11 @@
 #define _SENSORMGR_h
 
 #include <Arduino.h>
-#include <vector>
 #include <array>
 #include <algorithm>
 #include <i2c_t3.h>
 
-#include "Utils/average.hpp"
+#include "Utils/Median.h"
 #include "Utils/Singleton.hpp"
 #include "Utils/pin_mapping.h"
 #include "MotionControl/MotionControlSystem.h"
@@ -32,7 +31,7 @@ private:
 	VL6180X sensorCubeAV;
 	VL6180X sensorCubeAR;
 
-	std::vector<Average<uint32_t ,AVERAGE_US_SIZE>> distances;
+	std::array<Median<uint16_t ,MEDIAN_US_SIZE>,NBR_OF_US_SENSOR> distances;
 	uint8_t currentMeasuringUS = 0;
 	bool isMeasuring = false;
 	bool firstMeasure = true;
@@ -40,7 +39,6 @@ private:
 	MOVING_DIRECTION measure_direction;
 
 	bool jumperPlugged;
-    bool isBasicDetectionOn;
 	bool basicBlocked;
 
 	float meanAmbiantLight = CUBE_AVAR_DETECTION_AMBIANT_LUX;
@@ -57,9 +55,6 @@ public:
 	bool isReadyToGo();
 	bool isCont1Engaged();
 
-    void enableBasicDetection(bool);
-	int8_t isBasicBlocked();
-	void resetBasicBlocked();
 };
 
 #endif

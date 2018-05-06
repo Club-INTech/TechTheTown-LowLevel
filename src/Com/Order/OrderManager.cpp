@@ -51,22 +51,6 @@ void OrderManager::communicate() {
         else if (motionControlSystem.sentMoveAbnormal() && !motionControlSystem.isMoveAbnormal()) {//Si on est plus bloqué et qu'on avait prévenu
             motionControlSystem.setMoveAbnormalSent(false);
         }
-        int8_t basicDetectionCheck = sensorMgr.isBasicBlocked();
-        if(basicDetectionCheck) {
-            if (!basicDetectionTriggeredSent) {
-                highLevel.sendEvent("basicDetectionTriggered");
-                basicDetectionTriggeredSent = true;
-                basicDetectionFinishedSent = false;
-            }
-        }
-        else if(!basicDetectionCheck) {
-            if (!basicDetectionFinishedSent && basicDetectionTriggeredSent) {
-                highLevel.sendEvent("basicDetectionFinished");
-                basicDetectionTriggeredSent = false;
-                basicDetectionFinishedSent = true;
-            }
-
-        }
     }
 
     if (checkHooksTimer.check() && hooksEnabled)
