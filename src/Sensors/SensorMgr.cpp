@@ -27,6 +27,7 @@ SensorMgr::SensorMgr()
 	sensorCubeAV.init();
 	sensorCubeAV.setAddress(CUBE_AV_DETECTION_ADDR);
 	sensorCubeAV.configureDefault();
+	sensorCubeAV.setRangeMaxConvergenceTime(63);
 	sensorCubeAV.setAmbiantGain(VL6180X::ALS_GAIN::G40);
 	delay(50);
 	//wake up sensorcubeAR
@@ -35,6 +36,7 @@ SensorMgr::SensorMgr()
 	//init sensorCubeAR at defaultAddress
 	sensorCubeAR.init();
 	sensorCubeAR.configureDefault();
+	sensorCubeAR.setRangeMaxConvergenceTime(63);
     sensorCubeAR.setAmbiantGain(VL6180X::ALS_GAIN::G40);
 
 	jumperPlugged = isJumperEngaged();

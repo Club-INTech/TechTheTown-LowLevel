@@ -120,6 +120,10 @@ class VL6180X
     void setScaling(uint8_t new_scaling);
     inline uint8_t getScaling(void) { return scaling; }
 
+    void setRangeMaxConvergenceTime( uint8_t time_ms );
+    inline uint8_t getRangeMaxConvergenceTime() { return readReg(SYSRANGE__MAX_CONVERGENCE_TIME); }
+
+
     inline void setAmbiantGain(ALS_GAIN _gain) { writeReg(SYSALS__ANALOGUE_GAIN,_gain);als_gain=_gain; }
     float getAmbiantGain();
     inline void setSoftwareOffset(int8_t offset){ software_offset=offset; }

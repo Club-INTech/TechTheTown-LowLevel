@@ -409,6 +409,12 @@ bool VL6180X::timeoutOccurred()
   return tmp;
 }
 
+void VL6180X::setRangeMaxConvergenceTime(uint8_t time_ms)
+{
+  if(time_ms > 63)time_ms=63;
+  writeReg(SYSRANGE__MAX_CONVERGENCE_TIME,time_ms);
+}
+
 /*
 void VL6180X::enableThreshRangeMode(uint8_t value, bool condition , uint16_t refresh_period )
 {
