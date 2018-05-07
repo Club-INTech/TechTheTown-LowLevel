@@ -8,7 +8,8 @@ MotionControlSystem::MotionControlSystem() :
 											leftSpeedPID(&currentLeftSpeed, &leftPWM, &leftSpeedSetpoint),
 											translationPID(&currentDistance, &translationSpeed, &translationSetpoint),
 											rotationPID(&currentAngle, &rotationSpeed, &rotationSetpoint),
-											averageLeftSpeed(), averageRightSpeed() {
+                                            maxAcceptableTranslationSpeed(10000), maxAcceptableRotationSpeed(6000),
+											averageLeftSpeed(), averageRightSpeed(){
 	translationControlled = true;
 	rotationControlled = true;
 	leftSpeedControlled = true;
@@ -33,30 +34,33 @@ MotionControlSystem::MotionControlSystem() :
 	translation = true;
 	direction = NONE;
 
+    wasMoving = false;
+
 	leftSpeedPID.setOutputLimits(-255, 255);
 	rightSpeedPID.setOutputLimits(-255, 255);
 
 
     maxSpeed = 12000;				// Limite globale de la vitesse (Rotation + Translation)
-    maxSpeedTranslation = 10000;
-    maxSpeedRotation = 5000;
+	maxSpeedTranslation = maxAcceptableTranslationSpeed;
+	maxSpeedRotation = maxAcceptableRotationSpeed;
 
 
-	delayToStop = 100;              // Temps a l'arret avant de considérer un blocage
-    toleranceRadiale = 10;          // Rayon du cercle de tolérance du point à point avant de considérer une droite
+	delayToStop = 25;              // Temps a l'arret avant de considérer un blocage
+	toleranceRadiale = 10;          // Rayon du cercle de tolérance du point à point avant de considérer une droite
 	toleranceAngulairePtP = 0.1;
-    toleranceTranslation = 50;
+	toleranceTranslation = 50;
 	toleranceRotation = 100;
-	toleranceSpeed = 24;			// 48 Proportionnellement aux 2A
+	toleranceSpeed = 24;
 	toleranceSpeedEstablished = 120; // Doit être la plus petite possible, sans bloquer les trajectoires courbes 50
 	delayToEstablish = 100;
 	toleranceDifferentielle = 4500;  // Pour les trajectoires "normales", verifie que les roues ne font pas nawak chacunes de leur cote.
 	toleranceDerivative = 0; 		// Doit être suffisament faible pour être fiable mais suffisament élevée pour arrêter contre un mur
 
+
     leftSpeedPID.setTunings(0.2165,0.00005,0.414);
     rightSpeedPID.setTunings(0.225,0.00005,0.4121);
-    translationPID.setTunings(6.5,0,1.08);
-    rotationPID.setTunings(15,0.00001,0);
+	translationPID.setTunings(6.5,0,1.08);
+	rotationPID.setTunings(15,0.00001,0);
 
 
 	maxAcceleration = 30;
@@ -241,12 +245,8 @@ bool MotionControlSystem::isRightWheelSpeedAbnormal() {
 	return (ABS(rightSpeedPID.getError())>toleranceSpeedEstablished);
 }
 
-void MotionControlSystem::enableForcedMovement() {
-	forcedMovement = true;
-}
-
-void MotionControlSystem::disableForcedMovement() {
-	forcedMovement = false;
+void MotionControlSystem::enableForcedMovement(bool b) {
+	forcedMovement = b;
 }
 
 void MotionControlSystem::disablePointToPoint()
@@ -427,6 +427,7 @@ void MotionControlSystem::orderTranslation(int32_t mmDistance)
 	{
 		translationPID.resetErrors();
 		moving = true;
+        wasMoving = true;
 	}
 
 	direction = (mmDistance < 0) ? BACKWARD : FORWARD;
@@ -440,7 +441,7 @@ void MotionControlSystem::orderRotation(float targetAngleRadian, RotationWay rot
  * Ordre de rotation
  * @param targetAngleRadian : Angle cible
  * @param rotationWay : Stratégie de rotation (FREE, TRIGO, ANTITRIGO)
- */
+ **/
 {
 	static int32_t deuxPiTick = (int32_t)(2 * PI / TICK_TO_RADIAN);
 	static int32_t piTick = (int32_t)(PI / TICK_TO_RADIAN);
@@ -488,6 +489,7 @@ void MotionControlSystem::orderRotation(float targetAngleRadian, RotationWay rot
 	{
 		rotationPID.resetErrors();
 		moving = true;
+        wasMoving = true;
 	}
 	direction = NONE;
 	moveAbnormal = false;
@@ -511,7 +513,6 @@ void MotionControlSystem::orderRawPwm(Side side, int16_t pwm) {
 	else
 		rightMotor.run(pwm);
 }
-
 
 void MotionControlSystem::stop() {
 	Serial.print(millis());
@@ -541,6 +542,8 @@ void MotionControlSystem::stop() {
 
 	direction = NONE;
 }
+
+
 
 bool MotionControlSystem::isMoving() const
 {
@@ -590,6 +593,7 @@ void MotionControlSystem::setRawNegativeRotationSpeed() {
 }
 
 void MotionControlSystem::setRawNullSpeed() {
+	moving = false;
 	rotationSpeed = 0;
 	translationSpeed = 0;
 }
@@ -600,13 +604,13 @@ void MotionControlSystem::setRawNullSpeed() {
 
 float MotionControlSystem::getAngleRadian() const
 {
-	float angleMod2 = modulo(currentAngle + (int32_t)(originalAngle/TICK_TO_RADIAN),(int32_t)(2 * PI / TICK_TO_RADIAN)) * TICK_TO_RADIAN;
-	float angleFinal = angleMod2;
-	if(angleMod2 > PI)
-	{
-		angleFinal = angleMod2 - (float)TWO_PI;
-	}
-	return(angleFinal);
+    float angleMod2 = modulo(currentAngle + (int32_t)(originalAngle/TICK_TO_RADIAN),(int32_t)(2 * PI / TICK_TO_RADIAN)) * TICK_TO_RADIAN;
+    float angleFinal = angleMod2;
+    if(angleMod2 > PI)
+    {
+        angleFinal = angleMod2 - (float)TWO_PI;
+    }
+    return(angleFinal);
 }
 
 void MotionControlSystem::setOriginalAngle(float newAngle)
@@ -637,12 +641,18 @@ void MotionControlSystem::setY(float newY)
 void MotionControlSystem::setTranslationSpeed(float raw_speed)
 {
 	// Conversion de raw_speed de mm / s en ticks / s
-	double speed = raw_speed / TICK_TO_MM;
+	float speed = raw_speed / TICK_TO_MM;
 
-	if (speed < 0) { // SINGEPROOF
+    if (speed < 0)
+    { // SINGEPROOF
 		maxSpeedTranslation = 0;
 	}
-	else {
+    else if(speed>maxAcceptableTranslationSpeed)
+    {
+        maxSpeedTranslation = maxAcceptableTranslationSpeed;
+    }
+    else
+    {
 		maxSpeedTranslation = (int32_t)speed;
 	}
 }
@@ -650,13 +660,19 @@ void MotionControlSystem::setTranslationSpeed(float raw_speed)
 void MotionControlSystem::setRotationSpeed(float raw_speed)
 {
 	// Conversion de raw_speed de rad/s en ticks/s
-	int speed = raw_speed / TICK_TO_RADIAN;
+	float speed = raw_speed / TICK_TO_RADIAN;
 
-	if (speed < 0) {
+    if (speed < 0)
+    {
 		maxSpeedRotation = 0;
 	}
-	else {
-		maxSpeedRotation = speed;
+    else if(speed>maxAcceptableRotationSpeed)
+    {
+        maxSpeedRotation = maxAcceptableRotationSpeed;
+    }
+    else
+    {
+		maxSpeedRotation = (int32_t)speed;
 	}
 }
 
@@ -721,7 +737,7 @@ void MotionControlSystem::setRightSpeedTunings(float kp, float ki, float kd) {
 	rightSpeedPID.setTunings(kp, ki, kd);
 }
 
-void MotionControlSystem::getPWMS(uint32_t& left, uint32_t& right) {
+void MotionControlSystem::getPWMS(int32_t& left, int32_t& right) {
 	left = leftPWM;
 	right = rightPWM;
 }
@@ -804,4 +820,9 @@ void MotionControlSystem::printValues() {
 	Serial.print("RightPwm - "); Serial.println(this->rightPWM);
 }
 
-
+void MotionControlSystem::resetPIDErrors(){
+	leftSpeedPID.resetErrors();
+	rightSpeedPID.resetErrors();
+	translationPID.resetErrors();
+	rotationPID.resetErrors();
+}

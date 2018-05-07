@@ -388,3 +388,4 @@ Supprimerait platformio.ini
 .vscode/settings.json
 .vscode/tasks.json
 lib/readme.txt
+.vscode/*.db

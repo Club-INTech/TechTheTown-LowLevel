@@ -78,6 +78,8 @@ private:
 	volatile int32_t maxSpeed;                // definit la vitesse maximal des moteurs du robot
 	volatile int32_t maxSpeedTranslation;    // definit la consigne max de vitesse de translation envoiée au PID (trapèze)
 	volatile int32_t maxSpeedRotation;        // definit la consigne max de vitesse de rotation envoiée au PID (trapèze)
+    const int32_t maxAcceptableTranslationSpeed;
+    const int32_t maxAcceptableRotationSpeed;
 
 											  //	Limitation d'accélération
 	volatile int32_t maxAcceleration;
@@ -166,7 +168,7 @@ public:
     /* Vitesse */
 	void setLeftSpeedTunings(float, float, float);
 	void setRightSpeedTunings(float, float, float);
-	void getPWMS(uint32_t&  left, uint32_t&  right);
+	void getPWMS(int32_t&  left, int32_t&  right);
 	void getSpeedErrors(float & leftProp, float & leftIntegral, float & leftDerivative, float & rightProp, float & rightIntegral, float & rightDerivative);
 	void rawWheelSpeed(uint16_t speed, int32_t& leftsetpoint, int32_t& rightsetpoint);
 	void getSpeedSetpoints(int32_t & left, int32_t & right);
@@ -230,10 +232,11 @@ public:
 	void enableRotationControl(bool);
 	void enableSpeedControl(bool);
 	void manageStop();
-	void enableForcedMovement();
-	void disableForcedMovement();
+	void enableForcedMovement(bool);
+
 	void disablePointToPoint();
 
+	void resetPIDErrors();
 };
 
 #endif

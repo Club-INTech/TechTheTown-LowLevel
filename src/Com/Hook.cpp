@@ -3,9 +3,9 @@
 #include "Hook.h"
 
 
-Hook::Hook(uint8_t id, uint32_t x, uint32_t y, uint32_t r, float alpha, float tolerance, const char* o) : hookID(id), zoneX(x), zoneY(y), zoneR(r),angleTarget(alpha),angleTolerance(tolerance), order(o)
+Hook::Hook(uint8_t id, int32_t x, uint32_t y, uint32_t r, float alpha, float tolerance, const char* o) : hookID(id), zoneX(x), zoneY(y), zoneR(r),angleTarget(alpha),angleTolerance(tolerance), order(o)
 {
-	active = true;
+	active = false;
 	ready = false;
 }
 
@@ -13,23 +13,47 @@ Hook::Hook(uint8_t id, uint32_t x, uint32_t y, uint32_t r, float alpha, float to
 
 bool Hook::check(uint32_t currentX, uint32_t currentY, float currentAngle)
 {
+	if(ABS(currentAngle-angleTarget) > PI)
+	{
+		if(angleTarget<0)
+		{
+			currentAngle -= TWO_PI;
+		}
+		else
+		{
+			currentAngle += TWO_PI;
+		}
+	}
 #if DEBUG
-	Serial.println("On fait un check des hooks avec les positions suivantes");
-	Serial.print("Angle actuel: ");
-	Serial.println(currentAngle);
-	Serial.print("Angle cible: ");
-	Serial.println(angleTarget);
-	Serial.print("Delta: ");
-	Serial.println(ABS(currentAngle-angleTarget));
-	Serial.print("Tolérance: ");
-	Serial.println(angleTolerance);
-    Serial.print("Ordre à executer: ");
-    Serial.println(order);
-	Serial.print("======");
-    Serial.print((zoneX-currentX)*(zoneX-currentX) + (zoneY - currentY)*(zoneY - currentY) <= zoneR*zoneR
-                   && (ABS(currentAngle-angleTarget) <= angleTolerance));
-	Serial.println("=====");
+
+	static EthernetMgr& highLevel = EthernetMgr::Instance();
+
+	highLevel.println("On fait un check des hooks avec les positions suivantes");
+	highLevel.print("Position cibleX: ");
+	highLevel.println(zoneX);
+	highLevel.print("Position X: ");
+	highLevel.println(currentX);
+	highLevel.print("Position cibleY: ");
+	highLevel.println(zoneY);
+	highLevel.print("Position Y: ");
+	highLevel.println(currentY);
+	highLevel.print("Angle actuel: ");
+	highLevel.println(currentAngle);
+	highLevel.print("Angle cible: ");
+	highLevel.println(angleTarget);
+	highLevel.print("Delta: ");
+	highLevel.println(ABS(currentAngle-angleTarget));
+	highLevel.print("Tolérance: ");
+	highLevel.println(angleTolerance);
+    highLevel.print("Ordre à executer: ");
+    highLevel.println(order);
+	highLevel.print("Hook pos state:");
+	highLevel.println((zoneX-currentX)*(zoneX-currentX) + (zoneY - currentY)*(zoneY - currentY) <= zoneR*zoneR);
+	highLevel.print("Hook angle state:");
+    highLevel.println(ABS((currentAngle+PI)-(angleTarget+PI)) <= angleTolerance);
+	highLevel.println("=====");
 #endif
+
 	return ((zoneX-currentX)*(zoneX-currentX) + (zoneY - currentY)*(zoneY - currentY) <= zoneR*zoneR
 			&& (ABS(currentAngle-angleTarget) <= angleTolerance));
 }

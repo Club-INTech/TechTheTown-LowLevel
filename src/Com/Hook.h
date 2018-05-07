@@ -3,15 +3,15 @@
 #ifndef _HOOK_h
 #define _HOOK_h
 
-
+#include "Interfaces/EthernetInterface.h"
 #include "WProgram.h"
 
 class Hook
 {
 private:
 	const uint8_t hookID;
-	const uint32_t zoneX;
-	const uint32_t zoneY;
+	const int32_t zoneX;
+	const uint32_t zoneY; //Y jamais < 0
 	const uint32_t zoneR;
 	const float angleTarget;
 	const float angleTolerance;
@@ -21,7 +21,7 @@ private:
 	const String order;
 
 public:
-	Hook(uint8_t, uint32_t, uint32_t, uint32_t, float, float, const char*);
+	Hook(uint8_t, int32_t, uint32_t, uint32_t, float, float, const char*);
 	bool check(uint32_t, uint32_t, float);
 
 	const String getOrder();

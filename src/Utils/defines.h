@@ -4,7 +4,7 @@
 #define _DEFINES_h
 
 #include <Arduino.h>
-#include "define_debug.h"
+#include "define_com_options.h"
 
 /**
 *COMMUNICATION
@@ -15,16 +15,18 @@
 constexpr uint8_t RX_BUFFER_SIZE = 64; // Taille max des messages
 constexpr uint8_t RX_WORD_COUNT = 10; // Nombre de mots max par ordre
 
-constexpr uint8_t NBR_OF_US_SENSOR = 0;
+constexpr uint8_t NBR_OF_US_SENSOR = 4;
 
 // Divers headers de communication pour l'éthernet
 constexpr uint8_t HEADER_LENGTH = 2;
 
-constexpr char STD_HEADER[2] = {0x40,0x40};
-constexpr char DEBUG_HEADER[2] = {0x02,0x20};
-constexpr char EVENT_HEADER[2] = {0x14,0x17};
-constexpr char SENSOR_HEADER[2] = {0x01,0x06};
-constexpr char POSITION_HEADER[2] = {0x07,0x05};
+using Header = const char[HEADER_LENGTH];
+Header STD_HEADER = {0x40,0x40};
+Header DEBUG_HEADER = {0x02,0x20};
+Header EVENT_HEADER = {0x14,0x17};
+Header SENSOR_HEADER = {0x01,0x06};
+Header POSITION_HEADER = {0x07,0x05};
+Header ACK_HEADER = {0x06,0x1A};
 
 
 // Séparateurs des mots d'ordres
@@ -53,8 +55,20 @@ constexpr float     TICK_TO_RADIAN = static_cast<float>(TICK_TO_MM/DISTANCE_COD_
 // Nombre de valeurs par moyenne
 constexpr uint8_t   AVERAGE_SPEED_SIZE =        25;
 constexpr uint8_t   AVERAGE_DERIVATIVE_SIZE =   100;
+constexpr uint8_t   AVERAGE_US_SIZE =           5;
 
 constexpr float     WHEEL_DISTANCE_TO_CENTER =  145.1;
 constexpr uint8_t   TOLERANCY =                 50;
+
+/**
+*CAPTEURS
+*/
+constexpr uint8_t   CUBE_AV_DETECTION_ADDR = 0x10;
+
+constexpr float     CUBE_AV_DETECTION_RANGE_MM = 100;
+constexpr float     CUBE_AR_DETECTION_RANGE_MM = 100;
+constexpr float     CUBE_AVAR_DETECTION_AMBIANT_LUX = 15;
+
+constexpr uint16_t BASIC_DETECTION_DISTANCE = 30;
 
 #endif

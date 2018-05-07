@@ -5,12 +5,13 @@
 *
 **/
 
-#include "Com/OrderManager.h"
+#include "Com/Order/OrderManager.h"
 
 
 void setup() {
+
 	/* Série */
-	Serial.begin(115200);
+	Serial.begin(9600);
     Serial.flush();
 	Serial.println("Série OK");
 	delay(250);
@@ -54,7 +55,6 @@ void motionControlInterrupt() {
 	compteurDeLavage++;
 }
 
-
 void blink(){
 	static int32_t t=0;
 	if(millis()-t>500){
@@ -62,16 +62,23 @@ void blink(){
 		digitalWrite(LED_BUILTIN,!digitalRead(LED_BUILTIN));
 	}
 }
+
+void test()
+{
+	Serial.println("coucou");
+	delay(200);
+}
 /**
  * Boucle principale, y est géré:
  * La communication HL
  * Les capteurs
  * Divers initialisations et instanciations
  */
+
 void loop(){
 	OrderManager& orderMgr = OrderManager::Instance();
 
-    /* AX12 initialisation */
+    // AX12 initialisation
     orderMgr.execute("rlbAv");
     orderMgr.execute("rlbAr");
     delay(1000);
@@ -79,11 +86,12 @@ void loop(){
     orderMgr.execute("flpAr");
     delay(1000);
 
-    delay(2000);
 
-    /* MotionControlSystem */
-    IntervalTimer motionControlInterruptTimer;
-    motionControlInterruptTimer.priority(253);
+    delay(2000);
+    // MotionControlSystem
+
+	IntervalTimer motionControlInterruptTimer;
+	motionControlInterruptTimer.priority(253);
     motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); // Setup de l'interruption d'asservissement
 
 
@@ -171,12 +179,20 @@ void loop(){
 //	delay(2000);*/
 //    orderMgr.execute("demo");
 
+
+	// Measure Ambient light
+	orderMgr.sensorMgr.measureMeanAmbientLight();
+
+
+	delay(1500);//Laisse le temps aux capteurs de clignotter leur ID
+
+    static Metro USSend = Metro(100);
+
     while (true) {
         orderMgr.communicate();
-        /*if(i%100==0)
-            orderMgr.execute("transError");
-        i++;*/
-//		 orderMgr.refreshUS();
+//		orderMgr.refreshUS();
+        orderMgr.isHLWaiting() ? orderMgr.checkJumper() : void();
+//        USSend.check() ? orderMgr.sendUS() : void();
     }
 
 }

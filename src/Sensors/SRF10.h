@@ -8,7 +8,7 @@
 class SRF10 : public AbstractI2CSensorUS
 {
 private:
-    uint8_t real_addr = BASE_OFFSET_ADDRESS;
+    uint16_t real_addr = BASE_OFFSET_ADDRESS;
     uint16_t last_distance_measured = 0xFFFF;
     bool waitingMeasure = false;
 
@@ -42,7 +42,7 @@ private:
       G700 = 0x10
     } Gain;
 
-    SRF10(uint8_t addr,uint8_t rangeByte,GAIN gain);  /* 0 <= addr < 16 */
+    SRF10(uint8_t id,uint8_t rangeByte,GAIN gain);  /* 0 <= id < 16 */
     /*GAIN 100 et range 255 good */
 
     bool ping();
@@ -51,7 +51,8 @@ private:
     void setMaxRangeByte(uint8_t range);
     void setMaxGain(GAIN gain);
 
-    void changeAddressTo(uint8_t new_addr);
+    void changeIdTo(uint8_t id);
+    void changeAddressTo(uint8_t addr);
 
     void request();
     bool update();

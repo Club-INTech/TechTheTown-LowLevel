@@ -5,13 +5,14 @@ Au boulot les 1As !
 
 - [x] Communication Ethernet de base
 - [x] Ordres Des Actionneurs
-- [ ] Asservissement
+- [x] Asservissement
+- [ ] Asservissement encore meilleur
 - [x] Capteurs
 - [x] Hooks
 - [x] Canal de Position (établir la fréquence d'envoie et le header associé avec le HL) & détection de fin de mouvement
 - [x] Détection des blocages physiques et transmission sur le canal Event
-- [ ] Mise en place de la basic Detection (arrêt si obstacle trop proche)
-- [ ] Fusion de la gestion Série/Ethernet
+- [x] Mise en place de la basic Detection (Envoi d'event si obstacle trop proche)
+- [x] Fusion de la gestion Série/Ethernet
 - [ ] Gérer les ordres grâce à une classe pour que ce soit propre
 - [ ] Mise en place de cas d'erreur explicites et plus nombreux pour le HL
 - [ ] MotionControl point à point(avec réorientation progressive)
@@ -25,11 +26,12 @@ Au boulot les 1As !
 |   Ordres  |                       Actions                      |
 |:---------:|:--------------------------------------------------:|
 |     ?     |                     Ping le LL                     |
-|    sus    |                    Switch les US                   |
+|     j     |       Active l'attente de l'activation du jumper   |
+|    sus    |    Switch les US ou choisit leur état (on/off)     |
 |     f     |                 Check le mouvement                 |
 |    ?xyo   |               Position + Orientation               |
 |     d     |                  Translate de x mm                 |
-|     t     |                   Tourne de α rad                  |
+|     t     | Tourne de α rad, dans le sens demandé ou librement |
 |    stop   |                        Stop                        |
 |     cx    |                   Set x d'origine                  |
 |     cy    |                   Set y d'origine                  |
@@ -50,12 +52,12 @@ Au boulot les 1As !
 |    cod    |            Retourne les ticks de codeuse           |
 |  pfdebug  |            Info de debug sur la position           |
 |   rawpwm  |        Demande un PWM brut aux deux moteurs        |
-|   getpwn  |          Retourne le PWN des deux moteurs          |
+|   getpwn  |          Retourne le PWM des deux moteurs          |
 |   errors  |         Retourne les erreurs d'incertitude         |
 |rawdistance|         Retourne la distance brute en ticks        |
 |  rawspeed |               Vitesse brute des roues              |
 | rawposdata|         Pos x,y,α; vL,vR, targetvL,targetvR        |
-| monthlery |                Mode de présentation                |
+| montlhery |                Mode de présentation                |
 |     av    |                       Avance                       |
 |     rc    |                       Recule                       |
 |     td    |                   Tourne à droite                  |
@@ -64,7 +66,8 @@ Au boulot les 1As !
 |     nh    | Créé un nouveau hook (id,x,y,r,α,tolerance,action) |
 |     eh    |                   Active le hook                   |
 |     dh    |                  Désactive le hook                 |
-
+|     emergencyStop     |  Arrète brutalement le robot et ***DESACTIVE*** l'asserv |
+|  resumeEmergencyStop  |     Redemarre l'asserv après un emergencyStop      |
 
 #### ORDRES DE CONTRÔLE D'ACTION
 
@@ -76,22 +79,26 @@ Au boulot les 1As !
 |    AXGs   |           Modifie la vitesse d'un groupe           |
 |    alp    |                  Active la pompe                   |
 |    dlp    |                 Désactive la pompe                 |
-|  blbAbei  |         Baisse le bras avant pour abeille          |
+|  blbAvbei |         Baisse le bras avant pour abeille          |
 |   blbAv   |                Baisse le bras avant                |
 |   rlbAv   |                Relève le bras avant                |
 |   flpAv   |                Ferme la porte avant                |
 |   olpAv   |                Ouvre la porte avant                |
-|   tlpAv   |                Tilt la porte avant                 |
+|  olpAvp   |          Ouvre légèrement la porte avant           |
 |    aeAv   |            Active l'électrovanne avant             |
 |    deAv   |           Désactive l'électrovanne avant           |
+|  blbArbei |         Baisse le bras arrière pour abeille        |
 |   blbAr   |               Baisse le bras arrière               |
 |   rlbAr   |               Relève le bras arrière               |
 |   flpAr   |               Ferme la porte arrière               |
 |   olpAr   |               Ouvre la porte arrière               |
-|   tlpAr   |               Tilt la porte arrière                |
+|  olpArp   |          Ouvre légèrement la porte arrière         |
 |    aeAr   |           Active l'électrovanne arrière            |
 |    deAr   |          Désactive l'électrovanne arrière          |
-
+|    ccAv   |                Check cube Avant                    |
+|    ccAr   |                Check cube Arriere                  |
+|    bde    |             Active la basic detection              |
+|    bdd    |           Désactive la basic detection             |
 
 ### ORDRES SPECIFIQUES LL
 
