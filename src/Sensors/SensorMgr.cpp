@@ -15,7 +15,7 @@ SensorMgr::SensorMgr()
 
 	for( uint8_t i = 0 ; i < NBR_OF_US_SENSOR ; i++ )
 	{
-		US[i] = new SRF10(i,60,SRF10::GAIN::G80);
+		US[i] = new SRF10(i,20,SRF10::GAIN::G80);
 		distances[i] = Median<uint16_t ,MEDIAN_US_SIZE>();
 	}
 
