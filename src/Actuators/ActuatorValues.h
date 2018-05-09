@@ -28,7 +28,7 @@ constexpr int armBaseSpeed = 250;
  */
 
 constexpr int frontLowCubes = 90;
-constexpr int frontLowBee = 110;
+constexpr int frontLowBee = 120;
 constexpr int frontFolded = 182;
 
 /*

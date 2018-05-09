@@ -83,7 +83,7 @@ void loop(){
 
 	delay(1500);//Laisse le temps aux capteurs de clignotter leur ID
 
-    static Metro USSend = Metro(100);
+    static Metro USSend = Metro(80);
 
     while (true) {
         orderMgr.communicate();
