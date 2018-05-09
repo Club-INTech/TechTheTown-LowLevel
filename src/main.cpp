@@ -11,7 +11,7 @@
 void setup() {
 
 	/* Série */
-	Serial.begin(9600);
+	Serial.begin(115200);
     Serial.flush();
 	Serial.println("Série OK");
 	delay(250);
