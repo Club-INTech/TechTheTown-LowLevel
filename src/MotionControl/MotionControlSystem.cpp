@@ -54,7 +54,7 @@ MotionControlSystem::MotionControlSystem() :
     leftSpeedPID.setTunings(0.2165,0.00005,0.414);
     rightSpeedPID.setTunings(0.225,0.00005,0.4121);
 	translationPID.setTunings(6.5,0,1.08);
-	rotationPID.setTunings(9,0.00001,0);
+	rotationPID.setTunings(12,0.00001,0);
 
 
 	maxAcceleration = 30;
