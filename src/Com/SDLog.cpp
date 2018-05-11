@@ -6,12 +6,12 @@
 
 
 SDLog::SDLog()
+/// Initiliase la carte SD
 /**
- * Initialise la carte SD:
  * Ouvre la communication avec la carte SD
  * Supprime les fichiers précédents et en crééant de nouveaux, vides
  * Si l'initialisation échoue, on bloque les écritures
- **/
+ */
 {
     if(!SD.begin(BUILTIN_SDCARD))
     {
@@ -38,12 +38,13 @@ SDLog::SDLog()
 }
 
 bool SDLog::logWrite(const String message)
+/// Écrit dans la SD
 /**
  * Écrit le message dans le fichier correspondant à son canal et dans
  * le fichier général, ou seulement le fichier général si il n'a pas de header
  * @param message: message à logger
  * @return Vrai si on a bien réussi à écrire, faux sinon ou si la carte SD n'est pas init
- **/
+ */
 {
     if(!sdStatus)
         return(false);
@@ -81,12 +82,13 @@ bool SDLog::logWrite(const char* message)
 }
 
 bool SDLog::logWriteReception(const char* message)
+/// Écrit les entrées dans la SD
 /**
  * Permet d'écrire dans le fichier "input.txt" et le fichier général les messages
  * reçus, en ajoutant un indicateur de la réception
  * @param message : Message reçu a logger
  * @return Vrai si l'écriture a réussi
- **/
+ */
 {
     if(!sdStatus)
         return(false);
@@ -106,7 +108,7 @@ bool SDLog::logToFile(const String &message,const char* logFile)
  * @param message : message à logger
  * @param logFile : fichier de log correspondant
  * @return Vrai si on a réussi à écrire dans le fichier
- **/
+ */
 {
     File outputFile = SD.open(logFile,FILE_WRITE);
     if(!outputFile)

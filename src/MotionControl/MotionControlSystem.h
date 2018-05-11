@@ -50,40 +50,39 @@ private:
 
 	//	Asservissement en vitesse du moteur droit
 	PID rightSpeedPID;
-	volatile int32_t rightSpeedSetpoint;    // ticks/seconde
-	volatile int32_t currentRightSpeed;        // ticks/seconde
+	volatile int32_t rightSpeedSetpoint;        /**< En tick/s */
+	volatile int32_t currentRightSpeed;         /**< En tick/s */
 	volatile int32_t rightPWM;
 	volatile int32_t lastRightPWM;
 
 	//	Asservissement en vitesse du moteur gauche
 	PID leftSpeedPID;
-	volatile int32_t leftSpeedSetpoint;        // ticks/seconde
-	volatile int32_t currentLeftSpeed;        // ticks/seconde
+	volatile int32_t leftSpeedSetpoint;         /**< En tick/s */
+	volatile int32_t currentLeftSpeed;          /**< En tick/s */
 	volatile int32_t leftPWM;
 	volatile int32_t lastLeftPWM;
 
 	//	Asservissement en position : translation
 	PID translationPID;
-	volatile int32_t translationSetpoint;    // ticks
-	volatile int32_t currentDistance;        // ticks
-	volatile int32_t translationSpeed;        // ticks/seconde
+	volatile int32_t translationSetpoint;       /**< En tick */
+	volatile int32_t currentDistance;           /**< En tick */
+	volatile int32_t translationSpeed;          /**< En tick/s */
 
 											  //	Asservissement en position : rotation
 	PID rotationPID;
-	volatile int32_t rotationSetpoint;        // angle absolu visé (en ticks)
-	volatile int32_t currentAngle;            // ticks
-	volatile int32_t rotationSpeed;            // ticks/seconde
+	volatile int32_t rotationSetpoint;          /**< angle absolu visé - En tick */
+	volatile int32_t currentAngle;              /**< En tick */
+	volatile int32_t rotationSpeed;             /**< En tick/s */
 
 											   //	Limitation de vitesses
-	volatile int32_t maxSpeed;                // definit la vitesse maximal des moteurs du robot
-	volatile int32_t maxSpeedTranslation;    // definit la consigne max de vitesse de translation envoiée au PID (trapèze)
-	volatile int32_t maxSpeedRotation;        // definit la consigne max de vitesse de rotation envoiée au PID (trapèze)
-    const int32_t maxAcceptableTranslationSpeed;
-    const int32_t maxAcceptableRotationSpeed;
+	volatile int32_t maxSpeed;                  /**< Vitesse maximale totale des moteurs - En tick/s */
+	volatile int32_t maxSpeedTranslation;       /**< Consigne max de vitesse de translation du PID (trapèze) - En tick/s */
+	volatile int32_t maxSpeedRotation;          /**< Consigne max de vitesse de rotation du PID (trapèze) - En tick/s */
+    const int32_t maxAcceptableTranslationSpeed;/**< Vitesse maximale acceptable en translation, limite les ordres du HL - En tick/s */
+    const int32_t maxAcceptableRotationSpeed;   /**< Vitesse maximale acceptable en rotation, limite les ordres du HL - En tick/s */
 
 											  //	Limitation d'accélération
-	volatile int8_t maxAcceleration;
-	volatile int8_t maxDeceleration;
+	volatile int8_t maxAcceleration;            /**< Accélération maximale, limite le PID de vitesse - En tick/(s*ms) */
 
 
 	//	Pour faire de jolies courbes de réponse du système, la vitesse moyenne c'est mieux !
@@ -105,15 +104,15 @@ private:
 	* 	par le haut niveau pour correspondre à son système de coordonnées.
 	* 	Le bas niveau met à jour la valeur de ces variables et les
 	*/
-	volatile float x;                // Positionnement 'x' (mm)
-	volatile float y;                // Positionnement 'y' (mm)
-	volatile float originalAngle;    // Angle d'origine	  (radians)
-									 // 'originalAngle' représente un offset ajouté à l'angle courant pour que nos angles en radians coïncident avec la représentation haut niveau des angles.
+	volatile float x;                           /**< Positionnement en x - En mm */
+	volatile float y;                           /**< Positionnement en y - En mm */
+	volatile float originalAngle;               /**< Offset ajouté à l'angle courant pour que nos angles en radians coïncident avec la représentation haut niveau des angles - En rad */
+
     // Variables d'état du mouvement
 	volatile bool moving;
 	volatile bool wasMoving;
 	volatile MOVING_DIRECTION direction;
-	volatile bool moveAbnormal;
+	volatile bool moveAbnormal;                 /**< Est vrai si on s'est arrêté autrement que par une fin de mouvement */
 	volatile bool moveAbnormalSent;
 
 	// Variables d'activation des différents PID
@@ -122,23 +121,23 @@ private:
 	volatile bool leftSpeedControlled;
 	volatile bool rightSpeedControlled;
 
-	volatile bool forcedMovement;   // Si true, alors pas de gestion de l'arret : ON FORCE MODAFUCKA !!!
+	volatile bool forcedMovement;   /**< Si true, alors pas de gestion de l'arret : ON FORCE MODAFUCKA !!! */
 
                                     // Variables de réglage de la détection de blocage physique
-	unsigned int delayToStop;       //En ms
+	unsigned int delayToStop;       /**< En ms */
 
 	//Nombre de ticks de tolérance pour considérer qu'on est arrivé à destination
-	int toleranceTranslation;
-	int toleranceRotation;
+	int toleranceTranslation;       /**< En tick */
+	int toleranceRotation;          /**< En tick */
 
 	int toleranceSpeed;             // Tolérance avant de considérer le mouvement anormal (écart entre la consigne de vitesse et la vitesse réelle)
 	int toleranceSpeedEstablished;  // Tolérance autour de la vitesse établie avant de capter un blocage
 
-	int toleranceDifferentielle;
+	int toleranceDifferentielle;    /**< En tick/s  */
 
 	int delayToEstablish;           // Temps à attendre avant de considérer la vitesse stable
 
-	bool isPhysicallyStopped();     //Indique si le robot est immobile.
+	bool isPhysicallyStopped();     /**< Indique si le robot est immobile */
 	bool isLeftWheelSpeedAbnormal();
 	bool isRightWheelSpeedAbnormal();
 

@@ -83,7 +83,8 @@ void MotionControlSystem::control()
 /**
  * LA fonction de l'asservissement
  * Contrôle les dépassements par rapport aux limites imposées (Vitesse, accélération)
- * Met à jour la position et l'angle
+ * Met à jour la position, l'angle et les PIDs
+ * Donne le PWM aux moteurs
  */
 {
 	if (controlled) {
@@ -345,7 +346,7 @@ void MotionControlSystem::orderRotation(float targetAngleRadian, RotationWay rot
  * Ordre de rotation
  * @param targetAngleRadian : Angle cible
  * @param rotationWay : Stratégie de rotation (FREE, TRIGO, ANTITRIGO)
- **/
+ */
 {
 
 	static int32_t deuxPiTick = (int32_t)(2 * PI / TICK_TO_RADIAN);
