@@ -13,7 +13,7 @@ Au boulot les 1As !
 - [x] Détection des blocages physiques et transmission sur le canal Event
 - [x] Mise en place de la basic Detection (Envoi d'event si obstacle trop proche)
 - [x] Fusion de la gestion Série/Ethernet
-- [ ] Gérer les ordres grâce à une classe pour que ce soit propre
+- [x] Gérer les ordres grâce à une classe pour que ce soit propre
 - [ ] Mise en place de cas d'erreur explicites et plus nombreux pour le HL
 - [ ] MotionControl point à point(avec réorientation progressive)
 - [ ] Ordre propre pour la récupération de données d'asservissement + scripts en conséquence
@@ -23,50 +23,51 @@ Au boulot les 1As !
 ### ORDRES HL ⇒ LL
 #### ORDRES GENERAUX
 
-|   Ordres  |                       Actions                      |
-|:---------:|:--------------------------------------------------:|
-|     ?     |                     Ping le LL                     |
-|     j     |       Active l'attente de l'activation du jumper   |
-|    sus    |    Switch les US ou choisit leur état (on/off)     |
-|     f     |                 Check le mouvement                 |
-|    ?xyo   |               Position + Orientation               |
-|     d     |                  Translate de x mm                 |
-|     t     | Tourne de α rad, dans le sens demandé ou librement |
-|    stop   |                        Stop                        |
-|     cx    |                   Set x d'origine                  |
-|     cy    |                   Set y d'origine                  |
-|     co    |                   Set α d'origine                  |
-|    cxyo   |                 Set x,y,α d'origine                |
-|    ctv    |                Set translation speed               |
-|    crv    |                 Set rotation speed                 |
-|    ctrv   |           Set translation+rotation speed           |
-|    efm    |                Enable forced movment               |
-|    dfm    |               Disable forced movment               |
-|    ct0    |          Désactive l'asserv en translation         |
-|    ct1    |           Active l'asserv en translation           |
-|    cr0    |           Désactive l'asserv en rotation           |
-|    cr1    |             Active l'asserv en rotation            |
-|    cv0    |            Désactive l'asserv en vitesse           |
-|    cv1    |             Active l'asserv en vitesse             |
-|   seti2c  |                Set les capteurs I2C                |
-|    cod    |            Retourne les ticks de codeuse           |
-|  pfdebug  |            Info de debug sur la position           |
-|   rawpwm  |        Demande un PWM brut aux deux moteurs        |
-|   getpwn  |          Retourne le PWM des deux moteurs          |
-|   errors  |         Retourne les erreurs d'incertitude         |
-|  rawspeed |               Vitesse brute des roues              |
-| rawposdata|         Pos x,y,α; vL,vR, targetvL,targetvR        |
-| montlhery |                Mode de présentation                |
-|     av    |                       Avance                       |
-|     rc    |                       Recule                       |
-|     td    |                   Tourne à droite                  |
-|     tg    |                   Tourne à gauche                  |
-|   sstop   |                        Arrêt                       |
-|     nh    | Créé un nouveau hook (id,x,y,r,α,tolerance,action) |
-|     eh    |                   Active le hook                   |
-|     dh    |                  Désactive le hook                 |
-|     emergencyStop     |  Arrète brutalement le robot et ***DESACTIVE*** l'asserv |
-|  resumeEmergencyStop  |     Redemarre l'asserv après un emergencyStop      |
+|        Ordres         |                           Actions                         |
+|:---------------------:|:---------------------------------------------------------:|                  
+|          ?            |                         Ping le LL                        |
+|          j            |           Active l'attente de l'activation du jumper      |
+|         sus           |        Switch les US ou choisit leur état (on/off)        |
+|          f            |                     Check le mouvement                    |
+|        ?xyo           |                   Position + Orientation                  |
+|          d            |                      Translate de x mm                    |
+|          t            |     Tourne de α rad, dans le sens demandé ou librement    |
+|        stop           |                            Stop                           |
+|         cx            |                       Set x d'origine                     |
+|         cy            |                       Set y d'origine                     |
+|         co            |                       Set α d'origine                     |
+|        cxyo           |                     Set x,y,α d'origine                   |
+|        ctv            |                    Set translation speed                  |
+|        crv            |                     Set rotation speed                    |
+|        ctrv           |               Set translation+rotation speed              |
+|        efm            |                    Enable forced movment                  |
+|        dfm            |                   Disable forced movment                  |
+|        ct0            |              Désactive l'asserv en translation            |
+|        ct1            |               Active l'asserv en translation              |
+|        cr0            |               Désactive l'asserv en rotation              |
+|        cr1            |                 Active l'asserv en rotation               |
+|        cv0            |                Désactive l'asserv en vitesse              |
+|        cv1            |                 Active l'asserv en vitesse                |
+|       seti2c          |                    Set les capteurs I2C                   |
+|        cod            |                Retourne les ticks de codeuse              |
+|      pfdebug          |                Info de debug sur la position              |
+|      rawpwm           |            Demande un PWM brut aux deux moteurs           |
+|      getpwn           |              Retourne le PWM des deux moteurs             |
+|      errors           |             Retourne les erreurs d'incertitude            |
+|     rawdistance       |             Retourne la distance brute en ticks           |
+|      rawspeed         |                   Vitesse brute des roues                 |
+|     rawposdata        |             Pos x,y,α; vL,vR, targetvL,targetvR           |
+|     montlhery         |                    Mode de présentation                   |
+|         av            |                           Avance                          |
+|         rc            |                           Recule                          |
+|         td            |                       Tourne à droite                     |
+|         tg            |                       Tourne à gauche                     |
+|       sstop           |                            Arrêt                          |
+|         nh            |     Créé un nouveau hook (id,x,y,r,α,tolerance,action)    |
+|         eh            |                       Active le hook                      |
+|         dh            |                     Désactive le hook                     |
+|    emergencyStop      |  Arrète brutalement le robot et ***DESACTIVE*** l'asserv  |
+|  resumeEmergencyStop  |          Redemarre l'asserv après un emergencyStop        |
 
 #### ORDRES DE CONTRÔLE D'ACTION
 
