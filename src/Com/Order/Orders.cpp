@@ -38,6 +38,7 @@ void ORDER_D::impl(Args args)
 {
     int16_t deplacement = strtod(args[0], nullptr);
     orderManager.highLevel.printfln(DEBUG_HEADER,"distance : %d",deplacement);
+    orderManager.motionControlSystem.disablePointToPoint();
     orderManager.motionControlSystem.orderTranslation(deplacement);
     orderManager.sensorMgr.resetBasicBlocked();
 }
@@ -53,6 +54,7 @@ void ORDER_T::impl(Args args)
     orderManager.highLevel.printfln(DEBUG_HEADER,"angle : %f", angle);
     MotionControlSystem::RotationWay rotationWay = MotionControlSystem::FREE;
 
+    orderManager.motionControlSystem.disablePointToPoint();
     orderManager.motionControlSystem.orderRotation(angle, rotationWay);
     orderManager.sensorMgr.resetBasicBlocked();
 }
