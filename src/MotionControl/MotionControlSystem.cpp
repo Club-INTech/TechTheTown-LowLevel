@@ -351,7 +351,22 @@ void MotionControlSystem::updatePosition() {
         float moveVectorX = targetX - x;
         float moveVectorY = targetY - y;
         int moveNorm = (int)sqrtf(moveVectorX*moveVectorX+moveVectorY*moveVectorY);
-        float moveArgument = 2*atan2f(moveVectorY,moveVectorX+moveNorm);
+        float moveArgument = atan2f(moveVectorY,moveVectorX);
+
+		translationSetpoint = currentDistance;
+		if(ABS(getAngleRadian()-moveArgument) > (float)PI)
+		{
+			if(moveArgument<0)
+			{
+				moveArgument += TWO_PI;
+			}
+			else
+			{
+				moveArgument -= TWO_PI;
+			}
+		}
+
+
 		Serial.println(x);
 		Serial.println(y);
 		Serial.println(getAngleRadian());
@@ -362,12 +377,13 @@ void MotionControlSystem::updatePosition() {
 		Serial.println(currentDistance);
 		Serial.println(translationSetpoint);
 		Serial.println(getAngleRadian()-moveArgument);
-        Serial.println((float)PI/2);
+		Serial.println((float)PI/2);
 		Serial.println("-----------------------");
-        Serial.println(ABS(getAngleRadian()-moveArgument)>=(float)PI/2);
-        Serial.println(ABS(getAngleRadian()-moveArgument)<(float)PI/2);
-        Serial.println("-----------------------");
-		translationSetpoint = currentDistance;
+		Serial.println(ABS(getAngleRadian()-moveArgument)>=(float)PI/2);
+		Serial.println(ABS(getAngleRadian()-moveArgument)<(float)PI/2);
+		Serial.println("-----------------------");
+
+
         if(ABS(getAngleRadian()-moveArgument)>=(float)PI/2)
         {
             moveNorm = -moveNorm;
