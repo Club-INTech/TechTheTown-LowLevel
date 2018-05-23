@@ -26,12 +26,19 @@ void OrderManager::communicate() {
     if (highLevel.read(readMessage)) {
         char message[RX_BUFFER_SIZE];
         strcpy(message,readMessage);
-        highLevel.acknowledge(message);
+        if(com_options & ETHERNET_RW)
+        {
+            highLevel.acknowledge(message);
+        }
 
-        if (message[0]!=charIDLastMessage) {
+        if (message[0]!=charIDLastMessage && com_options & ETHERNET_RW) {
             charIDLastMessage = message[0];
             char* orderToExecute = message + 1;
             execute(orderToExecute);
+        }
+        else if(!( com_options & ETHERNET_RW))
+        {
+            execute(message);
         }
     }
 

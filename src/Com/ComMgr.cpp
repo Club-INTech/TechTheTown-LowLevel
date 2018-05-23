@@ -6,7 +6,10 @@
 
 ComMgr::ComMgr()
 {
-    ethernet = new EthernetInterface();
+    if(com_options & ETHERNET_RW)
+    {
+        ethernet = new EthernetInterface();
+    }
     serial = new SerialInterface();
 }
 
@@ -22,17 +25,27 @@ void ComMgr::sendUS(const std::vector<Average<uint32_t, AVERAGE_US_SIZE>> & data
 
 void ComMgr::sendEvent(const char * data)
 {
-    char strCurrentAckID[4];
-    sprintf(strCurrentAckID,"%4d",currentAckID);
-
     char formatted[64];
-    memcpy(formatted,strCurrentAckID,4);
-    formatted[4]='\0';
-    strcat(formatted+4,data);
+    if(com_options & ETHERNET_RW)
+    {
+        char strCurrentAckID[4];
+        sprintf(strCurrentAckID, "%4d", currentAckID);
 
-    printfln(EVENT_HEADER,formatted);
-    addEventsToAcknowledge(strCurrentAckID,formatted);
-    currentAckID++;
+        memcpy(formatted, strCurrentAckID, 4);
+        formatted[4] = '\0';
+        strcat(formatted + 4, data);
+
+        printfln(EVENT_HEADER, formatted);
+        addEventsToAcknowledge(strCurrentAckID, formatted);
+    }
+
+    strcat(formatted, data);
+    printfln(EVENT_HEADER, formatted);
+
+    if(com_options & ETHERNET_RW)
+    {
+        currentAckID++;
+    }
 }
 
 void ComMgr::sendPosition(const float * data)
