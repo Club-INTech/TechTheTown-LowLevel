@@ -52,7 +52,23 @@ void ORDER_T::impl(Args args)
         angle = strtof(args[0], nullptr);
     }
     orderManager.highLevel.printfln(DEBUG_HEADER,"angle : %f", angle);
+
     MotionControlSystem::RotationWay rotationWay = MotionControlSystem::FREE;
+    if(args.nbrParams() > 1)
+    {
+        if(!strcmp(args[1],"trigo"))
+        {
+            rotationWay = MotionControlSystem::TRIGO;
+        }
+        else if(!strcmp(args[1],"antitrigo"))
+        {
+            rotationWay = MotionControlSystem::ANTITRIGO;
+        }
+        else if(strcmp(args[1],"free") != 0)
+        {
+            orderManager.highLevel.printfln(DEBUG_HEADER,"ARGUMENT INVALIDE");
+        }
+    }
 
     orderManager.motionControlSystem.disablePointToPoint();
     orderManager.motionControlSystem.orderRotation(angle, rotationWay);
