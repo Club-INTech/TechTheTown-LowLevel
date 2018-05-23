@@ -258,34 +258,6 @@ void MotionControlSystem::manageStop()
 {
 	static uint32_t time = 0;
 	static uint32_t time2 = 0;
-	static int32_t timeToEstablish = 0;
-	static bool isSpeedEstablished = false;
-
-	if (moving&&
-		averageLeftDerivativeError.value()<toleranceSpeedEstablished &&
-		averageRightDerivativeError.value()<toleranceSpeedEstablished &&
-
-		leftSpeedPID.getError()<toleranceSpeed &&
-		rightSpeedPID.getError()<toleranceSpeed &&
-
-		!forcedMovement) {
-
-		if (timeToEstablish == 0) {
-			timeToEstablish = millis();
-		}
-
-		else if ((timeToEstablish > delayToEstablish) && !isSpeedEstablished) {
-			isSpeedEstablished = true;
-            if(leftSpeedSetpoint == 0 && rightSpeedSetpoint == 0)
-            {
-                leftMotor.run(0);
-                rightMotor.run(0);
-                leftSpeedPID.resetErrors();
-                rightSpeedPID.resetErrors();
-            }
-
-		}
-	}
 
 	if (isPhysicallyStopped() && moving && !forcedMovement) // Pour un blocage classique
 	{
