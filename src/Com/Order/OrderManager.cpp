@@ -148,6 +148,9 @@ void OrderManager::execute(const char* orderToExecute)
         else if (!strcmp(str_order, "t")) {
             order = new ORDER_T;
         }
+        else if(!strcmp(str_order, "goto")) {
+            order = new ORDER_GOTO;
+        }
         else if (!strcmp(str_order, "stop")) {
             order = new ORDER_STOP;
         }
@@ -373,6 +376,12 @@ void OrderManager::execute(const char* orderToExecute)
         }
         else if (!strcmp(str_order, "ack")){
             order = new ORDER_ACK;
+        }
+        else if (!strcmp(str_order, "ptpDemo")) {
+            order = new ORDER_PTPDEMO;
+        }
+        else if (!strcmp(str_order, "ptpDemoSeq")) {
+            order = new ORDER_PTPDEMOSEQ;
         }
         else {
             order = new ORDER_UNKOWN;

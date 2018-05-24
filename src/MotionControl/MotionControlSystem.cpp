@@ -47,20 +47,20 @@ MotionControlSystem::MotionControlSystem() :
 
 	delayToStop = 25;              // Temps a l'arret avant de considérer un blocage
 	toleranceRadiale = 10;          // Rayon du cercle de tolérance du point à point avant de considérer une droite
-	toleranceAngulairePtP = 0.1;
+	toleranceAngulairePtP = 0.25;
 	toleranceTranslation = 50;
 	toleranceRotation = 100;
 	toleranceSpeed = 24;
 	toleranceSpeedEstablished = 120; // Doit être la plus petite possible, sans bloquer les trajectoires courbes 50
 	delayToEstablish = 100;
-	toleranceDifferentielle = 4500;  // Pour les trajectoires "normales", verifie que les roues ne font pas nawak chacunes de leur cote.
+	toleranceDifferentielle = 2147483647;  // Pour les trajectoires "normales", verifie que les roues ne font pas nawak chacunes de leur cote.
 	toleranceDerivative = 0; 		// Doit être suffisament faible pour être fiable mais suffisament élevée pour arrêter contre un mur
 
 
     leftSpeedPID.setTunings(0.2165,0.00005,0.414);
     rightSpeedPID.setTunings(0.225,0.00005,0.4121);
-	translationPID.setTunings(6.5,0,1.08);
-	rotationPID.setTunings(15,0.00001,0);
+    translationPID.setTunings(6.5,0,1.08);
+    rotationPID.setTunings(12,0.00001,0);
 
 
 	maxAcceleration = 30;
@@ -339,36 +339,43 @@ void MotionControlSystem::updatePosition() {
 		}
 
 
-		Serial.println(x);
-		Serial.println(y);
-		Serial.println(getAngleRadian());
-		Serial.println(moveVectorX);
-		Serial.println(moveVectorY);
-		Serial.println(moveNorm);
+		Serial.printf("X : %f\n",x);
+		Serial.printf("Y : %f\n",y);
+		Serial.printf("Angle actuel: %f\n",getAngleRadian());
+		Serial.printf("Déplacement en X: %f\n",moveVectorX);
+		Serial.printf("Déplacement en Y: %f\n",moveVectorY);
+		Serial.printf("Norme du déplacement : %i\n",moveNorm);
+        Serial.printf("Angle du déplacement : %f\n",moveArgument);
 		Serial.println("-----------------------");
 		Serial.println(currentDistance);
 		Serial.println(translationSetpoint);
 		Serial.println(getAngleRadian()-moveArgument);
-		Serial.println((float)PI/2);
 		Serial.println("-----------------------");
 		Serial.println(ABS(getAngleRadian()-moveArgument)>=(float)PI/2);
 		Serial.println(ABS(getAngleRadian()-moveArgument)<(float)PI/2);
-		Serial.println("-----------------------");
+		Serial.println("~~~~~~~~~~~~~~~~~~~~~~~");
 
 
-        if(ABS(getAngleRadian()-moveArgument)>=(float)PI/2)
+        if(getAngleRadian()-moveArgument>=(float)PI/2)
         {
             moveNorm = -moveNorm;
             moveArgument += (float)PI;
         }
-
-        if(!sequentialPointToPoint || ( sequentialPointToPoint  && moveArgument <= toleranceAngulairePtP ))
+        else if(getAngleRadian()-moveArgument<=-(float)PI/2)
         {
+            moveNorm = -moveNorm;
+            moveArgument -= (float)PI;
+        }
+
+        if(!sequentialPointToPoint || ( sequentialPointToPoint  && ABS(getAngleRadian()-moveArgument) <= toleranceAngulairePtP ))
+        {
+            Serial.println("On avance ta mère");
             orderTranslation(moveNorm);
         }
+
         orderRotation(moveArgument,RotationWay::FREE);
         Serial.println(moveNorm);
-        Serial.println(moveArgument);
+        Serial.println(getAngleRadian()-moveArgument);
 
         if(ABS(moveNorm)<toleranceRadiale)
         {

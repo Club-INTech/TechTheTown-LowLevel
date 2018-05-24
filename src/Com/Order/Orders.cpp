@@ -83,7 +83,7 @@ void ORDER_GOTO::impl(Args args)
 
     if(args.nbrParams() == 3)
     {
-        isSequential = !strcmp(args[3],"true") || !strcmp(args[3],"1");
+        isSequential = !strcmp(args[2],"true") || !strcmp(args[2],"1");
         Serial.print("On séquentialise : ");
         Serial.println(isSequential);
     }
@@ -659,4 +659,27 @@ void ORDER_ACK::impl(Args args)
 {
     const char* ackID = args[0];
     orderManager.highLevel.removeEventsToAcknowledge(ackID);
+}
+
+void ORDER_PTPDEMO::impl(Args args)
+{
+    orderManager.execute("goto 500 -700");
+    delay(5000);
+    orderManager.execute("goto 1000 -400");
+    delay(5000);
+    orderManager.execute("goto 750 100");
+    delay(5000);
+    orderManager.execute("goto 0 0");
+}
+
+
+void ORDER_PTPDEMOSEQ::impl(Args args)
+{
+    orderManager.execute("goto 500 -700 true");
+    delay(5000);
+    orderManager.execute("goto 1000 -400 true");
+    delay(5000);
+    orderManager.execute("goto 750 100 true");
+    delay(5000);
+    orderManager.execute("goto 0 0 true");
 }
