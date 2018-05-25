@@ -9,6 +9,7 @@
 #include "Utils/pin_mapping_select.h"
 #include "Utils/defines.h"
 #include "MotionControl/Encoder.h"
+#include "PointToPointTrajectory.h"
 
 enum MOVING_DIRECTION { FORWARD, BACKWARD, NONE };
 
@@ -128,10 +129,14 @@ private:
 	volatile bool pointToPointMovement;
     volatile bool sequentialPointToPoint;   // Si true, on tourne pour s'orienter puis on avance
 
+	volatile bool followTrajectory;
+	PointToPointTrajectory *trajectoryToFollow;
+
                                     // Variables de réglage de la détection de blocage physique
 	unsigned int delayToStop;       //En ms
 
     int toleranceRadiale;           // Tolérance en mm pour le point à point
+    int toleranceRadialeTrajectoire;
     float toleranceAngulairePtP;      // Tolérance angulaire en rad avant de translater en PtP séquentiel
 
     //Nombre de ticks de tolérance pour considérer qu'on est arrivé à destination
@@ -215,6 +220,7 @@ public:
 	void orderRotation(float, RotationWay);
 	void orderGoto(float, float);
     void orderGoto(float, float, bool);
+	void orderTrajectory(const double*, const double*, int);
 	void orderRawPwm(Side, int16_t);
 
 	/* Autres */

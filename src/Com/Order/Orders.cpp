@@ -97,6 +97,18 @@ void ORDER_GOTO::impl(Args args)
 //      }
 }
 
+void ORDER_FOLLOWTRAJECTORY::impl(Args args)
+{
+    if(strtof(args[0], nullptr) == 0)
+    {
+        orderManager.motionControlSystem.orderTrajectory(trajectory_S_path[0],trajectory_S_path[1],trajectory_S_size);
+    }
+    else
+    {
+        orderManager.highLevel.printfln(DEBUG_HEADER,"ERREUR::Paramètres incorrects");
+    }
+}
+
 void ORDER_STOP::impl(Args args)
 {
 

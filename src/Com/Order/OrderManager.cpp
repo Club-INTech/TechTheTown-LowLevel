@@ -151,6 +151,10 @@ void OrderManager::execute(const char* orderToExecute)
         else if(!strcmp(str_order, "goto")) {
             order = new ORDER_GOTO;
         }
+        else if(!strcmp(str_order, "followTrajectory"))
+        {
+            order = new ORDER_FOLLOWTRAJECTORY;
+        }
         else if (!strcmp(str_order, "stop")) {
             order = new ORDER_STOP;
         }

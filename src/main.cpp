@@ -85,7 +85,8 @@ void loop(){
     orderMgr.execute("flpAv");
     orderMgr.execute("flpAr");
     delay(1000);
-
+	orderMgr.execute("ctv 300");
+	orderMgr.execute("crv 1.75");
 
     delay(2000);
     // MotionControlSystem
