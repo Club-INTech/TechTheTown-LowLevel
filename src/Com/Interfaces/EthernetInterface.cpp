@@ -11,7 +11,7 @@ EthernetInterface::EthernetInterface():server{ PORT }
 {
 	resetCard();
 
-	while(Ethernet.localIP() != ip) {
+	while(Ethernet.localIP() != ip && (ETHERNET_RW & com_options)) {
         digitalWrite(30,HIGH);
 		pinMode(LED_BUILTIN,OUTPUT);
 		digitalWrite(LED_BUILTIN,!digitalRead(LED_BUILTIN)); //La led de la teensy clignote si il y a erreur

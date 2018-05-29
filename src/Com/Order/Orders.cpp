@@ -29,9 +29,7 @@ void ORDER_F::impl(Args args)
 
 void ORDER_XYO::impl(Args args)
 {
-    orderManager.highLevel.printfln(STD_HEADER,"%f",orderManager.motionControlSystem.getX());
-    orderManager.highLevel.printfln(STD_HEADER,"%f",orderManager.motionControlSystem.getY());
-    orderManager.highLevel.printfln(STD_HEADER,"%f",orderManager.motionControlSystem.getAngleRadian());
+    orderManager.highLevel.printfln(STD_HEADER,"%f %f %f",orderManager.motionControlSystem.getX(),orderManager.motionControlSystem.getY(),orderManager.motionControlSystem.getAngleRadian());
 }
 
 void ORDER_D::impl(Args args)
