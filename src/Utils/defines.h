@@ -5,6 +5,7 @@
 
 #include <Arduino.h>
 #include "define_com_options.h"
+#include "define_zombie.h"
 
 /**
 *COMMUNICATION
@@ -14,7 +15,15 @@
 constexpr uint8_t RX_BUFFER_SIZE = 64; // Taille max des messages
 constexpr uint8_t RX_WORD_COUNT = 10; // Nombre de mots max par ordre
 
+#if isZombie
+
 constexpr uint8_t NBR_OF_US_SENSOR = 4;
+
+#else
+
+constexpr uint8_t NBR_OF_US_SENSOR = 0;
+
+#endif
 
 // Divers headers de communication pour l'éthernet
 constexpr uint8_t HEADER_LENGTH = 2;
@@ -40,7 +49,7 @@ constexpr uint8_t F_ENV_POS = 50;
 */
 
 constexpr uint16_t  MC_FREQUENCY =              1000; //1Khz
-constexpr double    MC_PERIOD = static_cast<double>(1000000/MC_FREQUENCY); // Durée en µs entre deux mesures
+constexpr double    MC_PERIOD = static_cast<double>(1000000.0/MC_FREQUENCY); // Durée en µs entre deux mesures
 
 constexpr uint16_t  TICKS_PER_TURN =            2400;   // Unité : ticks
 constexpr float     COD_WHEEL_DIAMETER =        65.948;  // Unité : mm

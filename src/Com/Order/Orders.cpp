@@ -18,7 +18,14 @@ void ORDER_PING::impl(Args args)
 
 void ORDER_J::impl(Args args)
 {
-    orderManager.HLWaiting = true;
+    if(!isZombie)
+    {
+        orderManager.HLWaiting = true;
+    }
+    else
+    {
+        orderManager.highLevel.printfln(STD_HEADER,"Impossible d'attendre le jumper en mode zombie");
+    }
 }
 
 void ORDER_F::impl(Args args)

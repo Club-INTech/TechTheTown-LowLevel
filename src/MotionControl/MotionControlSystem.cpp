@@ -28,7 +28,7 @@ MotionControlSystem::MotionControlSystem() :
 	moving = false;
 	moveAbnormal = false;
 	moveAbnormalSent = false;
-	forcedMovement = false;
+	forcedMovement = isZombie;
 	translation = true;
 	direction = NONE;
 
@@ -96,7 +96,26 @@ void MotionControlSystem::control()
 		static int32_t previousLeftSpeedSetpoint = 0;
 		static int32_t previousRightSpeedSetpoint = 0;
 
-		updateTicks();
+		if(!isZombie)
+		{
+			updateTicks();
+		}
+		else
+		{
+			static double floatingLeftTicks = 0;
+			static double floatingRightTicks = 0;
+
+			floatingLeftTicks = previousLeftTicks + previousLeftSpeedSetpoint/(double)MC_FREQUENCY;
+			floatingRightTicks = previousRightTicks + previousRightSpeedSetpoint/(double)MC_FREQUENCY;
+			leftTicks = (int32_t)floatingLeftTicks;
+			rightTicks = (int32_t)floatingRightTicks;
+//			if(millis()%100==0)
+//			{
+//				Serial.println(previousLeftSpeedSetpoint/(double)MC_FREQUENCY);
+//				Serial.println(floatingLeftTicks);
+//				Serial.println(floatingRightTicks);
+//			}
+		}
 
 		currentLeftSpeed = (leftTicks - previousLeftTicks) * MC_FREQUENCY;
 		currentRightSpeed = (rightTicks - previousRightTicks) * MC_FREQUENCY;
