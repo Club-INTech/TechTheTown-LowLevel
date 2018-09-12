@@ -627,9 +627,3 @@ void ORDER_DH::impl(Args args)
         orderManager.highLevel.printfln(DEBUG_HEADER,"ERREUR::Activation d'un hook inexistant");
     }
 }
-
-void ORDER_ACK::impl(Args args)
-{
-    const char* ackID = args[0];
-    orderManager.highLevel.removeEventsToAcknowledge(ackID);
-}

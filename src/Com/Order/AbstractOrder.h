@@ -32,7 +32,7 @@ protected:
 #define ORDER(name,nbrparam)                         \
 struct ORDER_##name : public AbstractOrder           \
 {                                                    \
-    ORDER_##name() : AbstractOrder(nbrparam)\
+    ORDER_##name() : AbstractOrder(nbrparam)         \
     {}                                               \
     void impl(Args);                                 \
 }                                                    \

@@ -14,32 +14,19 @@ OrderManager::OrderManager():
     isSendingUS = true;
     hooksEnabled = true;
     HLWaiting = false;
-    basicDetectionTriggeredSent = false;
-    basicDetectionFinishedSent = false;
-
-    charIDLastMessage = 'Z';
     highLevel.printfln(DEBUG_HEADER,"Communications ready");
 }
 
 void OrderManager::communicate() {
 
     if (highLevel.read(readMessage)) {
-        char message[RX_BUFFER_SIZE];
-        strcpy(message,readMessage);
-        highLevel.acknowledge(message);
-
-        if (message[0]!=charIDLastMessage) {
-            charIDLastMessage = message[0];
-            char* orderToExecute = message + 1;
-            execute(orderToExecute);
-        }
+        execute(readMessage);
     }
 
     memset(readMessage, 0, RX_BUFFER_SIZE);
 
     static Metro checkMovement = Metro(10);
     static Metro checkHooksTimer = Metro(20);
-    static Metro ackEvent = Metro(50);
 
 
     if (checkMovement.check())
@@ -57,10 +44,6 @@ void OrderManager::communicate() {
     {
         checkHooks();
         executeHooks();
-    }
-
-    if (ackEvent.check()) {
-        highLevel.sendEventsToAcknowledge();
     }
 
     static Metro sendPos = Metro(50);
@@ -347,9 +330,6 @@ void OrderManager::execute(const char* orderToExecute)
         }
         else if (!strcmp(str_order, "dh")) {
             order = new ORDER_DH;
-        }
-        else if (!strcmp(str_order, "ack")){
-            order = new ORDER_ACK;
         }
         else {
             order = new ORDER_UNKOWN;

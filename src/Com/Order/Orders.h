@@ -182,7 +182,5 @@ ORDER(DH,1);
  *		   *|	       ACKNOWLEDGEMENT        |*
  *    	   *|_________________________________|*
 */
-
-ORDER(ACK,1);
 ORDER(DEMO,0);
 #endif //TECHTHETOWN_LOWLEVEL_ORDERS_H

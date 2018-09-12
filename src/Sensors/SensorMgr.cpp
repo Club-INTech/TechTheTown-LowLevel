@@ -13,6 +13,7 @@ SensorMgr::SensorMgr()
 	CORE_PIN16_CONFIG = PORT_PCR_MUX(2)|PORT_PCR_ODE|PORT_PCR_SRE|PORT_PCR_DSE;
 	CORE_PIN17_CONFIG = PORT_PCR_MUX(2)|PORT_PCR_ODE|PORT_PCR_SRE|PORT_PCR_DSE;
 
+
 	for( uint8_t i = 0 ; i < NBR_OF_US_SENSOR ; i++ )
 	{
 		US[i] = new SRF10(i,20,SRF10::GAIN::G70);
@@ -41,6 +42,7 @@ SensorMgr::SensorMgr()
 
 	jumperPlugged = isJumperEngaged();
 	basicBlocked = false;
+
 }
 
 void SensorMgr::sendUS()

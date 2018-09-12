@@ -12,6 +12,7 @@ void setup() {
 
 	/* Série */
 	Serial.begin(115200);
+
     Serial.flush();
 	Serial.println("Série OK");
 	delay(250);
@@ -61,6 +62,7 @@ void test()
  */
 
 void loop(){
+
 	OrderManager& orderMgr = OrderManager::Instance();
 
     // AX12 initialisation
