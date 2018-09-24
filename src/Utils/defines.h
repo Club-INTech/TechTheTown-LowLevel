@@ -10,6 +10,7 @@
 *COMMUNICATION
 */
 
+
 // Nombre d'octets acceptables depuis le HL
 constexpr uint8_t RX_BUFFER_SIZE = 64; // Taille max des messages
 constexpr uint8_t RX_WORD_COUNT = 10; // Nombre de mots max par ordre

@@ -38,6 +38,7 @@ void ORDER_D::impl(Args args)
 {
     int16_t deplacement = strtod(args[0], nullptr);
     orderManager.highLevel.printfln(DEBUG_HEADER,"distance : %d",deplacement);
+    orderManager.motionControlSystem.disablePointToPoint();
     orderManager.motionControlSystem.orderTranslation(deplacement);
 }
 
@@ -50,8 +51,8 @@ void ORDER_T::impl(Args args)
         angle = strtof(args[0], nullptr);
     }
     orderManager.highLevel.printfln(DEBUG_HEADER,"angle : %f", angle);
-    MotionControlSystem::RotationWay rotationWay = MotionControlSystem::FREE;
 
+    MotionControlSystem::RotationWay rotationWay = MotionControlSystem::FREE;
     if(args.nbrParams() > 1)
     {
         if(!strcmp(args[1],"trigo"))
@@ -68,11 +69,47 @@ void ORDER_T::impl(Args args)
         }
     }
 
+    orderManager.motionControlSystem.disablePointToPoint();
     orderManager.motionControlSystem.orderRotation(angle, rotationWay);
+}
+
+void ORDER_GOTO::impl(Args args)
+{
+    float targetX = strtof(args[0],nullptr);
+    float targetY = strtof(args[1],nullptr);
+    bool isSequential = false;
+
+    if(args.nbrParams() == 3)
+    {
+        isSequential = !strcmp(args[2],"true") || !strcmp(args[2],"1");
+        Serial.print("On séquentialise : ");
+        Serial.println(isSequential);
+    }
+//                if(-1500 <= targetX && targetX <= 1500 && 0 <= targetY && targetY <= 2000)
+//                {
+        orderManager.motionControlSystem.orderGoto(targetX,targetY, isSequential);
+//                }
+//                else
+//      {
+//                highLevel.log("ERREUR::Paramètres incorrects");
+//      }
+}
+
+void ORDER_FOLLOWTRAJECTORY::impl(Args args)
+{
+    if(strtof(args[0], nullptr) == 0)
+    {
+        orderManager.motionControlSystem.orderTrajectory(trajectory_S_path[0],trajectory_S_path[1],trajectory_S_size);
+    }
+    else
+    {
+        orderManager.highLevel.printfln(DEBUG_HEADER,"ERREUR::Paramètres incorrects");
+    }
 }
 
 void ORDER_STOP::impl(Args args)
 {
+
 
     orderManager.motionControlSystem.stop();
     orderManager.highLevel.printfln(DEBUG_HEADER,"A priori, je m'arrête");
@@ -614,16 +651,35 @@ void ORDER_EH::impl(Args args)
     }
 }
 
-void ORDER_DH::impl(Args args)
-{
+void ORDER_DH::impl(Args args) {
     int hookId = orderManager.parseInt(args[0]);
 
-    if(orderManager.hookList.hookWithId(hookId))
-    {
-        orderManager.hookList.disableHook((uint8_t)hookId); //Singe proof ?
+    if (orderManager.hookList.hookWithId(hookId)) {
+        orderManager.hookList.disableHook((uint8_t) hookId); //Singe proof ?
+    } else {
+        orderManager.highLevel.printfln(DEBUG_HEADER, "ERREUR::Activation d'un hook inexistant");
     }
-    else
-    {
-        orderManager.highLevel.printfln(DEBUG_HEADER,"ERREUR::Activation d'un hook inexistant");
-    }
+}
+
+void ORDER_PTPDEMO::impl(Args args)
+{
+    orderManager.execute("goto 500 -700");
+    delay(5000);
+    orderManager.execute("goto 1000 -400");
+    delay(5000);
+    orderManager.execute("goto 750 100");
+    delay(5000);
+    orderManager.execute("goto 0 0");
+}
+
+
+void ORDER_PTPDEMOSEQ::impl(Args args)
+{
+    orderManager.execute("goto 500 -700 true");
+    delay(5000);
+    orderManager.execute("goto 1000 -400 true");
+    delay(5000);
+    orderManager.execute("goto 750 100 true");
+    delay(5000);
+    orderManager.execute("goto 0 0 true");
 }

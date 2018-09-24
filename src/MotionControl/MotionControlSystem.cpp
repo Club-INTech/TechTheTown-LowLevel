@@ -29,33 +29,43 @@ MotionControlSystem::MotionControlSystem() :
 	moveAbnormal = false;
 	moveAbnormalSent = false;
 	forcedMovement = false;
+    pointToPointMovement = false;
+    sequentialPointToPoint = false;
+    followTrajectory = false;
 	translation = true;
 	direction = NONE;
+
+    trajectoryToFollow = new PointToPointTrajectory();
 
     wasMoving = false;
 
 	leftSpeedPID.setOutputLimits(-255, 255);
 	rightSpeedPID.setOutputLimits(-255, 255);
 
+
     maxSpeed = 12000;				// Limite globale de la vitesse (Rotation + Translation)
-    maxSpeedTranslation = maxAcceptableTranslationSpeed;
-    maxSpeedRotation = maxAcceptableRotationSpeed;
+	maxSpeedTranslation = maxAcceptableTranslationSpeed;
+	maxSpeedRotation = maxAcceptableRotationSpeed;
 
 
 	delayToStop = 25;              // Temps a l'arret avant de considérer un blocage
+	toleranceRadiale = 10;          // Rayon du cercle de tolérance du point à point avant de considérer une droite
+	toleranceRadialeTrajectoire = 50;
+    toleranceAngulairePtP = 0.25;
 	toleranceTranslation = 50;
 	toleranceRotation = 100;
 	toleranceSpeed = 24;
 	toleranceSpeedEstablished = 120; // Doit être la plus petite possible, sans bloquer les trajectoires courbes 50
 	delayToEstablish = 100;
-	toleranceDifferentielle = 4500;  // Pour les trajectoires "normales", verifie que les roues ne font pas nawak chacunes de leur cote.
+	toleranceDifferentielle = 2147483647;  // Pour les trajectoires "normales", verifie que les roues ne font pas nawak chacunes de leur cote.
+	toleranceDerivative = 0; 		// Doit être suffisament faible pour être fiable mais suffisament élevée pour arrêter contre un mur
 
 
     leftSpeedPID.setTunings(0.2165,0.00005,0.414);
     rightSpeedPID.setTunings(0.225,0.00005,0.4121);
-	translationPID.setTunings(6.5,0,1.08);
-	rotationPID.setTunings(12,0.00001,0);
 
+    translationPID.setTunings(6.5,0,1.08);
+    rotationPID.setTunings(12,0.00001,0);
 
 	maxAcceleration = 30;
 
@@ -88,6 +98,7 @@ void MotionControlSystem::control()
  */
 {
 	if (controlled) {
+
 		// Pour le calcul de la vitesse instantanee :
 		static int32_t previousLeftTicks = 0;
 		static int32_t previousRightTicks = 0;
@@ -136,8 +147,8 @@ void MotionControlSystem::control()
 		else if (rotationSpeed < -maxSpeedRotation)
 			rotationSpeed = -maxSpeedRotation;
 
-			leftSpeedSetpoint = (int32_t)(translationSpeed - rotationSpeed);
-			rightSpeedSetpoint = (int32_t)(translationSpeed + rotationSpeed);
+		leftSpeedSetpoint = (int32_t)(translationSpeed - rotationSpeed);
+		rightSpeedSetpoint = (int32_t)(translationSpeed + rotationSpeed);
 
 		// Limitation de la vitesse
 		if (leftSpeedSetpoint > maxSpeed) {
@@ -154,19 +165,19 @@ void MotionControlSystem::control()
 		}
 
 		//Limiteurs d'accélération et décélération
-		if (leftSpeedSetpoint - previousLeftSpeedSetpoint > maxAcceleration)
+		if (((leftSpeedSetpoint - previousLeftSpeedSetpoint)  > maxAcceleration) && moving)
 		{
-			leftSpeedSetpoint = (int32_t)(previousLeftSpeedSetpoint + maxAcceleration);
+			leftSpeedSetpoint = (previousLeftSpeedSetpoint + maxAcceleration);
 		}
-		else if (previousLeftSpeedSetpoint - leftSpeedSetpoint > maxAcceleration)
+		else if (((previousLeftSpeedSetpoint - leftSpeedSetpoint)  > maxAcceleration) && moving)
 		{
-			leftSpeedSetpoint = (int32_t)(previousLeftSpeedSetpoint - maxAcceleration);
+			leftSpeedSetpoint = (previousLeftSpeedSetpoint - maxAcceleration);
 		}
-		if (rightSpeedSetpoint - previousRightSpeedSetpoint > maxAcceleration)
+		if (((rightSpeedSetpoint - previousRightSpeedSetpoint)  > maxAcceleration) && moving)
 		{
 			rightSpeedSetpoint = (previousRightSpeedSetpoint + maxAcceleration);
 		}
-		else if (previousRightSpeedSetpoint - rightSpeedSetpoint > maxAcceleration)
+		else if (((previousRightSpeedSetpoint - rightSpeedSetpoint)  > maxAcceleration) && moving)
 		{
 			rightSpeedSetpoint = (previousRightSpeedSetpoint - maxAcceleration);
 		}
@@ -216,7 +227,19 @@ void MotionControlSystem::enableSpeedControl(bool enabled) {
 }
 
 bool MotionControlSystem::isPhysicallyStopped() {
-	return ((translationPID.getDerivativeError() == 0) && (rotationPID.getDerivativeError() == 0)) || (ABS(ABS(leftSpeedPID.getError()) - ABS(rightSpeedPID.getError()))>toleranceDifferentielle);
+	bool translationBlockage = ABS(translationPID.getDerivativeError()) <= toleranceDerivative;
+	bool rotationBlockage = ABS(rotationPID.getDerivativeError()) <= toleranceDerivative;
+	bool speedDifferenceTooHigh = ABS(ABS(leftSpeedPID.getError()) - ABS(rightSpeedPID.getError()))>toleranceDifferentielle;
+	/*Serial.print("Translation check: ");
+	Serial.println(translationBlockage);
+	Serial.print("Rotation check: ");
+	Serial.println(rotationBlockage);
+	Serial.print("Speed check: ");
+	Serial.println(speedDifferenceTooHigh);*/
+//	Serial.println("tests");
+//	Serial.println(translationBlockage && rotationBlockage && moving);
+//	Serial.println(speedDifferenceTooHigh && moving);
+	return ((translationBlockage && rotationBlockage) || speedDifferenceTooHigh);
 }
 
 bool MotionControlSystem::isLeftWheelSpeedAbnormal() {
@@ -230,46 +253,35 @@ bool MotionControlSystem::isRightWheelSpeedAbnormal() {
 void MotionControlSystem::enableForcedMovement(bool b) {
 	forcedMovement = b;
 }
+
+void MotionControlSystem::disablePointToPoint()
+{
+	pointToPointMovement = false;
+}
+
 void MotionControlSystem::manageStop()
 {
 	static uint32_t time = 0;
 	static uint32_t time2 = 0;
-	static int32_t timeToEstablish = 0;
-	static bool isSpeedEstablished = false;
-
-	if (moving&&
-		averageLeftDerivativeError.value()<toleranceSpeedEstablished &&
-		averageRightDerivativeError.value()<toleranceSpeedEstablished &&
-
-		leftSpeedPID.getError()<toleranceSpeed &&
-		rightSpeedPID.getError()<toleranceSpeed &&
-
-		!forcedMovement) {
-
-		if (timeToEstablish == 0) {
-			timeToEstablish = millis();
-		}
-
-		else if ((timeToEstablish > delayToEstablish) && !isSpeedEstablished) {
-			isSpeedEstablished = true;
-
-		}
-	}
 
 	if (isPhysicallyStopped() && moving && !forcedMovement) // Pour un blocage classique
 	{
+//		Serial.println("Je test le blocage");
 		if (time == 0)
 		{ //Debut du timer
 			time = millis();
+//			Serial.println("Je set le timer");
 		}
 		else
 		{
+//			Serial.println("Je vérifie si je suis bien arrêté");
+//			Serial.print("dt: ");
+//			Serial.println(millis()-time);
 			if ((millis() - time) >= delayToStop)
-			{ //Si arreté plus de 'delayToStop' ms
-				{ //Stoppe pour cause de fin de mouvement
-					moveAbnormal = !(ABS((translationPID.getError()) <= toleranceTranslation) && ABS(rotationPID.getError()) <= toleranceRotation);
-					stop();
-				}
+			{ 	//Si arreté plus de 'delayToStop' ms
+			  	// Stoppe pour cause de fin de mouvement
+				moveAbnormal = !(ABS((translationPID.getError()) <= toleranceTranslation) && ABS(rotationPID.getError()) <= toleranceRotation);
+				stop();
 			}
 		}
 	}
@@ -293,6 +305,7 @@ void MotionControlSystem::manageStop()
 
 	else
 	{
+//		Serial.println("Je reset les timer");
 		time = 0;
 		time2 = 0;
 		if (moving)
@@ -309,6 +322,101 @@ void MotionControlSystem::updatePosition() {
 
 	x += (deltaDistanceMm * cosf(getAngleRadian()));
 	y += (deltaDistanceMm * sinf(getAngleRadian()));
+    float currentAngleRadian = getAngleRadian();
+
+    if(pointToPointMovement)
+    {
+        float moveVectorX = targetX - x;
+        float moveVectorY = targetY - y;
+        int moveNorm = (int)sqrtf(moveVectorX*moveVectorX+moveVectorY*moveVectorY);
+        float moveArgument = atan2f(moveVectorY,moveVectorX);
+
+		translationSetpoint = currentDistance;
+		if(ABS(currentAngleRadian-moveArgument) > (float)PI)
+		{
+			if(moveArgument<0)
+			{
+				moveArgument += TWO_PI;
+			}
+			else
+			{
+				moveArgument -= TWO_PI;
+			}
+		}
+
+
+		Serial.printf("X : %f\n",x);
+		Serial.printf("Y : %f\n",y);
+		Serial.printf("Angle actuel: %f\n",currentAngleRadian);
+		Serial.printf("Déplacement en X: %f\n",moveVectorX);
+		Serial.printf("Déplacement en Y: %f\n",moveVectorY);
+		Serial.printf("Norme du déplacement : %i\n",moveNorm);
+        Serial.printf("Angle du déplacement : %f\n",moveArgument);
+		Serial.println("-----------------------");
+		Serial.println(currentDistance);
+		Serial.println(translationSetpoint);
+		Serial.println(currentAngleRadian-moveArgument);
+		Serial.println("-----------------------");
+		Serial.println(currentAngleRadian-moveArgument>=(float)PI/2);
+		Serial.println(ABS(currentAngleRadian-moveArgument)<(float)PI/2);
+        Serial.println(currentAngleRadian-moveArgument<=(float)PI/2);
+		Serial.println("~~~~~~~~~~~~~~~~~~~~~~~");
+
+
+        if(currentAngleRadian-moveArgument>=(float)PI/2)
+        {
+            moveNorm = -moveNorm;
+            moveArgument += (float)PI;
+        }
+        else if(currentAngleRadian-moveArgument<=-(float)PI/2)
+        {
+            moveNorm = -moveNorm;
+            moveArgument -= (float)PI;
+        }
+
+        if(followTrajectory)
+        {
+            moveNorm *= 1-pow(currentAngleRadian-moveArgument,2)*(0.205148+0.0646868*pow(currentAngleRadian-moveArgument,2));
+        }
+
+        if(!sequentialPointToPoint || ( sequentialPointToPoint  && ABS(currentAngleRadian-moveArgument) <= toleranceAngulairePtP ))
+        {
+//            Serial.println("On avance ta mère");
+            orderTranslation(moveNorm);
+        }
+
+        orderRotation(moveArgument,RotationWay::FREE);
+        Serial.println(moveNorm);
+        Serial.println(currentAngleRadian-moveArgument);
+
+        if((ABS(moveNorm)<toleranceRadiale && !*trajectoryToFollow )||(followTrajectory && !*trajectoryToFollow))
+        {
+            Serial.println("On s'arrête pour tolérance");
+            Serial.println(moveNorm);
+            Serial.println(toleranceRadiale);
+
+            forcedMovement = false;
+            pointToPointMovement = false;
+            followTrajectory = false;
+            trajectoryToFollow = new PointToPointTrajectory();
+
+            rotationSetpoint = currentAngle + (int32_t)(originalAngle/TICK_TO_RADIAN);
+        }
+        else if(ABS(moveNorm)<toleranceRadialeTrajectoire && *trajectoryToFollow)
+        {
+            Serial.println("#################");
+            Serial.printf("Old target: %f - %f\n", targetX, targetY);
+
+            std::pair<double,double> nextPoint = trajectoryToFollow->query();
+
+            targetX += nextPoint.first;
+            targetY += nextPoint.second;
+
+            Serial.printf("New target: %f - %f\n", targetX, targetY);
+            Serial.println("#################");
+        }
+		Serial.println("======================");
+    }
 }
 
 void MotionControlSystem::resetPosition()
@@ -326,7 +434,19 @@ void MotionControlSystem::resetPosition()
 
 void MotionControlSystem::orderTranslation(int32_t mmDistance)
 {
-
+    /*if(mmDistance<300)
+    {
+        translationPID.setTunings(2.8,0,0);
+    }
+    else if(mmDistance<600)
+    {
+        translationPID.setTunings(0.4,0,0);
+    }
+    else
+    {
+        translationPID.setTunings(5.5,0,0);
+    }*/
+    
 	translationSetpoint += (int32_t)mmDistance / TICK_TO_MM;
 	if (!moving)
 	{
@@ -348,14 +468,13 @@ void MotionControlSystem::orderRotation(float targetAngleRadian, RotationWay rot
  * @param rotationWay : Stratégie de rotation (FREE, TRIGO, ANTITRIGO)
  */
 {
-
 	static int32_t deuxPiTick = (int32_t)(2 * PI / TICK_TO_RADIAN);
 	static int32_t piTick = (int32_t)(PI / TICK_TO_RADIAN);
 
 	int32_t highLevelOffset = originalAngle / TICK_TO_RADIAN;
 
 	int32_t targetAngleTick = targetAngleRadian / TICK_TO_RADIAN;
-	Serial.println(targetAngleTick);
+//	Serial.println(targetAngleTick);
 	int32_t currentAngleTick = currentAngle + highLevelOffset;
 
     targetAngleTick = modulo(targetAngleTick, deuxPiTick);
@@ -401,6 +520,26 @@ void MotionControlSystem::orderRotation(float targetAngleRadian, RotationWay rot
 	moveAbnormal = false;
 }
 
+void MotionControlSystem::orderGoto(float targetX, float targetY) {
+    this->targetX = targetX;
+    this->targetY = targetY;
+    pointToPointMovement = true;
+}
+
+void MotionControlSystem::orderGoto(float targetX, float targetY, bool isSequential)
+{
+    this->orderGoto(targetX,targetY);
+    sequentialPointToPoint = isSequential;
+}
+
+void MotionControlSystem::orderTrajectory(const double * xDeltas, const double *yDeltas, int length)
+{
+    forcedMovement = true;
+    followTrajectory = true;
+    trajectoryToFollow = new PointToPointTrajectory(xDeltas,yDeltas,length);
+    std::pair<double,double> firstMove = trajectoryToFollow->query();
+    orderGoto((float)(x + firstMove.first),(float)(y + firstMove.second));
+}
 
 void MotionControlSystem::orderRawPwm(Side side, int16_t pwm) {
 	if (side == Side::LEFT)
@@ -410,13 +549,22 @@ void MotionControlSystem::orderRawPwm(Side side, int16_t pwm) {
 }
 
 void MotionControlSystem::stop() {
+	Serial.print(millis());
+	Serial.println(" - STOPPING");
+	Serial.println(currentDistance);
+	Serial.println(currentAngle);
 
 	moving = false;
+    pointToPointMovement = false;
+    followTrajectory = false;
+    trajectoryToFollow = new PointToPointTrajectory();
 	translationSetpoint = currentDistance;
 	rotationSetpoint = currentAngle;
 
 	leftSpeedSetpoint = 0;
 	rightSpeedSetpoint = 0;
+	translationSpeed = 0;
+	rotationSpeed = 0;
 
 	//Arrete les moteurs
 	leftMotor.run(0);
@@ -459,6 +607,9 @@ bool MotionControlSystem::sentMoveAbnormal() const
 
 void MotionControlSystem::setMoveAbnormalSent(bool status) {
 	moveAbnormalSent = status;
+	translationSetpoint = currentDistance;
+	rotationSetpoint = currentAngle;
+	controlled = true;
 }
 
 void MotionControlSystem::setRawPositiveTranslationSpeed() {
@@ -567,10 +718,10 @@ void MotionControlSystem::getTranslationTunings(float &kp, float &ki, float &kd)
 	ki = translationPID.getKi();
 	kd = translationPID.getKd();
 }
-void MotionControlSystem::getTranslationErrors(float& translationProp, float& translationIntegral, float& translationDerivative) {
-    translationProp = translationPID.getError()*TICK_TO_MM;
-    translationIntegral = translationPID.getIntegralErrol()*TICK_TO_MM;
-    translationDerivative = translationPID.getDerivativeError()*TICK_TO_MM;
+void MotionControlSystem::getTranslationErrors(int32_t& translationProp, int32_t& translationIntegral, int32_t& translationDerivative) {
+    translationProp = translationPID.getError();
+    translationIntegral = translationPID.getIntegralErrol();
+    translationDerivative = translationPID.getDerivativeError();
 }
 
 /* Getter des réglages de PID en rotation */
@@ -603,6 +754,9 @@ float MotionControlSystem::getLeftSpeed() {
 }
 float MotionControlSystem::getRightSpeed() {
     return(currentRightSpeed*TICK_TO_MM);
+}
+int32_t MotionControlSystem::getDistanceTicks() {
+    return(currentDistance);
 }
 
 /* Setters des réglages de PID */

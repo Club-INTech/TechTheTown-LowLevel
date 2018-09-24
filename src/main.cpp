@@ -12,7 +12,6 @@ void setup() {
 
 	/* Série */
 	Serial.begin(115200);
-
     Serial.flush();
 	Serial.println("Série OK");
 	delay(250);
@@ -29,16 +28,31 @@ void setup() {
     pinMode(PIN_ELECTROVANNE_AR,OUTPUT);
     digitalWrite(PIN_ELECTROVANNE_AR,LOW);
 
+
+	/*9pinMode(5,INPUT);
+	pinMode(PIN_PWM_LEFT,OUTPUT);
+	pinMode(PIN_DIR_LEFT,OUTPUT);
+	pinMode(PIN_PWM_RIGHT,OUTPUT);
+	analogWriteFrequency(PIN_PWM_LEFT,234375);
+	digitalWrite(PIN_DIR_LEFT,HIGH);
+	analogWriteFrequency(PIN_PWM_RIGHT,234375);*/
+
     Serial.println("Fin du setup");
 }
 
 /* Interruptions d'asservissements */
 void motionControlInterrupt() {
+	static int compteurDeLavage = 0;
 	static MotionControlSystem &motionControlSystem = MotionControlSystem::Instance();
 	motionControlSystem.updateTicks();
     motionControlSystem.control();
 	motionControlSystem.updatePosition();
-	motionControlSystem.manageStop();
+	if(compteurDeLavage == 5)
+	{
+		motionControlSystem.manageStop();
+		compteurDeLavage = 0;
+	}
+	compteurDeLavage++;
 }
 
 void blink(){
@@ -67,17 +81,22 @@ void loop(){
 
     // AX12 initialisation
     orderMgr.execute("rlbAv");
-	orderMgr.execute("rlbAr");
+    orderMgr.execute("rlbAr");
     delay(1000);
     orderMgr.execute("flpAv");
-	orderMgr.execute("flpAr");
+    orderMgr.execute("flpAr");
     delay(1000);
+	orderMgr.execute("ctv 300");
+	orderMgr.execute("crv 1.75");
 
-
+    delay(2000);
     // MotionControlSystem
-    IntervalTimer motionControlInterruptTimer;
-    motionControlInterruptTimer.priority(253);
+
+	IntervalTimer motionControlInterruptTimer;
+	motionControlInterruptTimer.priority(253);
     motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); // Setup de l'interruption d'asservissement
+
+
 
 	// Measure Ambient light
 	orderMgr.sensorMgr.measureMeanAmbientLight();
@@ -93,6 +112,7 @@ void loop(){
         orderMgr.isHLWaiting() ? orderMgr.checkJumper() : void();
         USSend.check() ? orderMgr.sendUS() : void();
     }
+
 }
 
 /*
