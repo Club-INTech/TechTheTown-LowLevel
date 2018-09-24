@@ -85,6 +85,8 @@ void OrderManager::execute(const char* orderToExecute)
 
         AbstractOrder* order;
 
+        Serial.println(orderToExecute);
+
         if (!strcmp(str_order, "?"))            //Ping
         {
             order = new ORDER_PING;
