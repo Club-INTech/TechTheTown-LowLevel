@@ -8,52 +8,75 @@
 #include "Com/Order/OrderManager.h"
 
 
-void setup() {
-
-	/* Série */
-	Serial.begin(115200);
-
-    Serial.flush();
-	Serial.println("Série OK");
-	delay(250);
-
-    /* Actuators */
-    // Par sécurité on met tout les actuators à LOW quand on les initialise
-		/* Pompe */
-	pinMode(PIN_PWM_POMPE,OUTPUT);
-    digitalWrite(PIN_PWM_POMPE,LOW);
-
-        /* Electrovanne */
-    pinMode(PIN_ELECTROVANNE_AV,OUTPUT);
-    digitalWrite(PIN_ELECTROVANNE_AV,LOW);
-    pinMode(PIN_ELECTROVANNE_AR,OUTPUT);
-    digitalWrite(PIN_ELECTROVANNE_AR,LOW);
-
-    Serial.println("Fin du setup");
-}
-
-/* Interruptions d'asservissements */
+/* Interruption d'asservissement */
 void motionControlInterrupt() {
 	static MotionControlSystem &motionControlSystem = MotionControlSystem::Instance();
 	motionControlSystem.updateTicks();
-    motionControlSystem.control();
+	motionControlSystem.control();
 	motionControlSystem.updatePosition();
 	motionControlSystem.manageStop();
 }
 
-void blink(){
-	static int32_t t=0;
-	if(millis()-t>500){
-		t=millis();
-		digitalWrite(LED_BUILTIN,!digitalRead(LED_BUILTIN));
+
+int main(){
+	/*************************
+	 * Initialisation du LL, gère:
+	 * La série
+	 * Les actionneurs
+	 * L'asservissement
+	 *************************/
+	/* Série */
+	Serial.begin(115200);
+
+	Serial.flush();
+	Serial.println("Série OK");
+	delay(250);
+
+	/* Actuators */
+	// Par sécurité on met tout les actuators à LOW quand on les initialise
+	/* Pompe */
+	pinMode(PIN_PWM_POMPE,OUTPUT);
+	digitalWrite(PIN_PWM_POMPE,LOW);
+
+	/* Electrovanne */
+	pinMode(PIN_ELECTROVANNE_AV,OUTPUT);
+	digitalWrite(PIN_ELECTROVANNE_AV,LOW);
+	pinMode(PIN_ELECTROVANNE_AR,OUTPUT);
+	digitalWrite(PIN_ELECTROVANNE_AR,LOW);
+
+	Serial.println("Fin du setup");
+	OrderManager& orderMgr = OrderManager::Instance();
+
+	// AX12 initialisation
+	orderMgr.execute("rlbAv");
+	orderMgr.execute("rlbAr");
+	delay(1000);
+	orderMgr.execute("flpAv");
+	orderMgr.execute("flpAr");
+	delay(1000);
+
+
+	// MotionControlSystem
+	IntervalTimer motionControlInterruptTimer;
+	motionControlInterruptTimer.priority(253);
+	motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); // Setup de l'interruption d'asservissement
+
+	// Measure Ambient light
+	orderMgr.sensorMgr.measureMeanAmbientLight();
+
+
+	delay(1500);//Laisse le temps aux capteurs de clignotter leur ID
+
+	static Metro USSend = Metro(80);
+
+	while (true) {
+		orderMgr.communicate();
+		orderMgr.refreshUS();
+		orderMgr.isHLWaiting() ? orderMgr.checkJumper() : void();
+		USSend.check() ? orderMgr.sendUS() : void();
 	}
 }
 
-void test()
-{
-	Serial.println("coucou");
-	delay(200);
-}
 /**
  * Boucle principale, y est géré:
  * La communication HL
@@ -63,36 +86,7 @@ void test()
 
 void loop(){
 
-	OrderManager& orderMgr = OrderManager::Instance();
 
-    // AX12 initialisation
-    orderMgr.execute("rlbAv");
-	orderMgr.execute("rlbAr");
-    delay(1000);
-    orderMgr.execute("flpAv");
-	orderMgr.execute("flpAr");
-    delay(1000);
-
-
-    // MotionControlSystem
-    IntervalTimer motionControlInterruptTimer;
-    motionControlInterruptTimer.priority(253);
-    motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); // Setup de l'interruption d'asservissement
-
-	// Measure Ambient light
-	orderMgr.sensorMgr.measureMeanAmbientLight();
-
-
-	delay(1500);//Laisse le temps aux capteurs de clignotter leur ID
-
-    static Metro USSend = Metro(80);
-
-    while (true) {
-        orderMgr.communicate();
-		orderMgr.refreshUS();
-        orderMgr.isHLWaiting() ? orderMgr.checkJumper() : void();
-        USSend.check() ? orderMgr.sendUS() : void();
-    }
 }
 
 /*

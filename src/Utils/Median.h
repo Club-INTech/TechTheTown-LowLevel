@@ -7,6 +7,7 @@
 
 #include <Arduino.h>
 #include <array>
+#include <algorithm>
 
 template< typename T , unsigned int BUFFER_SIZE >
 class Median

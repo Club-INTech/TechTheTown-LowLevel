@@ -1,3 +1,11 @@
+.vscode
+.idea
+__vm
+.pioenvs
+lib
+.travis.yml
+CMakeLists.txt
+platformio.ini
 
 # Created by https://www.gitignore.io/api/clion,visualstudio,visualstudiocode
 
@@ -368,24 +376,5 @@ __pycache__/
 # should be stored in the .pubxml.user file.
 
 # End of https://www.gitignore.io/api/clion,visualstudio,visualstudiocode
-.pioenvs
 .piolibdeps
 CMakeListsPrivate.txt
-Supprimerait .clang_complete
-Supprimerait .gcc-flags.json
-Supprimerait .travis.yml
-Supprimerait CMakeLists.txt
-Supprimerait lib/
-Supprimerait platformio.ini
-/.travis.yml
-/CMakeLists.txt
-/platformio.ini
-.idea
-.clang_complete
-.gcc-flags.json
-.vscode/c_cpp_properties.json
-.vscode/launch.json
-.vscode/settings.json
-.vscode/tasks.json
-lib/readme.txt
-.vscode/*.db
