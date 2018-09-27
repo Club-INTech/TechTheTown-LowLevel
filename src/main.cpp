@@ -69,6 +69,13 @@ int main(){
 
 	static Metro USSend = Metro(80);
 
+
+	/**
+	 * Boucle principale, y est géré:
+	 * La communication HL
+	 * L'execution des ordres de ce dernier
+	 * Les capteurs
+	 */
 	while (true) {
 		orderMgr.communicate();
 		orderMgr.refreshUS();
@@ -76,27 +83,6 @@ int main(){
 		USSend.check() ? orderMgr.sendUS() : void();
 	}
 }
-
-/**
- * Boucle principale, y est géré:
- * La communication HL
- * Les capteurs
- * Divers initialisations et instanciations
- */
-
-void loop(){
-
-
-}
-
-/*
-extern "C"
-{
-    void _kill(){}
-    void _getpid(){}
-}*/
-
-
 
 /* Ce bout de code permet de compiler avec std::vector, copie honteusement de chez INTech-Senpai */
 namespace std {
