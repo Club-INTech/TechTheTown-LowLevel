@@ -10,6 +10,7 @@
 
 #include "Metro.h"
 #include <map>
+#include <set>
 #include <string>
 #include <cstdlib>
 #include <Arduino.h>
@@ -106,6 +107,9 @@ public:
 class OrderManager : public Singleton<OrderManager>
 {
 private:
+
+	std::map<const char*, AbstractOrder*> orders;
+
 	bool basicDetectionTriggeredSent;
 	bool basicDetectionFinishedSent;
 	char readMessage[RX_BUFFER_SIZE];
@@ -124,6 +128,8 @@ public:
 	bool HLWaiting;
 
     OrderManager();
+
+    void init();
 
     //Com&exec
     inline void refreshUS(){

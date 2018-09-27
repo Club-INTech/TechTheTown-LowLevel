@@ -5,12 +5,6 @@
 
 #include "Orders.h"
 
-void ORDER_UNKOWN::impl(Args args)
-{
-    orderManager.highLevel.printfln(STD_HEADER,"ordre inconnu");
-    orderManager.highLevel.printfln(DEBUG_HEADER,"T'es un déchêt");
-}
-
 void ORDER_PING::impl(Args args)
 {
     orderManager.highLevel.printfln(STD_HEADER,"0");
@@ -659,6 +653,10 @@ void ORDER_DH::impl(Args args) {
     } else {
         orderManager.highLevel.printfln(DEBUG_HEADER, "ERREUR::Activation d'un hook inexistant");
     }
+}
+
+void ORDER_DEMO::impl(Args args) {
+
 }
 
 void ORDER_PTPDEMO::impl(Args args)

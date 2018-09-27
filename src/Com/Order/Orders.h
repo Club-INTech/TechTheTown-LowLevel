@@ -9,8 +9,6 @@
 #include "OrderManager.h"
 #include "MotionControl/trajectories.h"
 
-ORDER(UNKOWN,0);
-
 ORDER(PING,0);
 ORDER(J,0);
 ORDER(F,0);
