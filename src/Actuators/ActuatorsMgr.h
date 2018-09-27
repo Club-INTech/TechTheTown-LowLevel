@@ -8,7 +8,7 @@
 
 #include "DynamixelMgr.h"
 
-#include "Utils/pin_mapping.h"
+#include "Utils/pin_mapping_select.h"
 #include "Utils/Singleton.hpp"
 
 class ActuatorsMgr : public Singleton<ActuatorsMgr>

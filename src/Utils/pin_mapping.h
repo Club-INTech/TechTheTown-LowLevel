@@ -37,11 +37,10 @@
 #define PIN_PWM_POMPE 1
 
 /* CAPTEURS */
-
-	//IR
+    // IR
 #define PIN_CUBE_AR_DETECTION_SLEEP 14
 
-	//CONT
+    // CONT
 #define PIN_JMPR 0
 #define PIN_CONT1 0
 

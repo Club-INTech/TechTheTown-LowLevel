@@ -85,6 +85,8 @@ void OrderManager::execute(const char* orderToExecute)
 
         AbstractOrder* order;
 
+        Serial.println(orderToExecute);
+
         if (!strcmp(str_order, "?"))            //Ping
         {
             order = new ORDER_PING;
@@ -107,6 +109,13 @@ void OrderManager::execute(const char* orderToExecute)
         }
         else if (!strcmp(str_order, "t")) {
             order = new ORDER_T;
+        }
+        else if(!strcmp(str_order, "goto")) {
+            order = new ORDER_GOTO;
+        }
+        else if(!strcmp(str_order, "followTrajectory"))
+        {
+            order = new ORDER_FOLLOWTRAJECTORY;
         }
         else if (!strcmp(str_order, "stop")) {
             order = new ORDER_STOP;
@@ -331,10 +340,16 @@ void OrderManager::execute(const char* orderToExecute)
         else if (!strcmp(str_order, "dh")) {
             order = new ORDER_DH;
         }
+        else if (!strcmp(str_order, "ptpDemo")) {
+            order = new ORDER_PTPDEMO;
+        }
+        else if (!strcmp(str_order, "ptpDemoSeq")) {
+            order = new ORDER_PTPDEMOSEQ;
+        }
         else {
             order = new ORDER_UNKOWN;
         }
-
+	    ORDER_PING();
         order->exec(orderData);
 
         delete order;

@@ -7,16 +7,20 @@
 
 #include "Com/Order/OrderManager.h"
 
-
 /* Interruption d'asservissement */
 void motionControlInterrupt() {
+	static int compteurDeLavage = 0;
 	static MotionControlSystem &motionControlSystem = MotionControlSystem::Instance();
 	motionControlSystem.updateTicks();
 	motionControlSystem.control();
 	motionControlSystem.updatePosition();
-	motionControlSystem.manageStop();
+	if(compteurDeLavage == 5)
+	{
+		motionControlSystem.manageStop();
+		compteurDeLavage = 0;
+	}
+	compteurDeLavage++;
 }
-
 
 int main(){
 	/*************************
@@ -47,29 +51,28 @@ int main(){
 	Serial.println("Fin du setup");
 	OrderManager& orderMgr = OrderManager::Instance();
 
-	// AX12 initialisation
-	orderMgr.execute("rlbAv");
-	orderMgr.execute("rlbAr");
-	delay(1000);
-	orderMgr.execute("flpAv");
-	orderMgr.execute("flpAr");
-	delay(1000);
+    // AX12 initialisation
+    orderMgr.execute("rlbAv");
+    orderMgr.execute("rlbAr");
+    delay(1000);
+    orderMgr.execute("flpAv");
+    orderMgr.execute("flpAr");
+    delay(1000);
+	orderMgr.execute("ctv 300");
+	orderMgr.execute("crv 1.75");
 
-
-	// MotionControlSystem
+    delay(2000);
+    // MotionControlSystem interrupt on timer
 	IntervalTimer motionControlInterruptTimer;
 	motionControlInterruptTimer.priority(253);
-	motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); // Setup de l'interruption d'asservissement
+    motionControlInterruptTimer.begin(motionControlInterrupt, MC_PERIOD); // Setup de l'interruption d'asservissement
 
 	// Measure Ambient light
 	orderMgr.sensorMgr.measureMeanAmbientLight();
 
-
 	delay(1500);//Laisse le temps aux capteurs de clignotter leur ID
 
 	static Metro USSend = Metro(80);
-
-
 	/**
 	 * Boucle principale, y est géré:
 	 * La communication HL
@@ -81,49 +84,7 @@ int main(){
 		orderMgr.refreshUS();
 		orderMgr.isHLWaiting() ? orderMgr.checkJumper() : void();
 		USSend.check() ? orderMgr.sendUS() : void();
-	}
-}
-
-/* Ce bout de code permet de compiler avec std::vector, copie honteusement de chez INTech-Senpai */
-namespace std {
-	void __throw_bad_alloc()
-	{
-		while (true)
-		{
-			Serial.println("ERROR\tUnable to allocate memory");
-			delay(500);
-		}
-	}
-
-	void __throw_length_error(char const*e)
-	{
-		while (true)
-		{
-			Serial.print("Length Error\t");
-			Serial.println(e);
-			delay(500);
-		}
-	}
-
-	void __throw_out_of_range(char const*e)
-	{
-		while (true)
-		{
-			Serial.print("Out of range error\t");
-			Serial.println(e);
-			delay(500);
-		}
-	}
-
-	void __throw_out_of_range_fmt(char const*e, ...)
-	{
-		while (true)
-		{
-			Serial.print("Out of range fmt\t");
-			Serial.println(e);
-			delay(500);
-		}
-	}
+    }
 }
 
                    /*``.           `-:--.`
@@ -150,13 +111,6 @@ namespace std {
          `:::::::/h////::.-:::::::y-
          :::::::ss`        -:/+sso:
          .:/++sy:          `//*/
-
-
-
-
-
-
-
 
 
 /*

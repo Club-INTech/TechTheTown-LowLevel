@@ -6,9 +6,10 @@
 #include "Motor.h"
 #include "Utils/pid.hpp"
 #include "Utils/average.hpp"
-#include "Utils/pin_mapping.h"
+#include "Utils/pin_mapping_select.h"
 #include "Utils/defines.h"
 #include "MotionControl/Encoder.h"
+#include "PointToPointTrajectory.h"
 
 enum MOVING_DIRECTION { FORWARD, BACKWARD, TRIGO, ANTITRIGO, CURVE, NONE }; //rename !
 
@@ -82,7 +83,9 @@ private:
     const int32_t maxAcceptableRotationSpeed;   /**< Vitesse maximale acceptable en rotation, limite les ordres du HL - En tick/s */
 
 											  //	Limitation d'accélération
-	volatile int8_t maxAcceleration;            /**< Accélération maximale, limite le PID de vitesse - En tick/(s*ms) */
+												/**< Accélération maximale, limite le PID de vitesse - En tick/(s*ms) */
+	volatile int32_t maxAcceleration;
+	volatile int32_t maxDeceleration;
 
 
 	//	Pour faire de jolies courbes de réponse du système, la vitesse moyenne c'est mieux !
@@ -104,10 +107,13 @@ private:
 	* 	par le haut niveau pour correspondre à son système de coordonnées.
 	* 	Le bas niveau met à jour la valeur de ces variables et les
 	*/
-	volatile float x;                           /**< Positionnement en x - En mm */
-	volatile float y;                           /**< Positionnement en y - En mm */
-	volatile float originalAngle;               /**< Offset ajouté à l'angle courant pour que nos angles en radians coïncident avec la représentation haut niveau des angles - En rad */
 
+	volatile float x;                // Positionnement 'x' (mm)
+	volatile float y;                // Positionnement 'y' (mm)
+    volatile float targetX;
+    volatile float targetY;
+	volatile float originalAngle;    // Angle d'origine	  (radians)
+									 // 'originalAngle' représente un offset ajouté à l'angle courant pour que nos angles en radians coïncident avec la représentation haut niveau des angles.
     // Variables d'état du mouvement
 	volatile bool moving;
 	volatile bool wasMoving;
@@ -121,19 +127,29 @@ private:
 	volatile bool leftSpeedControlled;
 	volatile bool rightSpeedControlled;
 
-	volatile bool forcedMovement;   /**< Si true, alors pas de gestion de l'arret : ON FORCE MODAFUCKA !!! */
+	volatile bool forcedMovement; 	// Si true, alors pas de gestion de l'arret : ON FORCE MODAFUCKA !!!
+	volatile bool pointToPointMovement;
+    volatile bool sequentialPointToPoint;   // Si true, on tourne pour s'orienter puis on avance
+
+	volatile bool followTrajectory;
+	PointToPointTrajectory *trajectoryToFollow;
 
                                     // Variables de réglage de la détection de blocage physique
 	unsigned int delayToStop;       /**< En ms */
 
-	//Nombre de ticks de tolérance pour considérer qu'on est arrivé à destination
-	int toleranceTranslation;       /**< En tick */
-	int toleranceRotation;          /**< En tick */
+    int toleranceRadiale;           // Tolérance en mm pour le point à point
+    int toleranceRadialeTrajectoire;
+    float toleranceAngulairePtP;      // Tolérance angulaire en rad avant de translater en PtP séquentiel
+
+    //Nombre de ticks de tolérance pour considérer qu'on est arrivé à destination
+	int toleranceTranslation;
+	int toleranceRotation;
 
 	int toleranceSpeed;             // Tolérance avant de considérer le mouvement anormal (écart entre la consigne de vitesse et la vitesse réelle)
 	int toleranceSpeedEstablished;  // Tolérance autour de la vitesse établie avant de capter un blocage
 
-	int toleranceDifferentielle;    /**< En tick/s  */
+	int toleranceDifferentielle;
+	int toleranceDerivative;
 
 	int delayToEstablish;           // Temps à attendre avant de considérer la vitesse stable
 
@@ -154,7 +170,7 @@ public:
 	/* Asservissement */
     //LA fonction d'asservissement
 	void control();
-	bool controlled;
+	volatile bool controlled;
 
     /* Vitesse */
 	void setLeftSpeedTunings(float, float, float);
@@ -165,7 +181,7 @@ public:
 	void getSpeedSetpoints(int32_t & left, int32_t & right);
 	void printValues();
 	void getTranslationTunings(float &, float &, float &) const;
-    void getTranslationErrors(float& translationProp, float& translationIntegral, float& translationDerivative);
+    void getTranslationErrors(int32_t& translationProp, int32_t& translationIntegral, int32_t& translationDerivative);
 	void getRotationTunings(float &, float &, float &) const;
     void getRotationErrors(float& rotaProp, float& rotaIntegral, float& rotaDerivative);
 
@@ -176,6 +192,7 @@ public:
 	void getRightSpeedTunings(float &, float &, float &) const;
     float getLeftSpeed();
     float getRightSpeed();
+	int32_t getDistanceTicks();
 
 	void setRawPositiveTranslationSpeed();
 
@@ -203,6 +220,9 @@ public:
 	/* Ordres */
 	void orderTranslation(int32_t);
 	void orderRotation(float, RotationWay);
+	void orderGoto(float, float);
+    void orderGoto(float, float, bool);
+	void orderTrajectory(const double*, const double*, int);
 	void orderRawPwm(Side, int16_t);
 
 	/* Autres */
@@ -222,8 +242,9 @@ public:
 	void manageStop();
 	void enableForcedMovement(bool);
 
-	void resetPIDErrors();
+	void disablePointToPoint();
 
+	void resetPIDErrors();
 };
 
 #endif

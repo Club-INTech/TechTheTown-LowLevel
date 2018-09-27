@@ -7,6 +7,7 @@
 
 #include "AbstractOrder.h"
 #include "OrderManager.h"
+#include "MotionControl/trajectories.h"
 
 ORDER(UNKOWN,0);
 
@@ -16,6 +17,8 @@ ORDER(F,0);
 ORDER(XYO,0);
 ORDER(D,1);
 ORDER(T,1);
+ORDER(GOTO,2);
+ORDER(FOLLOWTRAJECTORY,1);
 ORDER(STOP,0);
 ORDER(EMERGENCYSTOP,0);
 ORDER(RESUMEEMERGENCYSTOP,0);
@@ -183,4 +186,6 @@ ORDER(DH,1);
  *    	   *|_________________________________|*
 */
 ORDER(DEMO,0);
+ORDER(PTPDEMO,0);
+ORDER(PTPDEMOSEQ,0);
 #endif //TECHTHETOWN_LOWLEVEL_ORDERS_H

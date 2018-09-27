@@ -25,7 +25,6 @@ bool Hook::check(uint32_t currentX, uint32_t currentY, float currentAngle)
 		}
 	}
 #if DEBUG
-
 	static EthernetMgr& highLevel = EthernetMgr::Instance();
 
 	highLevel.println("On fait un check des hooks avec les positions suivantes");

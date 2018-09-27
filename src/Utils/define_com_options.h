@@ -5,15 +5,17 @@
 #ifndef TECHTHETOWN_LOWLEVEL_DEFINE_COM_OPTIONS_H
 #define TECHTHETOWN_LOWLEVEL_DEFINE_COM_OPTIONS_H
 
-enum COM_OPTIONS
-{
-    SERIAL_W    = 0b1,
-    SERIAL_R    = 0b10,
-    ETHERNET_W  = 0b100,
-    ETHERNET_R  = 0b1000,
+enum COM_OPTIONS {
+    SERIAL_W = 0b1,
+    SERIAL_R = 0b10,
+    ETHERNET_W = 0b100,
+    ETHERNET_R = 0b1000,
+    BLUETOOTH_W = 0b10000,
+    BLUETOOTH_R = 0b100000,
 
     ETHERNET_RW          = ETHERNET_W|ETHERNET_R,
     SERIAL_RW            = SERIAL_W|SERIAL_R,
+    BLUETOOTH_RW         = BLUETOOTH_W|BLUETOOTH_R,
     ETHERNET_RW_SERIAL_W   = ETHERNET_RW|SERIAL_W
 
 };
@@ -22,7 +24,7 @@ inline COM_OPTIONS operator|(COM_OPTIONS a, COM_OPTIONS b)
 
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
-constexpr COM_OPTIONS com_options = ETHERNET_RW_SERIAL_W;
+constexpr COM_OPTIONS com_options = SERIAL_RW;
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
 
