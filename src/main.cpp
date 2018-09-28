@@ -6,6 +6,7 @@
 **/
 
 #include "Com/Order/OrderManager.h"
+#include "Utils/Monitoring.h"
 
 
 void setup() {
@@ -30,6 +31,7 @@ void setup() {
     digitalWrite(PIN_ELECTROVANNE_AR,LOW);
 
     Serial.println("Fin du setup");
+
 }
 
 /* Interruptions d'asservissements */
@@ -64,6 +66,8 @@ void test()
 void loop(){
 
 	OrderManager& orderMgr = OrderManager::Instance();
+	//ORDER_PTPDEMO a = ORDER_PTPDEMO();
+	orderMgr.init();
 
     // AX12 initialisation
     orderMgr.execute("rlbAv");
@@ -88,7 +92,9 @@ void loop(){
     static Metro USSend = Metro(80);
 
     while (true) {
-    	
+
+    	Serial.printf("freeRAM: %f %, stackUsage: %i, heapUsage: %i\n",Monitoring::RAMUsagePercent(),Monitoring::stackSize(),Monitoring::heapSize());
+
         orderMgr.communicate();
 		orderMgr.refreshUS();
         orderMgr.isHLWaiting() ? orderMgr.checkJumper() : void();

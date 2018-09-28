@@ -32,7 +32,7 @@ class OrderManager : public Singleton<OrderManager>
 {
 private:
 
-	std::map<const char*, AbstractOrder*> orders;
+	std::map<String, AbstractOrder*> orders;
 
 	bool basicDetectionTriggeredSent;
 	bool basicDetectionFinishedSent;

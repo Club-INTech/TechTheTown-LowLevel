@@ -9,9 +9,6 @@ OrderManager::OrderManager():
         actuatorsMgr(ActuatorsMgr::Instance()),
         highLevel(ComMgr::Instance())
 {
-
-    init();
-
     memset(readMessage, 0, RX_BUFFER_SIZE);
     isSendingUS = true;
     hooksEnabled = true;
@@ -152,9 +149,8 @@ void OrderManager::executeHooks() {
 
 void OrderManager::init() {
 
-    orders.clear();
-
     orders.insert( {"?", new ORDER_PING} );
+
     orders.insert( {"j", new ORDER_J} );
     orders.insert( {"f", new ORDER_F} );
     orders.insert( {"?xyo", new ORDER_XYO} );
@@ -216,19 +212,19 @@ void OrderManager::init() {
     orders.insert( {"axs", new ORDER_AXS} );
     orders.insert( {"axgs", new ORDER_AXGS} );
 
-    orders.insert( {"blbavbei", new ORDER_BLBAVBEI} );
-    orders.insert( {"blbav", new ORDER_BLBAV} );
-    orders.insert( {"rlbav", new ORDER_RLBAV} );
-    orders.insert( {"blbarbei", new ORDER_BLBARBEI} );
-    orders.insert( {"blbar", new ORDER_BLBAR} );
-    orders.insert( {"rlbar", new ORDER_RLBAR} );
+    orders.insert( {"blbAvbei", new ORDER_BLBAVBEI} );
+    orders.insert( {"blbAv", new ORDER_BLBAV} );
+    orders.insert( {"rlbAv", new ORDER_RLBAV} );
+    orders.insert( {"blbArbei", new ORDER_BLBARBEI} );
+    orders.insert( {"blbAr", new ORDER_BLBAR} );
+    orders.insert( {"rlbAr", new ORDER_RLBAR} );
 
-    orders.insert( {"flpav", new ORDER_FLPAV} );
-    orders.insert( {"olpav", new ORDER_OLPAV} );
-    orders.insert( {"flpar", new ORDER_FLPAR} );
-    orders.insert( {"olpar", new ORDER_OLPAR} );
-    orders.insert( {"olparp", new ORDER_OLPARP} );
-    orders.insert( {"olpavp", new ORDER_OLPAVP} );
+    orders.insert( {"flpAv", new ORDER_FLPAV} );
+    orders.insert( {"olpAv", new ORDER_OLPAV} );
+    orders.insert( {"flpAr", new ORDER_FLPAR} );
+    orders.insert( {"olpAr", new ORDER_OLPAR} );
+    orders.insert( {"olpArp", new ORDER_OLPARP} );
+    orders.insert( {"olpAvp", new ORDER_OLPAVP} );
 
     orders.insert( {"alp", new ORDER_ALP} );
     orders.insert( {"dlp", new ORDER_DLP} );
