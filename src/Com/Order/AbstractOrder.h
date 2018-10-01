@@ -9,6 +9,7 @@
 #include "OrderData.h"
 #include "Utils/defines.h"
 #include "Actuators/ActuatorValues.h"
+#include "Utils/Singleton.hpp"
 
 typedef OrderData& Args;
 
@@ -29,13 +30,13 @@ protected:
     OrderManager&           orderManager;
 };
 
-#define ORDER(name,nbrparam)                         \
-struct ORDER_##name : public AbstractOrder           \
-{                                                    \
-    ORDER_##name() : AbstractOrder(nbrparam)         \
-    {}                                               \
-    void impl(Args);                                 \
-}                                                    \
+#define ORDER(name,nbrparam)                                                         \
+struct ORDER_##name : public AbstractOrder                                           \
+{                                                                                    \
+    ORDER_##name() : AbstractOrder(nbrparam)                                         \
+    {}                                                                               \
+    void impl(Args);                                                                 \
+}                                                                                    \
 
 
 #endif //TECHTHETOWN_LOWLEVEL_ABSTRACTORDER_H

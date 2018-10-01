@@ -9,13 +9,13 @@ OrderManager::OrderManager():
         actuatorsMgr(ActuatorsMgr::Instance()),
         highLevel(ComMgr::Instance())
 {
-
     memset(readMessage, 0, RX_BUFFER_SIZE);
     isSendingUS = true;
     hooksEnabled = true;
     HLWaiting = false;
     highLevel.printfln(DEBUG_HEADER,"Communications ready");
 }
+
 
 void OrderManager::communicate() {
 
@@ -65,11 +65,7 @@ void OrderManager::communicate() {
 
 void OrderManager::execute(const char* orderToExecute)
 {
-//	#ifdef DEBUG                    /*A LAISSER COMMENTÉ
     char str_order[RX_BUFFER_SIZE];
-//    #else                          *TANT QU'ON RESTE EN ORDRES
-//    int order;                     *SOUS FORME STRINGS
-//    #endif                        \*m'voyez
     char orderBuffer[RX_BUFFER_SIZE];
     strcpy(orderBuffer, orderToExecute);
 
@@ -77,286 +73,19 @@ void OrderManager::execute(const char* orderToExecute)
                            SEPARATOR);        //Sépare l'ordre en plusieurs mots, n_param=nombre de paramètres
 
     if (n_param >= 0) {
-        //#ifdef DEBUG
         strcpy(str_order, orderData.at(0));
-        //#else
-        //order = parseInt(orderData.at(0));
-        //#endif //DEBUG
-
-        AbstractOrder* order;
 
         Serial.println(orderToExecute);
 
-        if (!strcmp(str_order, "?"))            //Ping
+        auto it = orders.find(str_order);
+        if(it != orders.end())
+            it->second->exec(orderData);
+        else
         {
-            order = new ORDER_PING;
+            highLevel.printfln(STD_HEADER,"ordre inconnu");
+            highLevel.printfln(DEBUG_HEADER,"T'es un déchêt");
         }
-        else if (!strcmp(str_order, "j"))       //Le HL attend l'activation du Jumper
-        {
-            order = new ORDER_J;
-        }
-        else if (!strcmp(str_order, "f"))
-        {
-            order = new ORDER_F;
-        }
-        else if (!strcmp(str_order, "?xyo"))		//Renvoie la position du robot (en mm et radians)
-        {
-            order = new ORDER_XYO;
-        }
-        else if (!strcmp(str_order, "d"))		//Ordre de déplacement rectiligne (en mm)
-        {
-            order = new ORDER_D;
-        }
-        else if (!strcmp(str_order, "t")) {
-            order = new ORDER_T;
-        }
-        else if(!strcmp(str_order, "goto")) {
-            order = new ORDER_GOTO;
-        }
-        else if(!strcmp(str_order, "followTrajectory"))
-        {
-            order = new ORDER_FOLLOWTRAJECTORY;
-        }
-        else if (!strcmp(str_order, "stop")) {
-            order = new ORDER_STOP;
-        }
-        else if (!strcmp(str_order, "emergencyStop")) {
-            order = new ORDER_EMERGENCYSTOP;
-        }
-        else if (!strcmp(str_order, "resumeEmergencyStop")) {
-            order = new ORDER_RESUMEEMERGENCYSTOP;
-        }
-        else if (!strcmp(str_order, "cx")) {
-            order = new ORDER_CX;
-        }
-        else if (!strcmp(str_order, "cy")) {
-            order = new ORDER_CY;
-        }
-        else if (!strcmp(str_order, "co")) {
-            order = new ORDER_CO;
-        }
-        else if (!strcmp(str_order, "cxyo")) {
-            order = new ORDER_CXYO;
-        }
-        else if (!strcmp(str_order, "ctv")) {
-            order = new ORDER_CTV;
-        }
-        else if (!strcmp(str_order, "crv")) {
-            order = new ORDER_CRV;
-        }
-        else if (!strcmp(str_order, "ctrv")) {
-            order = new ORDER_CTRV;
-        }
-        else if (!strcmp(str_order, "efm")) {
-            order = new ORDER_EFM;
-        }
-        else if (!strcmp(str_order, "dfm")) {
-            order = new ORDER_DFM;
-        }
-        else if (!strcmp(str_order, "ct0")){        //Désactiver l'asservissement en translation
-            order = new ORDER_CT0;
-        }
-        else if (!strcmp(str_order, "ct1")){		//Activer l'asservissement en translation
-            order = new ORDER_CT1;
-        }
-        else if (!strcmp(str_order, "cr0")){		//Désactiver l'asservissement en rotation
-            order = new ORDER_CR0;
-        }
-        else if (!strcmp(str_order, "cr1")){		//Activer l'asservissement en rotation
-            order = new ORDER_CR1;
-        }
-        else if (!strcmp(str_order, "cv0")){		//Désactiver l'asservissement en vitesse
-            order = new ORDER_CV0;
-        }
-        else if (!strcmp(str_order, "cv1")){		//Activer l'asservissement en vitesse
-            order = new ORDER_CV1;
-        }
-        else if (!strcmp(str_order, "cod")) {
-            order = new ORDER_COD;
-        }
-        else if (!strcmp(str_order, "pfdebug"))
-        {
-            order = new ORDER_PFDEBUG;
-        }
-        else if (!strcmp(str_order, "rawpwm"))
-        {
-            order = new ORDER_RAWPWM;
-        }
-        else if (!strcmp(str_order, "getpwm")) {
-            order = new ORDER_GETPWM;
-        }
-        else if (!strcmp(str_order, "errors")) {
-            order = new ORDER_ERRORS;
-        }
-        else if (!strcmp(str_order, "rawspeed")) {
-            order = new ORDER_RAWSPEED;
-        }
-        else if (!strcmp(str_order, "rawposdata")){
-            order = new ORDER_RAWPOSDATA;
-        }
-        else if (!strcmp(str_order, "montlhery")) {
-            order = new ORDER_MONTLHERY;
-        }
-        else if (!strcmp(str_order, "av")) {
-            order = new ORDER_AV;
-        }
-        else if (!strcmp(str_order, "rc")) {
-            order = new ORDER_RC;
-        }
-        else if (!strcmp(str_order, "td")) {
-            order = new ORDER_TD;
-        }
-        else if (!strcmp(str_order, "tg")) {
-            order = new ORDER_TG;
-        }
-        else if (!strcmp(str_order, "sstop")){
-            order = new ORDER_SSTOP;
-        }
-        else if (!strcmp(str_order, "toggle")) {
-            order = new ORDER_TOGGLE;
-        }
-        else if (!strcmp(str_order, "display")) {
-            order = new ORDER_DISPLAY;
-        }
-        else if (!strcmp(str_order, "kpt")) {
-            order = new ORDER_KPT;
-        } else if (!strcmp(str_order, "kdt")) {
-            order = new ORDER_KDT;
-        } else if (!strcmp(str_order, "kit")) {
-            order = new ORDER_KIT;
-        }
-        else if (!strcmp(str_order, "kpr")) {
-            order = new ORDER_KPR;
-        } else if (!strcmp(str_order, "kir")) {
-            order = new ORDER_KIR;
-        } else if (!strcmp(str_order, "kdr")) {
-            order = new ORDER_KDR;
-        }
-        else if (!strcmp(str_order, "kpg")) {
-            order = new ORDER_KPG;
-        }
-        else if (!strcmp(str_order, "kig")) {
-            order = new ORDER_KIG;
-        }
-        else if (!strcmp(str_order, "kdg")) {
-            order = new ORDER_KDG;
-        }
-        else if (!strcmp(str_order, "kpd")) {
-            order = new ORDER_KPD;
-        }
-        else if (!strcmp(str_order, "kid")) {
-            order = new ORDER_KID;
-        }
-        else if (!strcmp(str_order, "kdd")) {
-            order = new ORDER_KDD;
-        }
-        else if (!strcmp(str_order, "AXm")) {
-            order = new ORDER_AXM;
-        }
-        else if (!strcmp(str_order, "AXGm")) {
-            order = new ORDER_AXGM;
-        }
-        else if (!strcmp(str_order, "AXs")) {
-            order = new ORDER_AXS;
-        }
-        else if (!strcmp(str_order, "AXGs")) {
-            order = new ORDER_AXGS;
-        }
-        else if (!strcmp(str_order, "blbAvbei")) {
-            order = new ORDER_BLBAVBEI;
-        }
-        else if (!strcmp(str_order, "blbAv")) {
-            order = new ORDER_BLBAV;
-        }
-        else if (!strcmp(str_order, "rlbAv")) {
-            order = new ORDER_RLBAV;
-        }
-        else if (!strcmp(str_order, "blbArbei")) {
-            order = new ORDER_BLBARBEI;
-        }
-        else if (!strcmp(str_order, "blbAr")) {
-            order = new ORDER_BLBAR;
-        }
-        else if (!strcmp(str_order, "rlbAr")) {
-            order = new ORDER_RLBAR;
-        }
-        else if (!strcmp(str_order, "flpAv")) {
-            order = new ORDER_FLPAV;
-        }
-        else if (!strcmp(str_order, "olpAv")) {
-            order = new ORDER_OLPAV;
-        }
-        else if (!strcmp(str_order, "flpAr")) {
-            order = new ORDER_FLPAR;
-        }
-        else if (!strcmp(str_order, "olpAr")) {
-            order = new ORDER_OLPAR;
-        }
-        else if (!strcmp(str_order, "olpAvp")) {
-            order = new ORDER_OLPAVP;
-        }
-        else if (!strcmp(str_order, "olpArp")) {
-            order = new ORDER_OLPARP;
-        }
-        else if (!strcmp(str_order, "alp")) {
-            order = new ORDER_ALP;
-        }
-        else if (!strcmp(str_order, "dlp")) {
-            order = new ORDER_DLP;
-        }
-        else if (!strcmp(str_order, "aeAv")) {
-            order = new ORDER_AEAV;
-        }
-        else if (!strcmp(str_order, "deAv")) {
-            order = new ORDER_DEAV;
-        }
-        else if (!strcmp(str_order, "aeAr")) {
-            order = new ORDER_AEAR;
-        }
-        else if (!strcmp(str_order, "deAr")) {
-            order = new ORDER_DEAR;
-        }
-        else if (!strcmp(str_order, "sus")){
-            order = new ORDER_SUS;
-        }
-        else if (!strcmp(str_order, "ccAv")) {
-            order = new ORDER_CCAV;
-        }
-        else if (!strcmp(str_order, "ccAr")) {
-            order = new ORDER_CCAR;
-        }
-        else if (!strcmp(str_order, "bde")) {
-            order = new ORDER_BDE;
-        }
-        else if (!strcmp(str_order, "bdd")) {
-            order = new ORDER_BDD;
-        }
-        else if (!strcmp(str_order, "nh")) {
-            order = new ORDER_NH;
-        }
-        else if (!strcmp(str_order, "eh")) {
-            order = new ORDER_EH;
-        }
-        else if (!strcmp(str_order, "dh")) {
-            order = new ORDER_DH;
-        }
-        else if (!strcmp(str_order, "ptpDemo")) {
-            order = new ORDER_PTPDEMO;
-        }
-        else if (!strcmp(str_order, "ptpDemoSeq")) {
-            order = new ORDER_PTPDEMOSEQ;
-        }
-        else {
-            order = new ORDER_UNKOWN;
-        }
-	    ORDER_PING();
-        order->exec(orderData);
-
-        delete order;
-
     }
-
-
     checkHooks();
 }
 
@@ -415,4 +144,105 @@ void OrderManager::executeHooks() {
     {
         execute(order.c_str());
     }
+}
+
+void OrderManager::init() {
+
+    orders.insert( {"?", new ORDER_PING} );
+
+    orders.insert( {"j", new ORDER_J} );
+    orders.insert( {"f", new ORDER_F} );
+    orders.insert( {"?xyo", new ORDER_XYO} );
+    orders.insert( {"d", new ORDER_D} );
+    orders.insert( {"t", new ORDER_T} );
+    orders.insert( {"goto", new ORDER_GOTO} );
+    orders.insert( {"followtrajectory", new ORDER_FOLLOWTRAJECTORY} );
+    orders.insert( {"stop", new ORDER_STOP} );
+    orders.insert( {"emergencyStop", new ORDER_EMERGENCYSTOP} );
+    orders.insert( {"resumeEmergencyStop", new ORDER_RESUMEEMERGENCYSTOP} );
+
+    orders.insert( {"cx", new ORDER_CX} );
+    orders.insert( {"cy", new ORDER_CY} );
+    orders.insert( {"co", new ORDER_CO} );
+    orders.insert( {"cxyo", new ORDER_CXYO} );
+    orders.insert( {"ctv", new ORDER_CTV} );
+    orders.insert( {"crv", new ORDER_CRV} );
+    orders.insert( {"ctrv", new ORDER_CTRV} );
+    orders.insert( {"efm", new ORDER_EFM} );
+    orders.insert( {"dfm", new ORDER_DFM} );
+
+    orders.insert( {"ct0", new ORDER_CT0} );
+    orders.insert( {"ct1", new ORDER_CT1} );
+    orders.insert( {"cr0", new ORDER_CR0} );
+    orders.insert( {"cr1", new ORDER_CR1} );
+    orders.insert( {"cv0", new ORDER_CV0} );
+    orders.insert( {"cv1", new ORDER_CV1} );
+
+    orders.insert( {"cod", new ORDER_COD} );
+    orders.insert( {"pfdebug", new ORDER_PFDEBUG} );
+    orders.insert( {"rawpwm", new ORDER_RAWPWM} );
+    orders.insert( {"getpwm", new ORDER_GETPWM} );
+    orders.insert( {"errors", new ORDER_ERRORS} );
+    orders.insert( {"rawposdata", new ORDER_RAWPOSDATA} );
+    orders.insert( {"rawspeed", new ORDER_RAWSPEED} );
+
+    orders.insert( {"montlhery", new ORDER_MONTLHERY} );
+    orders.insert( {"av", new ORDER_AV} );
+    orders.insert( {"rc", new ORDER_RC} );
+    orders.insert( {"td", new ORDER_TD} );
+    orders.insert( {"tg", new ORDER_TG} );
+    orders.insert( {"sstop", new ORDER_SSTOP} );
+
+    orders.insert( {"toggle", new ORDER_TOGGLE} );
+    orders.insert( {"display", new ORDER_DISPLAY} );
+    orders.insert( {"kpt", new ORDER_KPT} );
+    orders.insert( {"kdt", new ORDER_KDT} );
+    orders.insert( {"kit", new ORDER_KIT} );
+    orders.insert( {"kpr", new ORDER_KPR} );
+    orders.insert( {"kir", new ORDER_KIR} );
+    orders.insert( {"kdr", new ORDER_KDR} );
+    orders.insert( {"kpg", new ORDER_KPG} );
+    orders.insert( {"kpd", new ORDER_KPD} );
+    orders.insert( {"kid", new ORDER_KID} );
+    orders.insert( {"kdd", new ORDER_KDD} );
+
+    orders.insert( {"axm", new ORDER_AXM} );
+    orders.insert( {"axgm", new ORDER_AXGM} );
+    orders.insert( {"axs", new ORDER_AXS} );
+    orders.insert( {"axgs", new ORDER_AXGS} );
+
+    orders.insert( {"blbAvbei", new ORDER_BLBAVBEI} );
+    orders.insert( {"blbAv", new ORDER_BLBAV} );
+    orders.insert( {"rlbAv", new ORDER_RLBAV} );
+    orders.insert( {"blbArbei", new ORDER_BLBARBEI} );
+    orders.insert( {"blbAr", new ORDER_BLBAR} );
+    orders.insert( {"rlbAr", new ORDER_RLBAR} );
+
+    orders.insert( {"flpAv", new ORDER_FLPAV} );
+    orders.insert( {"olpAv", new ORDER_OLPAV} );
+    orders.insert( {"flpAr", new ORDER_FLPAR} );
+    orders.insert( {"olpAr", new ORDER_OLPAR} );
+    orders.insert( {"olpArp", new ORDER_OLPARP} );
+    orders.insert( {"olpAvp", new ORDER_OLPAVP} );
+
+    orders.insert( {"alp", new ORDER_ALP} );
+    orders.insert( {"dlp", new ORDER_DLP} );
+
+    orders.insert( {"aeAv", new ORDER_AEAV} );
+    orders.insert( {"deAv", new ORDER_DEAV} );
+    orders.insert( {"aeAr", new ORDER_AEAR} );
+    orders.insert( {"deAr", new ORDER_DEAR} );
+
+    orders.insert( {"sus", new ORDER_SUS} );
+    orders.insert( {"ccAv", new ORDER_CCAV} );
+    orders.insert( {"ccAr", new ORDER_CCAR} );
+    orders.insert( {"bde", new ORDER_BDE} );
+    orders.insert( {"bdd", new ORDER_BDD} );
+
+    orders.insert( {"nh", new ORDER_NH} );
+    orders.insert( {"eh", new ORDER_EH} );
+    orders.insert( {"dh", new ORDER_DH} );
+
+    orders.insert( {"ptpdemo", new ORDER_PTPDEMO} );
+    orders.insert( {"ptpdemoseq",new ORDER_PTPDEMOSEQ} );
 }

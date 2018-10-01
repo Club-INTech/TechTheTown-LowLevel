@@ -3,7 +3,7 @@
 #ifndef _HOOK_h
 #define _HOOK_h
 
-#include "Interfaces/EthernetInterface.h"
+#include "Com/Interfaces/EthernetInterface.h"
 #include "WProgram.h"
 
 class Hook

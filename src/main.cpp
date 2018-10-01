@@ -6,20 +6,15 @@
 **/
 
 #include "Com/Order/OrderManager.h"
+#include "Utils/Monitoring.h"
 
-/* Interruption d'asservissement */
+/* Interruptions d'asservissements */
 void motionControlInterrupt() {
-	static int compteurDeLavage = 0;
 	static MotionControlSystem &motionControlSystem = MotionControlSystem::Instance();
 	motionControlSystem.updateTicks();
 	motionControlSystem.control();
 	motionControlSystem.updatePosition();
-	if(compteurDeLavage == 5)
-	{
-		motionControlSystem.manageStop();
-		compteurDeLavage = 0;
-	}
-	compteurDeLavage++;
+	motionControlSystem.manageStop();
 }
 
 int main(){
@@ -50,18 +45,17 @@ int main(){
 
 	Serial.println("Fin du setup");
 	OrderManager& orderMgr = OrderManager::Instance();
+	//ORDER_PTPDEMO a = ORDER_PTPDEMO();
+	orderMgr.init();
 
     // AX12 initialisation
     orderMgr.execute("rlbAv");
-    orderMgr.execute("rlbAr");
+	orderMgr.execute("rlbAr");
     delay(1000);
     orderMgr.execute("flpAv");
-    orderMgr.execute("flpAr");
+	orderMgr.execute("flpAr");
     delay(1000);
-	orderMgr.execute("ctv 300");
-	orderMgr.execute("crv 1.75");
 
-    delay(2000);
     // MotionControlSystem interrupt on timer
 	IntervalTimer motionControlInterruptTimer;
 	motionControlInterruptTimer.priority(253);
@@ -72,15 +66,17 @@ int main(){
 
 	delay(1500);//Laisse le temps aux capteurs de clignotter leur ID
 
-	static Metro USSend = Metro(80);
 	/**
 	 * Boucle principale, y est géré:
 	 * La communication HL
 	 * L'execution des ordres de ce dernier
 	 * Les capteurs
 	 */
-	while (true) {
-		orderMgr.communicate();
+
+    static Metro USSend = Metro(80);
+
+    while (true) {
+        orderMgr.communicate();
 		orderMgr.refreshUS();
 		orderMgr.isHLWaiting() ? orderMgr.checkJumper() : void();
 		USSend.check() ? orderMgr.sendUS() : void();
