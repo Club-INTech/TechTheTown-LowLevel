@@ -10,6 +10,8 @@
 #include "RobotStatus.h"
 #include "Motor.h"
 
+// TODO : Tout docu
+
 class MCS : public Singleton<MCS>
 {
 
@@ -29,9 +31,26 @@ private:
     float targetRightSpeed;
 
 
-
 public:
 
+    void control();
+    void stop();
+
+    void translate(int16_t);
+    void rotate(float);
+    void gotoPoint(int16_t,int16_t,bool);
+
+    void toggleControl();
+    void toggleTranslation();
+    void toggleRotation();
+
+    int16_t getX();
+    int16_t getY();
+    float getAngle();
+
+    void setX(int16_t);
+    void setY(int16_t);
+    void setAngle(float);
 };
 
 #endif //LL_MCSREBORN_H

@@ -17,7 +17,9 @@ private:
 
 public:
     bool controlled;
-    bool pTpControl;
+    bool controlledTranslation;
+    bool controlledRotation;
+    bool controlledP2P;
     bool forcedMovement;
     bool moving;
     bool stuck;
