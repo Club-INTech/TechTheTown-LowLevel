@@ -24,6 +24,9 @@ public:
     uint8_t tolerancySpeed;
     uint8_t tolerancyDiferential;
     uint8_t tolerancyDerivative;
+
+    uint8_t tolerancyRadius;
+    uint8_t tolerancyAngle;
 };
 
 #endif //LL_CONTROLSETTINGS_H
