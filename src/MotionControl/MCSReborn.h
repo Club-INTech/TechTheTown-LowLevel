@@ -7,11 +7,13 @@
 
 #include "../Utils/Singleton.hpp"
 #include "ControlSettings.h"
+#include "RobotStatus.h"
 
 class MCS : public Singleton<MCS>
 {
-private:
 
+private:
+    RobotStatus robotStatus;
     ControlSettings controlSettings;
 public:
 
