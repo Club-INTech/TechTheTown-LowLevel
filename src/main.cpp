@@ -7,6 +7,7 @@
 
 #include "Com/Order/OrderManager.h"
 #include "Utils/Monitoring.h"
+#include <string>
 
 /* Interruptions d'asservissements */
 void motionControlInterrupt() {

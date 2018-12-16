@@ -55,7 +55,7 @@ public:
 
     void init();
 
-    //Com&exec
+    //COM&exec
     inline void refreshUS(){
 		if(isSendingUS)
 			sensorMgr.refreshUS(motionControlSystem.getMovingDirection());

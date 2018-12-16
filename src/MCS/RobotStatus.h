@@ -5,15 +5,16 @@
 #ifndef LL_ROBOTSTATUS_H
 #define LL_ROBOTSTATUS_H
 
-#include "Encoder.h"
+#include "HardwareEncoder.h"
 
 enum class MOVEMENT { FORWARD, BACKWARD, TRIGO, ANTITRIGO, CURVE, NONE };
 
-class RobotStatus {
+class RobotStatus
+{
 
 private:
-    Encoder leftEncoder;
-    Encoder rightEncoder;
+    HardwareEncoder<1>& leftEncoder = Encoder1;
+    HardwareEncoder<2>& rightEncoder = Encoder2;
 
 public:
     bool controlled;

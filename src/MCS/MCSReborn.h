@@ -9,6 +9,7 @@
 #include "ControlSettings.h"
 #include "RobotStatus.h"
 #include "Motor.h"
+#include "pid.hpp"
 
 // TODO : Tout docu
 
@@ -21,6 +22,11 @@ private:
 
     Motor leftMotor;
     Motor rightMotor;
+
+    PID leftSpeedPID;
+    PID rightSpeedPID;
+    PID translationPID;
+    PID rotationPID;
 
     int16_t targetX;
     int16_t targetY;
